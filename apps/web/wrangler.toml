@@ -1,20 +1,18 @@
 # Cloudflare Pages config for the KraftPlan web app.
 # Built with @cloudflare/next-on-pages (output: .vercel/output/static).
 #
-# Deploy from apps/web:
-#   pnpm pages:build && pnpm pages:deploy
-# or connect this repo in the Cloudflare dashboard (recommended, no CC needed):
-#   Framework preset:        Next.js
-#   Root directory:          apps/web
-#   Build command:           npx @cloudflare/next-on-pages@1
-#   Build output directory:  .vercel/output/static
+# Deploy from apps/web with an API token — no dashboard repo connection needed:
+#   pnpm pages:build
+#   npx wrangler pages deploy .vercel/output/static --project-name kraftplan
+#
+# The API runs on Cloudflare Workers (see apps/worker). After deploying the
+# Worker, set NEXT_PUBLIC_API_BASE below (or as a Pages env var) to its URL,
+# e.g. https://kraftplan-api.<your-subdomain>.workers.dev
 
 name = "kraftplan"
 compatibility_date = "2024-11-01"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
 
-# Public runtime var — set the real API URL here or in the dashboard.
-# (Also settable as a Pages environment variable named NEXT_PUBLIC_API_BASE.)
 [vars]
-NEXT_PUBLIC_API_BASE = "https://kraftplan-api.onrender.com"
+NEXT_PUBLIC_API_BASE = "https://kraftplan-api.workers.dev"

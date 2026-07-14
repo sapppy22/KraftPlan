@@ -56,5 +56,29 @@ jobs:
           workingDirectory: apps/web
           command: pages deploy .vercel/output/static --project-name=kraftplan --branch=main
 
-  # The API (apps/api) deploys automatically via Render's Blueprint (render.yaml,
-  # autoDeploy: true) on every push to main — no step needed here.
+  deploy-worker:
+    name: Deploy API → Cloudflare Workers
+    needs: ci
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.1.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @kraftplan/shared build
+      - name: Deploy Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: apps/worker
+          command: deploy
+        # DATABASE_URL and JWT_SECRET must be set once via `wrangler secret put`.
+
+  # Alternative: the Node build (apps/api) can deploy to Render via render.yaml.

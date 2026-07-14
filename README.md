@@ -10,17 +10,18 @@ Kraftplan is a full-stack web application for discovering, customizing, and exec
 
 ## 🚀 Live site & deployment
 
-KraftPlan runs on a **100% free, no-credit-card** stack:
+KraftPlan runs on a **100% free, no-credit-card, zero-cold-start** stack — everything
+deploys with `wrangler` + a Cloudflare API token (no repo connection needed):
 
 | Layer | Host | URL |
 |---|---|---|
 | Web app | **Cloudflare Pages** | `https://kraftplan.pages.dev` _(set after first deploy)_ |
-| Unified API | **Render** (free) | `https://kraftplan-api.onrender.com` |
-| Database | **Neon** (serverless Postgres) | provisioned & seeded ✅ |
+| API | **Cloudflare Workers** (`apps/worker`) | `https://kraftplan-api.<subdomain>.workers.dev` |
+| Database | **Neon** (Postgres over HTTP) | provisioned & seeded ✅ |
 
-The 5 backend services are combined into a **single deployable** (`apps/api`) so the whole
-backend runs in one free process. **Step-by-step guide → [DEPLOYMENT.md](./DEPLOYMENT.md)**
-(includes Neon setup, Cloudflare Pages, Render, CI/CD, uptime/keep-alive, and scaling notes).
+The API is a single always-on Cloudflare Worker (Hono + `drizzle-orm/neon-http`) — **no cold
+starts**. A Node/Fastify build (`apps/api`) is kept as an optional Render fallback.
+**Step-by-step guide → [DEPLOYMENT.md](./DEPLOYMENT.md)** (Neon, Workers, Pages, CI/CD, scaling).
 
 ---
 
@@ -52,25 +53,24 @@ backend runs in one free process. **Step-by-step guide → [DEPLOYMENT.md](./DEP
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│                         Client (Next.js)                          │
-│  React Server Components + Client Components                      │
-│  Workout Player · Dashboard · Plans · Library · Progress          │
-└─────────────┬─────────────────────────────────┬──────────────────┘
-              │ HTTPS (REST)                     │
-              ▼                                  ▼
-┌────────────────────────────┐     ┌──────────────────────────────┐
-│    Next.js BFF (Route      │     │    Fastify Services (5)       │
-│    Handlers + Server       │────▶│  auth | plans | workouts      │
-│    Actions)                │     │  progress | library           │
-└────────────────────────────┘     └──────────┬───────────────────┘
-                                               │
-                    ┌──────────────────────────┴──────────────┐
-                    ▼                                         ▼
-        ┌────────────────────┐                  ┌────────────────────┐
-        │   PostgreSQL (Neon) │                  │       Redis        │
-        │   + TimescaleDB     │                  │  cache + streams   │
-        │   (optionally)      │                  │                    │
-        └────────────────────┘                  └────────────────────┘
+│                    Web — Next.js 14 (App Router)                   │
+│      Dashboard · Plans · Workout Player · Library · Progress       │
+│                  Cloudflare Pages (global edge)                    │
+└────────────────────────────┬─────────────────────────────────────┘
+                             │ HTTPS (REST + JWT)
+                             ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                 API — Hono on Cloudflare Workers                   │
+│   /auth · /plans · /workouts · /progress · /dashboard · /exercises │
+│              always-on · zero cold start (apps/worker)             │
+│         (optional Node/Fastify build: apps/api → Render)           │
+└────────────────────────────┬─────────────────────────────────────┘
+                             │ drizzle-orm/neon-http
+                             ▼
+                 ┌────────────────────────────┐
+                 │   Neon — serverless Postgres │
+                 │   (HTTP driver, pooled)     │
+                 └────────────────────────────┘
 ```
 
 ### Frontend
@@ -81,24 +81,31 @@ backend runs in one free process. **Step-by-step guide → [DEPLOYMENT.md](./DEP
 - **Recharts** — Progress charts (volume, adherence, PR trends)
 - **Radix UI** — Accessible primitives (Dialog, Tabs, Progress)
 
-### Backend Services
-| Service | Port | Responsibility |
+### Backend API
+One always-on Cloudflare Worker (`apps/worker`, **Hono**) exposes the whole API. It's a
+port of the original five Fastify services (`services/*`), which still power the optional
+Node build (`apps/api`) for a Render deployment.
+
+| Domain | Endpoints | Responsibility |
 |---|---|---|
-| **Auth** | 4001 | Register, login (argon2 + JWT), profile management |
-| **Plans** | 4002 | Plan catalog, assignment, day-resolution for sessions |
-| **Workouts** | 4003 | Session lifecycle, idempotent set logging |
-| **Progress** | 4004 | PR computation, volume/adherence aggregates, dashboard |
-| **Library** | 4005 | Exercise search (full-text + filter), media URLs |
+| **Auth** | `/auth/*` | Register, login (PBKDF2 via WebCrypto + JWT), profile |
+| **Plans** | `/plans`, `/users/me/plan` | Catalog, assignment, today's-session resolution |
+| **Workouts** | `/workouts/*` | Session lifecycle, idempotent set logging |
+| **Progress** | `/progress/*`, `/dashboard` | PRs (computed on completion), volume/adherence/endurance |
+| **Library** | `/exercises/*` | Full-text exercise search + detail |
+
+- **PBKDF2 (WebCrypto)** password hashing runs identically on Workers and Node — no native
+  `argon2`, so the same hashes work across both backends and the shared DB.
+- The Worker decodes the Bearer JWT into an `x-user-id` context for downstream queries.
 
 ### Database
-- **PostgreSQL 16** via Neon (serverless)
-- **Drizzle ORM** — Type-safe SQL with migrations
-- Tables: `users`, `plans`, `plan_weeks`, `plan_days`, `plan_blocks`, `block_exercises`, `exercises`, `exercise_alternatives`, `user_plan_assignments`, `workout_sessions`, `workout_sets`, `personal_records`, `event_outbox`
-- `workout_sets` uses idempotency keys to prevent duplicate logs on retry
-
-### Cache & Events
-- **Redis** — Plan catalog cache, rate limiting, pub/sub for cache invalidation, Streams for `workout.completed` events
-- Outbox pattern: events written in same DB transaction as state change, then published to Redis Streams
+- **Neon** serverless Postgres. The Worker uses **`drizzle-orm/neon-http`** (stateless
+  fetch-per-query, ideal for Workers); the Node build uses pooled `postgres-js`.
+- **Drizzle ORM** — type-safe SQL. Tables: `users`, `plans`, `plan_weeks`, `plan_days`,
+  `plan_blocks`, `block_exercises`, `exercises`, `exercise_alternatives`,
+  `user_plan_assignments`, `workout_sessions`, `workout_sets`, `personal_records`,
+  `event_outbox`.
+- `workout_sets` uses idempotency keys to prevent duplicate logs on retry.
 
 ---
 

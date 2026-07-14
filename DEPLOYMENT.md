@@ -1,120 +1,104 @@
 # KraftPlan — Deployment Guide (free tier, no credit card)
 
-KraftPlan runs on three free services. **None require a credit card.**
+Everything deploys with **`wrangler` + a Cloudflare API token** — no dashboard
+"connect a Git repo" step (works even if you're only a repo collaborator).
 
-| Layer | Host | Free tier | Notes |
+| Layer | Host | Free tier | Cold starts |
 |---|---|---|---|
-| Web app (`apps/web`) | **Cloudflare Pages** | Unlimited requests, global CDN | Always-on, instant worldwide |
-| Unified API (`apps/api`) | **Render** (Node) | 750 hrs/mo | Sleeps after ~15 min idle → keep-alive included |
-| Database (`packages/db`) | **Neon** (Postgres) | 0.5 GB, autoscaling | Pooled connection handles many users |
+| Web app (`apps/web`) | **Cloudflare Pages** | unlimited requests, global CDN | none (static) |
+| API (`apps/worker`) | **Cloudflare Workers** | 100k requests/day | **none — always on** |
+| Database (`packages/db`) | **Neon** (Postgres over HTTP) | 0.5 GB, autoscaling | none |
 
 ```
-Browser ──► Cloudflare Pages (Next.js web)  ──►  Render (Fastify API)  ──►  Neon (Postgres)
-            always-on, global edge               apps/api, all services      pooled, serverless
+Browser ─▶ Cloudflare Pages (Next.js)  ─▶  Cloudflare Worker (Hono API)  ─▶  Neon (HTTP driver)
+           always-on, global edge          always-on, zero cold start        serverless Postgres
 ```
 
-The 5 original microservices are combined into **one deployable** (`apps/api`) so the
-whole backend runs in a single free process. See `apps/api/src/index.ts`.
+The API is a single Cloudflare Worker (`apps/worker`, Hono + `drizzle-orm/neon-http`)
+— **zero cold starts**, unlike a sleeping Node host. A Node/Fastify equivalent
+(`apps/api`) is kept as an optional Render fallback (see the end).
 
 ---
 
-## 0. Database — already provisioned ✅
+## 0. Prerequisites
 
-The Neon database is live and seeded (81 exercises, 9 plans). To re-run against a
-fresh Neon project, put the connection strings in `.env` and:
+- A **Cloudflare account** (free, no card) → create an **API token** with the
+  *Edit Cloudflare Workers* template: dash.cloudflare.com → My Profile → API Tokens.
+- Your **Cloudflare Account ID** (Workers & Pages → right sidebar).
+- The **Neon** database — already provisioned & seeded (81 exercises, 9 plans).
 
+Export the token for the CLI:
+```bash
+export CLOUDFLARE_API_TOKEN=xxxxxxxx
+export CLOUDFLARE_ACCOUNT_ID=xxxxxxxx
+```
+
+## 1. Deploy the API → Cloudflare Workers
+
+```bash
+cd apps/worker
+npx wrangler secret put DATABASE_URL   # paste the Neon POOLED connection string
+npx wrangler secret put JWT_SECRET     # paste a long random string
+pnpm deploy                            # wrangler deploy
+# → https://kraftplan-api.<your-subdomain>.workers.dev
+```
+Verify: `curl https://kraftplan-api.<subdomain>.workers.dev/health` → `{"status":"ok"}`.
+
+Set the allowed web origin (after step 2) with:
+`npx wrangler deploy --var CORS_ORIGIN:https://kraftplan.pages.dev`
+(or edit `[vars]` in `apps/worker/wrangler.toml`).
+
+## 2. Deploy the web app → Cloudflare Pages (direct upload)
+
+```bash
+cd apps/web
+# point the frontend at your Worker URL:
+#   edit NEXT_PUBLIC_API_BASE in apps/web/wrangler.toml, OR export it for the build:
+export NEXT_PUBLIC_API_BASE=https://kraftplan-api.<your-subdomain>.workers.dev
+pnpm pages:build                       # @cloudflare/next-on-pages
+npx wrangler pages deploy .vercel/output/static --project-name kraftplan
+# → https://kraftplan.pages.dev
+```
+No repo connection required — this uploads the built assets directly with your token.
+
+## 3. Wire them together
+
+- Worker `CORS_ORIGIN` → your Pages URL (`https://kraftplan.pages.dev`).
+- Web `NEXT_PUBLIC_API_BASE` → your Worker URL. Rebuild + redeploy the web after changing it.
+
+---
+
+## Database — already provisioned ✅
+
+To re-run against a fresh Neon project, put the connection strings in `.env` and:
 ```bash
 pnpm db:push    # create tables (uses DATABASE_URL_UNPOOLED)
 pnpm db:seed    # load exercises + plans
 ```
+Use the **pooled** URL (`...-pooler...`) for `DATABASE_URL`.
 
-Use the **pooled** URL (`...-pooler...`) for `DATABASE_URL` and the **direct** URL
-(no `-pooler`) for `DATABASE_URL_UNPOOLED`.
+## Uptime & scale
 
----
+- **Zero cold starts.** Both Pages and Workers are always-on at the edge — no
+  sleeping, no keep-alive needed.
+- **Neon** autoscales and its **pooled** endpoint multiplexes many connections;
+  the Worker uses the HTTP driver (one stateless fetch per query), which scales
+  cleanly with Workers' concurrency.
+- Free limits: Workers 100k req/day, Pages unlimited static requests, Neon 0.5 GB.
 
-## 1. Deploy the API → Render (free, no CC)
+## Optional CI/CD (GitHub Actions)
 
-1. Sign up at [render.com](https://render.com) (GitHub login, no card).
-2. **New +** → **Blueprint** → pick the `admin_redacted/KraftPlan` repo. Render reads
-   [`render.yaml`](./render.yaml) and creates the `kraftplan-api` web service.
-3. In the service's **Environment**, set:
-   - `DATABASE_URL` = your Neon **pooled** connection string
-   - `JWT_SECRET` = a long random string (see `.env`)
-   - `CORS_ORIGIN` = your Pages URL, e.g. `https://kraftplan.pages.dev`
-4. Deploy. Health check: `https://kraftplan-api.onrender.com/health` → `{"status":"ok"}`.
+The workflows in [`deploy/workflows/`](./deploy/workflows/) build + deploy the web app
+and (optionally) the Worker on push. Copy them into `.github/workflows/` via the GitHub
+web UI (a token without the `workflow` scope can't push them). Add repo secrets
+`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
 
-## 2. Deploy the web app → Cloudflare Pages (free, no CC)
+## Fallback: Node API on Render (only if you can't use Workers)
 
-Easiest is the **dashboard Git integration** (Cloudflare builds it for you):
-
-1. [dash.cloudflare.com](https://dash.cloudflare.com) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git** → `KraftPlan`.
-2. Build settings:
-   - **Framework preset:** Next.js
-   - **Root directory:** `apps/web`
-   - **Build command:** `npx @cloudflare/next-on-pages@1`
-   - **Build output directory:** `.vercel/output/static`
-3. **Environment variables** → add `NEXT_PUBLIC_API_BASE` = your Render API URL
-   (e.g. `https://kraftplan-api.onrender.com`).
-4. Save & Deploy → your site is live at `https://kraftplan.pages.dev`.
-
-CLI alternative (from `apps/web`): `pnpm pages:build && pnpm pages:deploy`.
-
-## 3. Wire the two together
-
-- Cloudflare Pages env: `NEXT_PUBLIC_API_BASE` → Render API URL.
-- Render env: `CORS_ORIGIN` → Pages URL.
-- Redeploy web after setting the API URL.
-
-## 4. Optional CI/CD (GitHub Actions)
-
-The CI/CD workflows live in [`deploy/workflows/`](./deploy/workflows/). **To enable them,
-copy both files into `.github/workflows/`** (GitHub blocks pushing workflow files with a
-token that lacks the `workflow` scope — easiest is to add them via the GitHub web UI, or
-push with a `workflow`-scoped token):
-
-- `deploy.yml` — typechecks + builds the web app on every push and deploys it to Pages on
-  `main`. Add repo secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`, and a repo
-  variable `NEXT_PUBLIC_API_BASE`.
-- `keep-api-warm.yml` — pings the API `/health` every 10 min. Add repo variable
-  `API_HEALTH_URL`.
-
-(Render redeploys itself via `autoDeploy`.)
-
----
-
-## Uptime: is Render a problem?
-
-**The web app's uptime is not affected.** Cloudflare Pages is static + globally
-cached, so pages always load instantly, everywhere — regardless of the API.
-
-**Only the API sleeps.** On Render's free tier the API idles out after ~15 min, so
-the *first* data request after a quiet period takes ~30-60s (cold start); everything
-after is fast. Two ways to handle it:
-
-1. **Keep-alive (included).** [`deploy/workflows/keep-api-warm.yml`](./deploy/workflows/keep-api-warm.yml)
-   (copy to `.github/workflows/`) pings `/health` every 10 min to keep the service awake. Set repo variable
-   `API_HEALTH_URL = https://kraftplan-api.onrender.com/health`. This keeps the API
-   warm within the 750 hrs/month free budget.
-2. **Move the API to Cloudflare Workers (best uptime).** Always-on, no cold starts,
-   100k requests/day free. This is the most Cloudflare-native option but requires two
-   code changes: swap `argon2` (native) for a WebCrypto password hash, and swap the
-   `postgres-js` TCP driver for Neon's serverless HTTP driver
-   (`@neondatabase/serverless` + `drizzle-orm/neon-http`). Ask and this can be done.
-
-**Recommendation:** ship on Render + keep-alive now (good uptime, zero cost); port the
-API to Workers later if you want zero cold starts.
-
----
-
-## Scaling to many users on free tier
-
-- **Neon** autoscales compute and the **pooled** endpoint (PgBouncer) multiplexes many
-  client connections — the app uses the pooled URL, so hundreds of concurrent users are
-  fine on the free tier.
-- **Cloudflare Pages** serves the frontend from the edge with no practical request cap.
-- **API** is the bottleneck on Render free (one small instance). If you outgrow it,
-  bump the Render plan or move to Workers (scales automatically).
+`apps/api` is the same API as a Fastify server. Deploy it via the Render Blueprint
+(`render.yaml`, free, no card) and set `NEXT_PUBLIC_API_BASE` to the Render URL. Note
+Render's free tier sleeps after ~15 min idle (cold starts) — the Worker path above
+avoids this entirely, which is why it's the default.
 
 ---
 
@@ -124,6 +108,6 @@ API to Workers later if you want zero cold starts.
 cp .env.example .env         # fill in DATABASE_URL (Neon) + JWT_SECRET
 pnpm install
 pnpm db:push && pnpm db:seed # first time only
-pnpm dev:api                 # unified API on :4001
-pnpm dev:web                 # web app on :3000
+pnpm --filter @kraftplan/worker dev   # Worker API on :4001 (reads apps/worker/.dev.vars)
+pnpm dev:web                          # web app on :3000
 ```
