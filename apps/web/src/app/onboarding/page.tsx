@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Dumbbell, ChevronRight, Check } from 'lucide-react';
+import { ChevronRight, Check } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { Logo } from '@/components/ui/Logo';
 import { api } from '@/lib/api/client';
-import { PLAN_CATEGORIES, DIFFICULTY_LEVELS, EQUIPMENT_TYPES } from '@forgefit/shared';
+import { PLAN_CATEGORIES, DIFFICULTY_LEVELS, EQUIPMENT_TYPES } from '@kraftplan/shared';
 
 type Step = 'goal' | 'experience' | 'equipment' | 'schedule' | 'plan';
 
@@ -86,7 +87,7 @@ export default function OnboardingPage() {
               {i < stepsOrder.length - 1 && (
                 <div
                   className={`flex-1 h-0.5 transition-all ${
-                    stepsOrder.indexOf(step) > i ? 'bg-accent-blue' : 'bg-white/10'
+                    stepsOrder.indexOf(step) > i ? 'bg-brand-orange' : 'bg-white/10'
                   }`}
                 />
               )}
@@ -107,7 +108,7 @@ export default function OnboardingPage() {
                 }}
                 className={`p-4 rounded-xl border text-left transition-all ${
                   goal === cat
-                    ? 'border-accent-blue bg-accent-blue/10'
+                    ? 'border-brand-orange bg-brand-orange/10'
                     : 'border-white/10 bg-bg-surface hover:border-white/20'
                 }`}
               >
@@ -128,7 +129,7 @@ export default function OnboardingPage() {
                 }}
                 className={`p-4 rounded-xl border text-left capitalize transition-all ${
                   experience === level
-                    ? 'border-accent-blue bg-accent-blue/10'
+                    ? 'border-brand-orange bg-brand-orange/10'
                     : 'border-white/10 bg-bg-surface hover:border-white/20'
                 }`}
               >
@@ -148,7 +149,7 @@ export default function OnboardingPage() {
                   onClick={() => toggleEquipment(eq)}
                   className={`px-4 py-2 rounded-pill text-sm border transition-all capitalize ${
                     equipment.includes(eq)
-                      ? 'border-accent-blue bg-accent-blue/10 text-accent-blue'
+                      ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
                       : 'border-white/10 bg-bg-surface text-text-secondary hover:border-white/20'
                   }`}
                 >
@@ -166,7 +167,7 @@ export default function OnboardingPage() {
           <div className="space-y-6 mt-6">
             <div>
               <label className="block text-sm font-medium mb-2">
-                Days per week: <span className="text-accent-blue">{daysPerWeek}</span>
+                Days per week: <span className="text-brand-orange">{daysPerWeek}</span>
               </label>
               <input
                 type="range"
@@ -174,7 +175,7 @@ export default function OnboardingPage() {
                 max={7}
                 value={daysPerWeek}
                 onChange={(e) => setDaysPerWeek(parseInt(e.target.value))}
-                className="w-full accent-accent-blue"
+                className="w-full accent-brand-orange"
               />
               <div className="flex justify-between text-xs text-text-secondary mt-1">
                 <span>2 days</span>
@@ -183,7 +184,7 @@ export default function OnboardingPage() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">
-                Session length (min): <span className="text-accent-blue">{sessionLength}min</span>
+                Session length (min): <span className="text-brand-orange">{sessionLength}min</span>
               </label>
               <input
                 type="range"
@@ -192,7 +193,7 @@ export default function OnboardingPage() {
                 step={5}
                 value={sessionLength}
                 onChange={(e) => setSessionLength(parseInt(e.target.value))}
-                className="w-full accent-accent-blue"
+                className="w-full accent-brand-orange"
               />
             </div>
             <Button className="w-full" onClick={() => setStep('plan')}>
@@ -204,9 +205,7 @@ export default function OnboardingPage() {
         {step === 'plan' && (
           <div className="mt-6 space-y-6">
             <div className="p-6 card-surface rounded-2xl text-center">
-              <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center mx-auto mb-4">
-                <Dumbbell className="w-8 h-8 text-white" />
-              </div>
+              <Logo size={64} showWordmark={false} className="mx-auto mb-4" />
               <h3 className="text-xl font-bold">All set!</h3>
               <p className="text-text-secondary mt-2">
                 We&apos;ll match you with the perfect {goalLabels[goal]?.toLowerCase()} plan based on your profile.

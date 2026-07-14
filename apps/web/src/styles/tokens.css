@@ -1,31 +1,62 @@
+/* ── KraftPlan design tokens ──
+   Palette sampled from the KraftPlan logo: deep charcoal base with a
+   red → orange → amber gradient (no blues). Accent token names are kept
+   as aliases so existing components restyle automatically. */
+
 :root {
-  --bg-base: #0B0E14;
-  --bg-surface: #141925;
-  --bg-elevated: #1C2333;
-  --text-primary: #F5F7FA;
-  --text-secondary: #9AA4B8;
-  --accent-blue: #3D8BFF;
-  --accent-violet: #8E6FFF;
-  --accent-cyan: #22D3EE;
+  /* Surfaces (dark = default) */
+  --bg-base: #0F0F10;
+  --bg-surface: #17171A;
+  --bg-elevated: #1F1F23;
+  --text-primary: #F6F5F3;
+  --text-secondary: #A1A1AA;
+
+  /* Brand ramp (from the logo) */
+  --brand-red: #EF4423;
+  --brand-orange: #F97316;
+  --brand-amber: #FBBF24;
+  --brand-gold: #F9DC66;
+
+  /* Accent aliases → repointed to the KraftPlan ramp */
+  --accent-blue: #F97316; /* primary action */
+  --accent-violet: #EF4423; /* secondary accent */
+  --accent-cyan: #FBBF24; /* highlights / data viz */
+
+  /* Semantic */
   --success: #34D399;
   --warning: #FBBF24;
   --danger: #F87171;
-  --gradient-brand: linear-gradient(135deg, #3D8BFF, #7C5CFF);
-  --gradient-card: linear-gradient(135deg, #1C2333 0%, #141925 100%);
+
+  /* Gradients */
+  --gradient-brand: linear-gradient(135deg, #EF4423 0%, #F97316 52%, #FBBF24 100%);
+  --gradient-card: linear-gradient(135deg, #1F1F23 0%, #17171A 100%);
+
+  /* Focus / glow */
+  --brand-glow: rgba(249, 115, 22, 0.25);
 }
 
 :root.light {
-  --bg-base: #F6F7FB;
+  --bg-base: #FAF8F5;
   --bg-surface: #FFFFFF;
   --bg-elevated: #FFFFFF;
-  --text-primary: #0F1320;
-  --text-secondary: #5A6378;
-  --accent-blue: #2E7BFF;
-  --accent-violet: #7C5CFF;
-  --accent-cyan: #22D3EE;
-  --success: #22C55E;
-  --warning: #F59E0B;
-  --danger: #EF4444;
-  --gradient-brand: linear-gradient(135deg, #2E7BFF, #7C5CFF);
-  --gradient-card: linear-gradient(135deg, #FFFFFF 0%, #f0f2f8 100%);
+  --text-primary: #1A1613;
+  --text-secondary: #6B6560;
+
+  --brand-red: #E23A1C;
+  --brand-orange: #EA6A0E;
+  --brand-amber: #F59E0B;
+  --brand-gold: #F5B841;
+
+  --accent-blue: #EA6A0E;
+  --accent-violet: #E23A1C;
+  --accent-cyan: #F59E0B;
+
+  --success: #16A34A;
+  --warning: #D97706;
+  --danger: #DC2626;
+
+  --gradient-brand: linear-gradient(135deg, #E23A1C 0%, #EA6A0E 52%, #F59E0B 100%);
+  --gradient-card: linear-gradient(135deg, #FFFFFF 0%, #F7F3EE 100%);
+
+  --brand-glow: rgba(234, 106, 14, 0.2);
 }

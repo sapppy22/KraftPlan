@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Dumbbell, LayoutDashboard, CalendarDays, BarChart3, Library, Settings, ChevronLeft, Github } from 'lucide-react';
+import { LayoutDashboard, CalendarDays, BarChart3, Library, Settings, Github } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Logo } from '@/components/ui/Logo';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -21,11 +22,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Mobile header */}
       <header className="sticky top-0 z-40 bg-bg-base/80 backdrop-blur-lg border-b border-white/5 lg:hidden">
         <div className="flex items-center justify-between px-4 h-14">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center">
-              <Dumbbell className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-display font-bold text-lg">ForgeFit</span>
+          <Link href="/dashboard" aria-label="KraftPlan home">
+            <Logo size={30} wordmarkClassName="text-lg" />
           </Link>
           <a
             href="https://github.com/admin_redacted/KraftPlan"
@@ -42,11 +40,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex">
         {/* Sidebar (desktop) */}
         <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 bg-bg-surface border-r border-white/5">
-          <div className="flex items-center gap-3 px-6 h-16 border-b border-white/5">
-            <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
-              <Dumbbell className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-display font-bold text-xl">ForgeFit</span>
+          <div className="flex items-center px-6 h-16 border-b border-white/5">
+            <Logo size={38} wordmarkClassName="text-xl" />
           </div>
           <nav className="flex-1 px-4 py-6 space-y-1">
             {navItems.map((item) => {
@@ -59,7 +54,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   className={cn(
                     'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all',
                     isActive
-                      ? 'bg-accent-blue/10 text-accent-blue'
+                      ? 'bg-brand-orange/10 text-brand-orange'
                       : 'text-text-secondary hover:text-text-primary hover:bg-white/5',
                   )}
                 >
@@ -100,7 +95,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 className={cn(
                   'flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-colors',
-                  isActive ? 'text-accent-blue' : 'text-text-secondary',
+                  isActive ? 'text-brand-orange' : 'text-text-secondary',
                 )}
               >
                 <Icon className="w-5 h-5" />
