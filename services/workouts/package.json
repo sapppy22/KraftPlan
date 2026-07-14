@@ -1,5 +1,5 @@
 {
-  "name": "@forgefit/workouts-service",
+  "name": "@kraftplan/workouts-service",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -12,8 +12,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@forgefit/shared": "workspace:*",
-    "@forgefit/db": "workspace:*",
+    "@kraftplan/shared": "workspace:*",
+    "@kraftplan/db": "workspace:*",
     "fastify": "^4.28.0",
     "@fastify/cors": "^9.0.0",
     "@fastify/rate-limit": "^9.1.0",

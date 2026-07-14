@@ -1,8 +1,8 @@
 import type { FastifyInstance } from 'fastify';
-import { createDB } from '@forgefit/db';
-import { schema } from '@forgefit/db';
+import { createDB } from '@kraftplan/db';
+import { schema } from '@kraftplan/db';
 import { eq, and } from 'drizzle-orm';
-import { assignPlanSchema } from '@forgefit/shared';
+import { assignPlanSchema } from '@kraftplan/shared';
 
 export async function assignmentRoutes(app: FastifyInstance) {
   const dbUrl = app.dbUrl as string;

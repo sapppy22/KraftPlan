@@ -1,5 +1,5 @@
 # Best Tech Stack Document
-## ForgeFit — AI-Powered Gym Workout Planner & Tracker
+## KraftPlan — AI-Powered Gym Workout Planner & Tracker
 
 > **Status:** Draft v1.0
 > **Last Updated:** 2026-07-13

@@ -1,8 +1,8 @@
-import { createDB } from '@forgefit/db';
-import { schema } from '@forgefit/db';
+import { createDB } from '@kraftplan/db';
+import { schema } from '@kraftplan/db';
 import { eq, and } from 'drizzle-orm';
-import { epley1RM } from '@forgefit/shared';
-import type { WorkoutCompletedEvent, PRBrokenEvent } from '@forgefit/shared';
+import { epley1RM } from '@kraftplan/shared';
+import type { WorkoutCompletedEvent, PRBrokenEvent } from '@kraftplan/shared';
 
 /**
  * Process a workout.completed event:

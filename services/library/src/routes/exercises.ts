@@ -1,8 +1,8 @@
 import type { FastifyInstance } from 'fastify';
-import { createDB } from '@forgefit/db';
-import { schema } from '@forgefit/db';
+import { createDB } from '@kraftplan/db';
+import { schema } from '@kraftplan/db';
 import { eq, and, like, or, sql } from 'drizzle-orm';
-import { exerciseSearchSchema } from '@forgefit/shared';
+import { exerciseSearchSchema } from '@kraftplan/shared';
 
 export async function exerciseRoutes(app: FastifyInstance) {
   const dbUrl = app.dbUrl as string;

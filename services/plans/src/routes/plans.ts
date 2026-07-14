@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
-import { createDB } from '@forgefit/db';
-import { schema } from '@forgefit/db';
+import { createDB } from '@kraftplan/db';
+import { schema } from '@kraftplan/db';
 import { eq, and, inArray, like, sql } from 'drizzle-orm';
 
 export async function planRoutes(app: FastifyInstance) {

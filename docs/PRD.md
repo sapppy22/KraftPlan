@@ -1,5 +1,5 @@
 # Product Requirements Document (PRD)
-## Project: ForgeFit — AI-Powered Gym Workout Planner & Tracker
+## Project: KraftPlan — AI-Powered Gym Workout Planner & Tracker
 
 > **Status:** Draft v1.0
 > **Owner:** Product Team
@@ -9,7 +9,7 @@
 
 ## 1. Overview
 
-ForgeFit is a web application that lets users discover, customize, and execute structured gym workout plans across multiple training disciplines — from mobility and endurance to powerlifting, lean-muscle gain, Hyrox, and athletic performance. Each plan breaks down into day-by-day sessions with follow-through exercise tutorials. As users complete sessions, they log interactive metrics: time taken, weights used, reps achieved, miles run, perceived effort, and more. A personal dashboard surfaces progress against previous personal records (PRs) and program milestones.
+KraftPlan is a web application that lets users discover, customize, and execute structured gym workout plans across multiple training disciplines — from mobility and endurance to powerlifting, lean-muscle gain, Hyrox, and athletic performance. Each plan breaks down into day-by-day sessions with follow-through exercise tutorials. As users complete sessions, they log interactive metrics: time taken, weights used, reps achieved, miles run, perceived effort, and more. A personal dashboard surfaces progress against previous personal records (PRs) and program milestones.
 
 **Front-end reference:** https://fitonist-app.webflow.io/ (clean, mobile-first, goal-driven, dark UI with vibrant accent gradients, large hero imagery, card-based plan selection).
 

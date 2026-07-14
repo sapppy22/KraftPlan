@@ -1,8 +1,8 @@
 import type { FastifyInstance } from 'fastify';
-import { createDB } from '@forgefit/db';
-import { schema } from '@forgefit/db';
+import { createDB } from '@kraftplan/db';
+import { schema } from '@kraftplan/db';
 import { eq, and } from 'drizzle-orm';
-import { setLogSchema } from '@forgefit/shared';
+import { setLogSchema } from '@kraftplan/shared';
 import { randomUUID } from 'crypto';
 
 export async function setRoutes(app: FastifyInstance) {

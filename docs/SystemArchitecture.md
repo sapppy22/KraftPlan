@@ -1,5 +1,5 @@
 # System Architecture Document
-## ForgeFit — AI-Powered Gym Workout Planner & Tracker
+## KraftPlan — AI-Powered Gym Workout Planner & Tracker
 
 > **Status:** Draft v1.0
 > **Last Updated:** 2026-07-13
@@ -8,7 +8,7 @@
 
 ## 1. Overview
 
-ForgeFit is a web application with a Next.js full-stack frontend, a Node.js service layer, a PostgreSQL primary datastore, a Redis cache/queue, an object store for media, and a time-series store for performance metrics. The architecture is designed to be horizontally scalable, stateless at the API layer, and tolerant of intermittent connectivity (gym Wi-Fi / mobile dead zones).
+KraftPlan is a web application with a Next.js full-stack frontend, a Node.js service layer, a PostgreSQL primary datastore, a Redis cache/queue, an object store for media, and a time-series store for performance metrics. The architecture is designed to be horizontally scalable, stateless at the API layer, and tolerant of intermittent connectivity (gym Wi-Fi / mobile dead zones).
 
 ---
 

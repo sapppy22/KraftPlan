@@ -1,9 +1,9 @@
 import type { FastifyInstance } from 'fastify';
-import { createDB } from '@forgefit/db';
-import { schema } from '@forgefit/db';
+import { createDB } from '@kraftplan/db';
+import { schema } from '@kraftplan/db';
 import { eq, and } from 'drizzle-orm';
 import { randomUUID } from 'crypto';
-import { registerSchema, loginSchema } from '@forgefit/shared';
+import { registerSchema, loginSchema } from '@kraftplan/shared';
 import { hashPassword, verifyPassword } from '../lib/password.js';
 import { signAccessToken, signRefreshToken } from '../lib/jwt.js';
 

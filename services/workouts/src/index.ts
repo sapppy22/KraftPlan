@@ -6,7 +6,7 @@ import { sessionRoutes } from './routes/sessions.js';
 import { setRoutes } from './routes/sets.js';
 
 const PORT = parseInt(process.env.WORKOUTS_PORT || '4003', 10);
-const DATABASE_URL = process.env.DATABASE_URL || 'postgres://forgefit:forgefit@localhost:5432/forgefit';
+const DATABASE_URL = process.env.DATABASE_URL || 'postgres://kraftplan:kraftplan@localhost:5432/kraftplan';
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
 async function main() {

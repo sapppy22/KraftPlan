@@ -3,10 +3,10 @@ import { createDB } from './index.js';
 import * as s from './schema/index.js';
 import { sql } from 'drizzle-orm';
 
-const db = createDB(process.env.DATABASE_URL || 'postgres://forgefit:forgefit@localhost:5432/forgefit');
+const db = createDB(process.env.DATABASE_URL || 'postgres://kraftplan:kraftplan@localhost:5432/kraftplan');
 
 async function seed() {
-  console.log('🌱 Seeding ForgeFit database...');
+  console.log('🌱 Seeding KraftPlan database...');
 
   // Clear existing data
   await db.execute(sql`TRUNCATE block_exercises, plan_blocks, plan_days, plan_weeks, user_plan_assignments, workout_sets, workout_sessions, personal_records, event_outbox, exercise_alternatives, plans, exercises CASCADE`);

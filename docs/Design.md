@@ -1,5 +1,5 @@
 # Design Document
-## ForgeFit — AI-Powered Gym Workout Planner & Tracker
+## KraftPlan — AI-Powered Gym Workout Planner & Tracker
 
 > **Status:** Draft v1.0
 > **Last Updated:** 2026-07-13
@@ -74,7 +74,7 @@ Inspired by Fitonist's dark UI with blue/circular accent elements.
 ## 3. Information Architecture
 
 ```
-ForgeFit
+KraftPlan
 ├── Auth
 │   ├── Login
 │   └── Register
@@ -218,7 +218,7 @@ Mobile-first: design the 390px view first, then enhance upward. The workout play
 
 ## 9. Branding & Tone
 
-- **Name:** ForgeFit.
+- **Name:** KraftPlan.
 - **Logo:** "F" monogram in a rounded square with brand gradient; wordmark in Space Grotesk Bold.
 - **Tone:** encouraging, direct, coach-like. Copy is short and action-oriented ("Start session", "Log set", "New PR — nice work").
 - Microcopy uses sentence case, avoids exclamation overload.

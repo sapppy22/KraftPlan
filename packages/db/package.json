@@ -1,5 +1,5 @@
 {
-  "name": "@forgefit/db",
+  "name": "@kraftplan/db",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -23,7 +23,7 @@
     "seed": "tsx src/seed.ts"
   },
   "dependencies": {
-    "@forgefit/shared": "workspace:*",
+    "@kraftplan/shared": "workspace:*",
     "drizzle-orm": "^0.31.0",
     "drizzle-kit": "^0.22.0",
     "postgres": "^3.4.0",

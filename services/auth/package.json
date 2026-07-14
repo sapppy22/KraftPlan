@@ -1,5 +1,5 @@
 {
-  "name": "@forgefit/auth-service",
+  "name": "@kraftplan/auth-service",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -12,8 +12,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@forgefit/shared": "workspace:*",
-    "@forgefit/db": "workspace:*",
+    "@kraftplan/shared": "workspace:*",
+    "@kraftplan/db": "workspace:*",
     "fastify": "^4.28.0",
     "@fastify/cors": "^9.0.0",
     "@fastify/cookie": "^9.4.0",

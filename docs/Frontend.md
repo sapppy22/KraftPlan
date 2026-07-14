@@ -1,5 +1,5 @@
 # Frontend Document
-## ForgeFit — AI-Powered Gym Workout Planner & Tracker
+## KraftPlan — AI-Powered Gym Workout Planner & Tracker
 
 > **Status:** Draft v1.0
 > **Last Updated:** 2026-07-13
@@ -271,10 +271,10 @@ Techniques: RSC for static pages, route segment config for ISR, `next/dynamic` f
 ## 15. Environment Variables (client-safe)
 
 ```
-NEXT_PUBLIC_API_BASE=https://api.forgefit.app
-NEXT_PUBLIC_CDN_BASE=https://cdn.forgefit.app
+NEXT_PUBLIC_API_BASE=https://api.kraftplan.app
+NEXT_PUBLIC_CDN_BASE=https://cdn.kraftplan.app
 NEXT_PUBLIC_AUTH_GOOGLE_ID=...
-NEXTAUTH_URL=https://app.forgefit.app
+NEXTAUTH_URL=https://app.kraftplan.app
 NEXTAUTH_SECRET=...            # server only
 ```
 

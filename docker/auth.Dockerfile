@@ -4,7 +4,7 @@ COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY packages/ packages/
 COPY services/auth/ services/auth/
 RUN corepack enable && pnpm install --frozen-lockfile
-RUN pnpm --filter @forgefit/auth-service build
+RUN pnpm --filter @kraftplan/auth-service build
 
 FROM node:20-alpine
 WORKDIR /app

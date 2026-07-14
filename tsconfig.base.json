@@ -16,10 +16,10 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "@forgefit/shared": ["./packages/shared/src"],
-      "@forgefit/shared/*": ["./packages/shared/src/*"],
-      "@forgefit/db": ["./packages/db/src"],
-      "@forgefit/db/*": ["./packages/db/src/*"]
+      "@kraftplan/shared": ["./packages/shared/src"],
+      "@kraftplan/shared/*": ["./packages/shared/src/*"],
+      "@kraftplan/db": ["./packages/db/src"],
+      "@kraftplan/db/*": ["./packages/db/src/*"]
     }
   },
   "exclude": ["node_modules", "dist", ".next"]

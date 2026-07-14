@@ -1,5 +1,5 @@
 # Data Flow & Integration Document
-## ForgeFit — AI-Powered Gym Workout Planner & Tracker
+## KraftPlan — AI-Powered Gym Workout Planner & Tracker
 
 > **Status:** Draft v1.0
 > **Last Updated:** 2026-07-13
@@ -8,7 +8,7 @@
 
 ## 1. Purpose
 
-This document describes how data moves through ForgeFit: between client and services, between services internally, with external integrations, and into/out of the datastores. It complements the System Architecture doc (which covers *what* the components are) by focusing on *how data flows and integrates*.
+This document describes how data moves through KraftPlan: between client and services, between services internally, with external integrations, and into/out of the datastores. It complements the System Architecture doc (which covers *what* the components are) by focusing on *how data flows and integrates*.
 
 ---
 

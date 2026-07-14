@@ -1,5 +1,5 @@
 # Backend Document
-## ForgeFit — AI-Powered Gym Workout Planner & Tracker
+## KraftPlan — AI-Powered Gym Workout Planner & Tracker
 
 > **Status:** Draft v1.0
 > **Last Updated:** 2026-07-13
@@ -48,7 +48,7 @@ Each service owns its DB tables (no cross-service direct table access); cross-se
 
 ## 4. API Surface (REST)
 
-Base URL: `https://api.forgefit.app/v1`
+Base URL: `https://api.kraftplan.app/v1`
 
 ### 4.1 Auth
 | Method | Path | Purpose |
@@ -345,7 +345,7 @@ JWT_PUBLIC_KEY_JWKS_URL=...
 GOOGLE_OAUTH_CLIENT_ID=...
 GOOGLE_OAUTH_CLIENT_SECRET=...
 S3_ENDPOINT=...
-S3_BUCKET=forgefit-media
+S3_BUCKET=kraftplan-media
 S3_ACCESS_KEY=...
 S3_SECRET_KEY=...
 SENTRY_DSN=...

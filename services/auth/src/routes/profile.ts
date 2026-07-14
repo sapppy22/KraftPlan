@@ -1,8 +1,8 @@
 import type { FastifyInstance } from 'fastify';
-import { createDB } from '@forgefit/db';
-import { schema } from '@forgefit/db';
+import { createDB } from '@kraftplan/db';
+import { schema } from '@kraftplan/db';
 import { eq } from 'drizzle-orm';
-import { profileUpdateSchema } from '@forgefit/shared';
+import { profileUpdateSchema } from '@kraftplan/shared';
 import { verifyJwt } from '../middleware/verifyJwt.js';
 
 export async function profileRoutes(app: FastifyInstance) {

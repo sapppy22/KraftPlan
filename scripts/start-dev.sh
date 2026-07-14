@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting ForgeFit development environment..."
+echo "🚀 Starting KraftPlan development environment..."
 
 # 1. Start Docker services
 echo "📦 Starting Postgres, Redis, and MinIO..."
@@ -9,7 +9,7 @@ docker compose -f docker/docker-compose.yml up -d
 
 # 2. Wait for Postgres
 echo "⏳ Waiting for Postgres..."
-until docker compose -f docker/docker-compose.yml exec -T postgres pg_isready -U forgefit; do
+until docker compose -f docker/docker-compose.yml exec -T postgres pg_isready -U kraftplan; do
   sleep 1
 done
 echo "✅ Postgres is ready"

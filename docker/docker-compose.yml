@@ -2,15 +2,15 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: forgefit
-      POSTGRES_PASSWORD: forgefit
-      POSTGRES_DB: forgefit
+      POSTGRES_USER: kraftplan
+      POSTGRES_PASSWORD: kraftplan
+      POSTGRES_DB: kraftplan
     ports:
       - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U forgefit']
+      test: ['CMD-SHELL', 'pg_isready -U kraftplan']
       interval: 5s
       timeout: 5s
       retries: 5
@@ -29,8 +29,8 @@ services:
     image: minio/minio
     command: server /data --console-address ':9001'
     environment:
-      MINIO_ROOT_USER: forgefit
-      MINIO_ROOT_PASSWORD: forgefit123
+      MINIO_ROOT_USER: kraftplan
+      MINIO_ROOT_PASSWORD: kraftplan123
     ports:
       - '9000:9000'
       - '9001:9001'

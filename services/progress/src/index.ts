@@ -5,7 +5,7 @@ import { progressRoutes } from './routes/progress.js';
 import { dashboardRoutes } from './routes/dashboard.js';
 
 const PORT = parseInt(process.env.PROGRESS_PORT || '4004', 10);
-const DATABASE_URL = process.env.DATABASE_URL || 'postgres://forgefit:forgefit@localhost:5432/forgefit';
+const DATABASE_URL = process.env.DATABASE_URL || 'postgres://kraftplan:kraftplan@localhost:5432/kraftplan';
 
 async function main() {
   const app = Fastify({ logger: true });
