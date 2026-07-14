@@ -1,9 +1,0 @@
-chore: add infrastructure, docs, and README
-
-Docker Compose for local Postgres/Redis/MinIO, Dockerfile for auth
-service, start-dev script, comprehensive README with system
-architecture diagram and project structure, and all 7 design
-documents (PRD, Design, System Architecture, Data Flow, Frontend,
-Backend, Best Tech Stack).
-
-Co-authored-by: CommandCodeBot <noreply@commandcode.ai>
