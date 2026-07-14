@@ -63,7 +63,7 @@ export const api = {
     }),
 
   // Plans
-  getPlans: (params?: Record<string, string>) =>
+  getPlans: (params?: Record<string, string | undefined>) =>
     apiFetch<any[]>('/plans', { params }),
 
   getPlanDetail: (id: string) => apiFetch<any>(`/plans/${id}`),
@@ -119,7 +119,7 @@ export const api = {
     apiFetch<any[]>('/progress/endurance', { params: { range } }),
 
   // Exercises
-  getExercises: (params?: Record<string, string>) =>
+  getExercises: (params?: Record<string, string | undefined>) =>
     apiFetch<{ exercises: any[]; total: number }>('/exercises', { params }),
 
   getExerciseDetail: (id: string) => apiFetch<any>(`/exercises/${id}`),

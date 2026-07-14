@@ -1,8 +1,8 @@
 import type { FastifyInstance } from 'fastify';
-import { createDB } from '@forgefit/db';
-import { schema } from '@forgefit/db';
+import { createDB } from '@kraftplan/db';
+import { schema } from '@kraftplan/db';
 import { eq, and, desc, sql, gte } from 'drizzle-orm';
-import { epley1RM } from '@forgefit/shared';
+import { epley1RM } from '@kraftplan/shared';
 
 export async function progressRoutes(app: FastifyInstance) {
   const dbUrl = app.dbUrl as string;
@@ -64,7 +64,7 @@ export async function progressRoutes(app: FastifyInstance) {
           eq(schema.workoutSessions.userId, userId),
           eq(schema.workoutSets.exerciseId, exerciseId),
           eq(schema.workoutSets.status, 'completed'),
-          sql`${schema.workoutSets.loggedAt} >= ${rangeDate}`,
+          sql`${schema.workoutSets.loggedAt} >= ${rangeDate.toISOString()}`,
           sql`${schema.workoutSets.weightKg} IS NOT NULL`,
           sql`${schema.workoutSets.reps} IS NOT NULL`,
         ),
@@ -99,7 +99,7 @@ export async function progressRoutes(app: FastifyInstance) {
         JOIN workout_sessions wss ON wss.id = ws.session_id
         WHERE wss.user_id = ${userId}
           AND ws.status = 'completed'
-          AND ws.logged_at >= ${rangeDate}
+          AND ws.logged_at >= ${rangeDate.toISOString()}
           AND ws.weight_kg IS NOT NULL
           AND ws.reps IS NOT NULL
         GROUP BY date_trunc('week', ws.logged_at)

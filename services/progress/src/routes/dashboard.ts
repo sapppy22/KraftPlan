@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
-import { createDB } from '@forgefit/db';
-import { schema } from '@forgefit/db';
+import { createDB } from '@kraftplan/db';
+import { schema } from '@kraftplan/db';
 import { eq, and, desc, sql, gte } from 'drizzle-orm';
 
 export async function dashboardRoutes(app: FastifyInstance) {
@@ -63,7 +63,7 @@ export async function dashboardRoutes(app: FastifyInstance) {
         JOIN workout_sessions wss ON wss.id = ws.session_id
         WHERE wss.user_id = ${userId}
           AND ws.status = 'completed'
-          AND ws.logged_at >= ${thirtyDaysAgo}
+          AND ws.logged_at >= ${thirtyDaysAgo.toISOString()}
           AND ws.weight_kg IS NOT NULL
           AND ws.reps IS NOT NULL
       `,
