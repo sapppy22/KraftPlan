@@ -1,0 +1,31 @@
+:root {
+  --bg-base: #0B0E14;
+  --bg-surface: #141925;
+  --bg-elevated: #1C2333;
+  --text-primary: #F5F7FA;
+  --text-secondary: #9AA4B8;
+  --accent-blue: #3D8BFF;
+  --accent-violet: #8E6FFF;
+  --accent-cyan: #22D3EE;
+  --success: #34D399;
+  --warning: #FBBF24;
+  --danger: #F87171;
+  --gradient-brand: linear-gradient(135deg, #3D8BFF, #7C5CFF);
+  --gradient-card: linear-gradient(135deg, #1C2333 0%, #141925 100%);
+}
+
+:root.light {
+  --bg-base: #F6F7FB;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #FFFFFF;
+  --text-primary: #0F1320;
+  --text-secondary: #5A6378;
+  --accent-blue: #2E7BFF;
+  --accent-violet: #7C5CFF;
+  --accent-cyan: #22D3EE;
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --gradient-brand: linear-gradient(135deg, #2E7BFF, #7C5CFF);
+  --gradient-card: linear-gradient(135deg, #FFFFFF 0%, #f0f2f8 100%);
+}
