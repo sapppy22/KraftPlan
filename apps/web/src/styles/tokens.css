@@ -17,11 +17,6 @@
   --brand-amber: #FBBF24;
   --brand-gold: #F9DC66;
 
-  /* Accent aliases → repointed to the KraftPlan ramp */
-  --accent-blue: #F97316; /* primary action */
-  --accent-violet: #EF4423; /* secondary accent */
-  --accent-cyan: #FBBF24; /* highlights / data viz */
-
   /* Semantic */
   --success: #34D399;
   --warning: #FBBF24;
@@ -46,10 +41,6 @@
   --brand-orange: #EA6A0E;
   --brand-amber: #F59E0B;
   --brand-gold: #F5B841;
-
-  --accent-blue: #EA6A0E;
-  --accent-violet: #E23A1C;
-  --accent-cyan: #F59E0B;
 
   --success: #16A34A;
   --warning: #D97706;
