@@ -1,6 +1,6 @@
 # KraftPlan — AI-Powered Gym Workout Planner & Tracker
 
-ForgeFit is a full-stack web application for discovering, customizing, and executing structured gym workout plans across multiple training disciplines. It provides an interactive workout player with set-by-set logging, rest timers, tutorial content, and a progress dashboard that tracks personal records and trends.
+Kraftplan is a full-stack web application for discovering, customizing, and executing structured gym workout plans across multiple training disciplines. It provides an interactive workout player with set-by-set logging, rest timers, tutorial content, and a progress dashboard that tracks personal records and trends.
 
 **Front-end reference:** [fitonist-app.webflow.io](https://fitonist-app.webflow.io/)
 
