@@ -108,7 +108,7 @@ export async function progressRoutes(app: FastifyInstance) {
     );
 
     return rows.map((r: any) => ({
-      week: r.week.toISOString().split('T')[0],
+      week: new Date(r.week).toISOString().split('T')[0],
       volumeKg: parseFloat(r.total_volume?.toString() || '0'),
     }));
   });
