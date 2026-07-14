@@ -24,6 +24,30 @@ backend runs in one free process. **Step-by-step guide → [DEPLOYMENT.md](./DEP
 
 ---
 
+## 📸 Screenshots
+
+### Dashboard — today's session, streak, volume, PRs & program progress
+![Dashboard](docs/screenshots/dashboard.png)
+
+### Progress analytics
+
+| Strength (1RM records + volume trend) | Adherence (activity heatmap + session log) |
+|:--:|:--:|
+| ![Progress · Strength](docs/screenshots/progress-strength.png) | ![Progress · Adherence](docs/screenshots/progress-adherence.png) |
+
+| Endurance (pace & distance trends) | Plan catalog |
+|:--:|:--:|
+| ![Progress · Endurance](docs/screenshots/progress-endurance.png) | ![Plans](docs/screenshots/plans.png) |
+
+| Exercise library (81 exercises) | Sign in |
+|:--:|:--:|
+| ![Library](docs/screenshots/library.png) | ![Login](docs/screenshots/login.png) |
+
+### Mobile — gym-ready, one-hand reachable
+<p align="center"><img src="docs/screenshots/dashboard-mobile.png" width="320" alt="Mobile dashboard"></p>
+
+---
+
 ## System Architecture
 
 ```
