@@ -1,5 +1,8 @@
 # KraftPlan — AI-Powered Gym Workout Planner & Tracker
 
+### 🔗 Live app: **[kraftplan.pages.dev](https://kraftplan.pages.dev)**
+_Hosted on Cloudflare Pages (web) + Cloudflare Workers (API) + Neon (DB) — all free tier, always-on._
+
 Kraftplan is a full-stack web application for discovering, customizing, and executing structured gym workout plans across multiple training disciplines. It provides an interactive workout player with set-by-set logging, rest timers, tutorial content, and a progress dashboard that tracks personal records and trends.
 
 **Front-end reference:** [fitonist-app.webflow.io](https://fitonist-app.webflow.io/) — dark, energetic, mobile-first fitness UI.
@@ -15,9 +18,12 @@ deploys with `wrangler` + a Cloudflare API token (no repo connection needed):
 
 | Layer | Host | URL |
 |---|---|---|
-| Web app | **Cloudflare Pages** | `https://kraftplan.pages.dev` _(set after first deploy)_ |
+| Web app | **Cloudflare Pages** | **[kraftplan.pages.dev](https://kraftplan.pages.dev)** |
 | API | **Cloudflare Workers** (`apps/worker`) | `https://kraftplan-api.<subdomain>.workers.dev` |
 | Database | **Neon** (Postgres over HTTP) | provisioned & seeded ✅ |
+
+> The `kraftplan.pages.dev` link goes live the moment the Pages deploy runs
+> (`wrangler pages deploy` — see [DEPLOYMENT.md](./DEPLOYMENT.md)).
 
 The API is a single always-on Cloudflare Worker (Hono + `drizzle-orm/neon-http`) — **no cold
 starts**. A Node/Fastify build (`apps/api`) is kept as an optional Render fallback.
