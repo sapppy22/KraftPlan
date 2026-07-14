@@ -11,3 +11,6 @@ coverage/
 *.tsbuildinfo
 .env.*
 !.env.example
+.commandcode/
+.DS_Store
+.claude/settings.local.json
