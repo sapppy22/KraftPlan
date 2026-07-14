@@ -1,5 +1,5 @@
 {
-  "name": "@forgefit/web",
+  "name": "@kraftplan/web",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -10,10 +10,13 @@
     "typecheck": "tsc --noEmit",
     "lint": "next lint",
     "test": "vitest run",
-    "clean": "rm -rf .next dist"
+    "clean": "rm -rf .next dist .vercel",
+    "pages:build": "npx @cloudflare/next-on-pages@1",
+    "pages:deploy": "wrangler pages deploy .vercel/output/static --project-name kraftplan",
+    "pages:preview": "wrangler pages dev .vercel/output/static"
   },
   "dependencies": {
-    "@forgefit/shared": "workspace:*",
+    "@kraftplan/shared": "workspace:*",
     "next": "^14.2.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
@@ -42,6 +45,8 @@
     "tailwindcss": "^3.4.0",
     "postcss": "^8.4.0",
     "autoprefixer": "^10.4.0",
-    "vitest": "^1.6.0"
+    "vitest": "^1.6.0",
+    "@cloudflare/next-on-pages": "^1.13.5",
+    "wrangler": "^3.90.0"
   }
 }

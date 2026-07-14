@@ -6,6 +6,10 @@ export default defineConfig({
   out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_URL || 'postgres://forgefit:forgefit@localhost:5432/forgefit',
+    // Prefer the direct (non-pooled) URL for DDL; fall back to the pooled URL.
+    url:
+      process.env.DATABASE_URL_UNPOOLED ||
+      process.env.DATABASE_URL ||
+      'postgres://kraftplan:kraftplan@localhost:5432/kraftplan',
   },
 });

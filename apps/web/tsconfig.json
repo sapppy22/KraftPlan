@@ -16,8 +16,8 @@
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/*": ["./src/*"],
-      "@forgefit/shared": ["../../packages/shared/src"],
-      "@forgefit/shared/*": ["../../packages/shared/src/*"]
+      "@kraftplan/shared": ["../../packages/shared/src"],
+      "@kraftplan/shared/*": ["../../packages/shared/src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

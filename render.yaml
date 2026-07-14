@@ -1,0 +1,26 @@
+# Render Blueprint for the KraftPlan unified API (free tier, no credit card).
+# Create a Render account, "New +" → "Blueprint", point it at this repo.
+# Then set the secret env vars (DATABASE_URL, JWT_SECRET, CORS_ORIGIN) in the
+# Render dashboard. The web frontend is deployed separately to Cloudflare Pages.
+services:
+  - type: web
+    name: kraftplan-api
+    runtime: node
+    plan: free
+    region: singapore # matches the Neon ap-southeast-1 region for low latency
+    branch: main
+    buildCommand: corepack enable && pnpm install --frozen-lockfile
+    startCommand: pnpm --filter @kraftplan/api start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL # Neon POOLED connection string — set in dashboard
+        sync: false
+      - key: JWT_SECRET # set in dashboard
+        sync: false
+      - key: CORS_ORIGIN # e.g. https://kraftplan.pages.dev
+        sync: false

@@ -1,5 +1,8 @@
 'use client';
 
+
+// Cloudflare Pages: dynamic routes must run on the Edge runtime.
+export const runtime = 'edge';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import { Loader2, ChevronLeft, Dumbbell, Clock, Calendar } from 'lucide-react';
@@ -20,7 +23,7 @@ export default function PlanDetailPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-accent-blue" />
+        <Loader2 className="w-8 h-8 animate-spin text-brand-orange" />
       </div>
     );
   }
@@ -81,7 +84,7 @@ export default function PlanDetailPage() {
           <div className="space-y-3">
             {plan.weeks.map((week: any) => (
               <Card key={week.id} className="p-4">
-                <h3 className="font-semibold text-accent-blue">Week {week.weekNumber}</h3>
+                <h3 className="font-semibold text-brand-orange">Week {week.weekNumber}</h3>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {week.days?.filter((d: any) => !d.isRestDay).map((day: any) => (
                     <span

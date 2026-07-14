@@ -1,5 +1,8 @@
 'use client';
 
+
+// Cloudflare Pages: dynamic routes must run on the Edge runtime.
+export const runtime = 'edge';
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { X, Play, Pause, Check, SkipForward, Loader2, ChevronDown, Video } from 'lucide-react';
@@ -87,7 +90,7 @@ export default function WorkoutPlayerPage(props: Props) {
   if (isLoading || !store.sessionManifest) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-accent-blue" />
+        <Loader2 className="w-8 h-8 animate-spin text-brand-orange" />
       </div>
     );
   }
@@ -152,7 +155,7 @@ export default function WorkoutPlayerPage(props: Props) {
           <span className="font-semibold truncate mx-2">
             {store.sessionManifest.title || 'Workout'}
           </span>
-          <span className="font-mono text-accent-blue">{formatElapsed(store.elapsedSec)}</span>
+          <span className="font-mono text-brand-orange">{formatElapsed(store.elapsedSec)}</span>
         </div>
       </header>
 
@@ -195,7 +198,7 @@ export default function WorkoutPlayerPage(props: Props) {
                 <div
                   key={`${block.id}-${ex.exerciseId}`}
                   className={cn('w-3 h-3 rounded-full transition-all', {
-                    'bg-accent-blue': isCurrentEx,
+                    'bg-brand-orange': isCurrentEx,
                     'bg-success': store.loggedSets[`${ex.exerciseId}-${ex.sets - 1}`]?.status === 'completed',
                     'bg-white/20': !isCurrentEx && !store.loggedSets[`${ex.exerciseId}-${ex.sets - 1}`],
                   })}
@@ -237,7 +240,7 @@ export default function WorkoutPlayerPage(props: Props) {
               </div>
 
               {/* Target */}
-              <div className="flex items-center gap-2 text-sm text-accent-blue">
+              <div className="flex items-center gap-2 text-sm text-brand-orange">
                 <span className="font-semibold">Set {currentSet + 1} / {currentExercise.sets}</span>
                 <span className="text-text-secondary">·</span>
                 <span>{currentExercise.repsScheme} reps</span>
@@ -268,7 +271,7 @@ export default function WorkoutPlayerPage(props: Props) {
                         <ul className="space-y-1">
                           {currentExercise.cues.map((cue: string, i: number) => (
                             <li key={i} className="flex items-start gap-2">
-                              <span className="text-accent-cyan mt-1">·</span>
+                              <span className="text-brand-amber mt-1">·</span>
                               {cue}
                             </li>
                           ))}

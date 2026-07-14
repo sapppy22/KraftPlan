@@ -2,7 +2,25 @@
 
 Kraftplan is a full-stack web application for discovering, customizing, and executing structured gym workout plans across multiple training disciplines. It provides an interactive workout player with set-by-set logging, rest timers, tutorial content, and a progress dashboard that tracks personal records and trends.
 
-**Front-end reference:** [fitonist-app.webflow.io](https://fitonist-app.webflow.io/)
+**Front-end reference:** [fitonist-app.webflow.io](https://fitonist-app.webflow.io/) — dark, energetic, mobile-first fitness UI.
+
+**Brand & design system:** deep-charcoal UI with the KraftPlan gradient sampled from the logo — red `#EF4423` → orange `#F97316` → amber `#FBBF24`. Dark-mode-first, WCAG AA, one consistent palette across every page (design tokens in `apps/web/src/styles/tokens.css`).
+
+---
+
+## 🚀 Live site & deployment
+
+KraftPlan runs on a **100% free, no-credit-card** stack:
+
+| Layer | Host | URL |
+|---|---|---|
+| Web app | **Cloudflare Pages** | `https://kraftplan.pages.dev` _(set after first deploy)_ |
+| Unified API | **Render** (free) | `https://kraftplan-api.onrender.com` |
+| Database | **Neon** (serverless Postgres) | provisioned & seeded ✅ |
+
+The 5 backend services are combined into a **single deployable** (`apps/api`) so the whole
+backend runs in one free process. **Step-by-step guide → [DEPLOYMENT.md](./DEPLOYMENT.md)**
+(includes Neon setup, Cloudflare Pages, Render, CI/CD, uptime/keep-alive, and scaling notes).
 
 ---
 
@@ -65,34 +83,34 @@ Kraftplan is a full-stack web application for discovering, customizing, and exec
 ### Prerequisites
 - Node.js >= 20
 - pnpm 9+ (`npm install -g pnpm@9`)
-- Docker Desktop (for local Postgres + Redis + MinIO)
+- A Postgres database — a free **[Neon](https://neon.tech)** project is recommended (no Docker needed)
 
-### Quick Start
+### Quick Start (with Neon — no Docker)
 
 ```bash
 # 1. Install dependencies
 pnpm install
 
-# 2. Start infrastructure (Postgres, Redis, MinIO)
-docker compose -f docker/docker-compose.yml up -d
+# 2. Configure env — put your Neon connection strings + a JWT secret in .env
+cp .env.example .env    # then edit DATABASE_URL / DATABASE_URL_UNPOOLED / JWT_SECRET
 
-# 3. Push schema to database
-pnpm --filter @forgefit/db push
+# 3. Push schema and seed (81 exercises, 9 plans)
+pnpm db:push
+pnpm db:seed
 
-# 4. Seed with 300+ exercises and 9 plans
-pnpm --filter @forgefit/db seed
-
-# 5. Start all services and frontend
-pnpm dev
+# 4. Run the unified API (:4001) and the web app (:3000)
+pnpm dev:api     # in one terminal
+pnpm dev:web     # in another
 ```
 
-### Using a remote database (Neon / Supabase)
-Set your connection string in `packages/db/.env`:
-```
-DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
-```
+Open http://localhost:3000. Redis is **not required** — it is unused at runtime and the
+app runs fully on Postgres alone.
 
-Then run steps 3-5 above. Docker is only needed for Redis — the app degrades gracefully without it.
+### Unified API
+
+All backend routes are combined into a single deployable, **`apps/api`** (`@kraftplan/api`),
+which mounts every service's routes in one Fastify process — ideal for free-tier hosting.
+The individual `services/*` still exist and can be run separately if desired.
 
 ---
 

@@ -7,3 +7,7 @@ dist/
 .turbo/
 coverage/
 .temp/
+.vercel/
+*.tsbuildinfo
+.env.*
+!.env.example

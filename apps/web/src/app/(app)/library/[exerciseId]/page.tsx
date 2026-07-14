@@ -1,5 +1,8 @@
 'use client';
 
+
+// Cloudflare Pages: dynamic routes must run on the Edge runtime.
+export const runtime = 'edge';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import { Loader2, ChevronLeft, Video, Dumbbell } from 'lucide-react';
@@ -19,7 +22,7 @@ export default function ExerciseDetailPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-accent-blue" />
+        <Loader2 className="w-8 h-8 animate-spin text-brand-orange" />
       </div>
     );
   }
@@ -64,7 +67,7 @@ export default function ExerciseDetailPage() {
 
       {/* Info */}
       <div>
-        <span className="inline-block px-3 py-1 rounded-pill text-xs font-medium bg-accent-blue/10 text-accent-blue capitalize mb-2">
+        <span className="inline-block px-3 py-1 rounded-pill text-xs font-medium bg-brand-orange/10 text-brand-orange capitalize mb-2">
           {exercise.category}
         </span>
         <h1 className="font-display text-3xl font-bold">{exercise.name}</h1>
@@ -115,7 +118,7 @@ export default function ExerciseDetailPage() {
           <ul className="space-y-2">
             {exercise.cues.map((cue: string, i: number) => (
               <li key={i} className="flex items-start gap-2 text-sm">
-                <span className="text-accent-cyan mt-1">·</span>
+                <span className="text-brand-amber mt-1">·</span>
                 {cue}
               </li>
             ))}
