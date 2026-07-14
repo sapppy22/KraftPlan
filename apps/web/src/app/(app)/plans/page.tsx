@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Loader2, Search, Dumbbell } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { Card } from '@/components/ui/Card';
-import { PLAN_CATEGORIES, DIFFICULTY_LEVELS } from '@forgefit/shared';
+import { PLAN_CATEGORIES, DIFFICULTY_LEVELS } from '@kraftplan/shared';
 
 const categoryLabels: Record<string, string> = {
   mobility: 'Mobility',
@@ -45,7 +45,7 @@ export default function PlansPage() {
         <button
           onClick={() => setCategory('')}
           className={`px-4 py-2 rounded-pill text-sm border transition-all ${
-            !category ? 'border-accent-blue bg-accent-blue/10 text-accent-blue' : 'border-white/10 bg-bg-surface text-text-secondary'
+            !category ? 'border-brand-orange bg-brand-orange/10 text-brand-orange' : 'border-white/10 bg-bg-surface text-text-secondary'
           }`}
         >
           All
@@ -55,7 +55,7 @@ export default function PlansPage() {
             key={cat}
             onClick={() => setCategory(category === cat ? '' : cat)}
             className={`px-4 py-2 rounded-pill text-sm border transition-all capitalize ${
-              category === cat ? 'border-accent-blue bg-accent-blue/10 text-accent-blue' : 'border-white/10 bg-bg-surface text-text-secondary'
+              category === cat ? 'border-brand-orange bg-brand-orange/10 text-brand-orange' : 'border-white/10 bg-bg-surface text-text-secondary'
             }`}
           >
             {categoryLabels[cat] || cat}
@@ -69,7 +69,7 @@ export default function PlansPage() {
             key={level}
             onClick={() => setDifficulty(difficulty === level ? '' : level)}
             className={`px-4 py-2 rounded-pill text-sm border transition-all capitalize ${
-              difficulty === level ? 'border-accent-blue bg-accent-blue/10 text-accent-blue' : 'border-white/10 bg-bg-surface text-text-secondary'
+              difficulty === level ? 'border-brand-orange bg-brand-orange/10 text-brand-orange' : 'border-white/10 bg-bg-surface text-text-secondary'
             }`}
           >
             {level}
@@ -80,7 +80,7 @@ export default function PlansPage() {
       {/* Plan Grid */}
       {isLoading ? (
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 animate-spin text-accent-blue" />
+          <Loader2 className="w-8 h-8 animate-spin text-brand-orange" />
         </div>
       ) : plans && plans.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -88,7 +88,7 @@ export default function PlansPage() {
             <Link key={plan.id} href={`/plans/${plan.id}`}>
               <Card interactive className="p-5 h-full flex flex-col">
                 {/* Category Badge */}
-                <span className="self-start px-3 py-1 rounded-pill text-xs font-medium bg-accent-blue/10 text-accent-blue capitalize">
+                <span className="self-start px-3 py-1 rounded-pill text-xs font-medium bg-brand-orange/10 text-brand-orange capitalize">
                   {categoryLabels[plan.category] || plan.category}
                 </span>
 

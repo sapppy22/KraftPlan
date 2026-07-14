@@ -48,7 +48,7 @@ export default function ProgressPage() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                isActive ? 'bg-accent-blue/10 text-accent-blue' : 'text-text-secondary hover:text-text-primary'
+                isActive ? 'bg-brand-orange/10 text-brand-orange' : 'text-text-secondary hover:text-text-primary'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -63,7 +63,7 @@ export default function ProgressPage() {
         <div className="space-y-3">
           {prsLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="w-6 h-6 animate-spin text-accent-blue" />
+              <Loader2 className="w-6 h-6 animate-spin text-brand-orange" />
             </div>
           ) : prs && prs.length > 0 ? (
             prs.map((pr: any) => (
@@ -132,7 +132,7 @@ export default function ProgressPage() {
         <div className="space-y-4">
           {adherenceLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="w-6 h-6 animate-spin text-accent-blue" />
+              <Loader2 className="w-6 h-6 animate-spin text-brand-orange" />
             </div>
           ) : adherence && adherence.length > 0 ? (
             <>

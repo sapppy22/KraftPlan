@@ -27,7 +27,7 @@ export default function SettingsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-accent-blue" />
+        <Loader2 className="w-8 h-8 animate-spin text-brand-orange" />
       </div>
     );
   }
@@ -49,7 +49,7 @@ export default function SettingsPage() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-3 bg-bg-elevated border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-accent-blue"
+            className="w-full px-4 py-3 bg-bg-elevated border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
             placeholder={profile?.name || 'Your name'}
           />
         </div>
@@ -59,7 +59,7 @@ export default function SettingsPage() {
           <select
             value={units}
             onChange={(e) => setUnits(e.target.value)}
-            className="w-full px-4 py-3 bg-bg-elevated border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-accent-blue"
+            className="w-full px-4 py-3 bg-bg-elevated border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-brand-orange"
           >
             <option value="metric">Metric (kg, km)</option>
             <option value="imperial">Imperial (lb, mi)</option>
@@ -71,7 +71,7 @@ export default function SettingsPage() {
           <select
             value={experience}
             onChange={(e) => setExperience(e.target.value)}
-            className="w-full px-4 py-3 bg-bg-elevated border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-accent-blue"
+            className="w-full px-4 py-3 bg-bg-elevated border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-brand-orange"
           >
             <option value="">Select...</option>
             <option value="beginner">Beginner</option>

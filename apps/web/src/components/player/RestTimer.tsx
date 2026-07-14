@@ -52,8 +52,9 @@ export function RestTimer({ restSec, onComplete, onSkip }: RestTimerProps) {
           />
           <defs>
             <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#3D8BFF" />
-              <stop offset="100%" stopColor="#8E6FFF" />
+              <stop offset="0%" stopColor="#EF4423" />
+              <stop offset="50%" stopColor="#F97316" />
+              <stop offset="100%" stopColor="#FBBF24" />
             </linearGradient>
           </defs>
         </svg>
@@ -68,7 +69,7 @@ export function RestTimer({ restSec, onComplete, onSkip }: RestTimerProps) {
           </button>
           <button
             onClick={() => setRemaining((r) => r + 15)}
-            className="px-6 py-2.5 rounded-pill bg-accent-blue/10 text-accent-blue font-medium hover:bg-accent-blue/20 transition-colors"
+            className="px-6 py-2.5 rounded-pill bg-brand-orange/10 text-brand-orange font-medium hover:bg-brand-orange/20 transition-colors"
           >
             +15s
           </button>

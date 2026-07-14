@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Loader2, Search, Dumbbell } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { Card } from '@/components/ui/Card';
-import { EXERCISE_CATEGORIES, DIFFICULTY_LEVELS, EQUIPMENT_TYPES } from '@forgefit/shared';
+import { EXERCISE_CATEGORIES, DIFFICULTY_LEVELS, EQUIPMENT_TYPES } from '@kraftplan/shared';
 
 export default function LibraryPage() {
   const [search, setSearch] = useState('');
@@ -40,7 +40,7 @@ export default function LibraryPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search exercises..."
-          className="w-full pl-12 pr-4 py-3 bg-bg-surface border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-accent-blue"
+          className="w-full pl-12 pr-4 py-3 bg-bg-surface border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
         />
       </div>
 
@@ -49,7 +49,7 @@ export default function LibraryPage() {
         <button
           onClick={() => setCategory('')}
           className={`px-3 py-1.5 rounded-pill text-xs border transition-all ${
-            !category ? 'border-accent-blue bg-accent-blue/10 text-accent-blue' : 'border-white/10 bg-bg-surface text-text-secondary'
+            !category ? 'border-brand-orange bg-brand-orange/10 text-brand-orange' : 'border-white/10 bg-bg-surface text-text-secondary'
           }`}
         >
           All
@@ -59,7 +59,7 @@ export default function LibraryPage() {
             key={cat}
             onClick={() => setCategory(category === cat ? '' : cat)}
             className={`px-3 py-1.5 rounded-pill text-xs border transition-all capitalize ${
-              category === cat ? 'border-accent-blue bg-accent-blue/10 text-accent-blue' : 'border-white/10 bg-bg-surface text-text-secondary'
+              category === cat ? 'border-brand-orange bg-brand-orange/10 text-brand-orange' : 'border-white/10 bg-bg-surface text-text-secondary'
             }`}
           >
             {cat}
@@ -73,7 +73,7 @@ export default function LibraryPage() {
           key={m}
           onClick={() => setMuscle(muscle === m ? '' : m)}
           className={`px-3 py-1.5 rounded-pill text-xs border transition-all capitalize ${
-            muscle === m ? 'border-accent-blue bg-accent-blue/10 text-accent-blue' : 'border-white/10 bg-bg-surface text-text-secondary'
+            muscle === m ? 'border-brand-orange bg-brand-orange/10 text-brand-orange' : 'border-white/10 bg-bg-surface text-text-secondary'
           }`}
         >
           {m}
@@ -83,7 +83,7 @@ export default function LibraryPage() {
       {/* Exercise Grid */}
       {isLoading ? (
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="w-8 h-8 animate-spin text-accent-blue" />
+          <Loader2 className="w-8 h-8 animate-spin text-brand-orange" />
         </div>
       ) : data?.exercises && data.exercises.length > 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">

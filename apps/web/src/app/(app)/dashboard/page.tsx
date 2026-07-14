@@ -16,7 +16,7 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-accent-blue" />
+        <Loader2 className="w-8 h-8 animate-spin text-brand-orange" />
       </div>
     );
   }
@@ -66,7 +66,7 @@ export default function DashboardPage() {
         </Card>
         <Card className="p-4">
           <div className="flex items-center gap-2 text-text-secondary text-sm">
-            <Calendar className="w-4 h-4 text-accent-cyan" />
+            <Calendar className="w-4 h-4 text-brand-amber" />
             This Week
           </div>
           <p className="text-2xl font-bold mt-1">
@@ -79,7 +79,7 @@ export default function DashboardPage() {
         </Card>
         <Card className="p-4">
           <div className="flex items-center gap-2 text-text-secondary text-sm">
-            <Dumbbell className="w-4 h-4 text-accent-blue" />
+            <Dumbbell className="w-4 h-4 text-brand-orange" />
             30d Volume
           </div>
           <p className="text-2xl font-bold mt-1">{formatKg(data?.volume30d)}</p>
