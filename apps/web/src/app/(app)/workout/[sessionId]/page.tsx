@@ -3,7 +3,7 @@
 
 // Cloudflare Pages: dynamic routes must run on the Edge runtime.
 export const runtime = 'edge';
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { X, Play, Pause, Check, SkipForward, Loader2, ChevronDown, Video } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
@@ -14,11 +14,11 @@ import { RestTimer } from '@/components/player/RestTimer';
 import { cn } from '@/lib/utils';
 
 interface Props {
-  params: Promise<{ sessionId: string }>;
+  params: { sessionId: string };
 }
 
 export default function WorkoutPlayerPage(props: Props) {
-  const params = use(props.params);
+  const { sessionId } = props.params;
   const router = useRouter();
   const store = usePlayerStore();
 
@@ -34,7 +34,7 @@ export default function WorkoutPlayerPage(props: Props) {
 
   useEffect(() => {
     if (todaySession && !sessionCreated && !todaySession.isRestDay) {
-      store.initSession(params.sessionId || 'demo-session', todaySession);
+      store.initSession(sessionId || 'demo-session', todaySession);
       setSessionCreated(true);
     }
   }, [todaySession, sessionCreated]);

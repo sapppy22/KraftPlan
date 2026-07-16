@@ -15,4 +15,4 @@ compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
 
 [vars]
-NEXT_PUBLIC_API_BASE = "https://kraftplan-api.workers.dev"
+NEXT_PUBLIC_API_BASE = "https://kraftplan-api.dassaptarshi13.workers.dev"

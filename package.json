@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "turbo dev",
+    "dev": "turbo dev --concurrency 16",
+    "dev:local": "turbo dev --filter=@kraftplan/worker --filter=@kraftplan/web --concurrency 16",
     "dev:web": "pnpm --filter @kraftplan/web dev",
     "dev:api": "pnpm --filter @kraftplan/api dev",
     "start:api": "pnpm --filter @kraftplan/api start",

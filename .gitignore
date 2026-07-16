@@ -16,3 +16,15 @@ coverage/
 .claude/settings.local.json
 .dev.vars
 .wrangler/
+
+# Cloudflare deployment secrets (local only — never commit)
+*.tmp
+apps/worker/.cf-token.tmp
+apps/worker/.db-url.tmp
+apps/worker/.jwt-secret.tmp
+
+# Windows deployment helper scripts (contain local paths / secrets)
+gen-jwt.bat
+apps/worker/deploy-worker.bat
+apps/worker/deploy-worker-only.bat
+apps/worker/deploy-remaining.bat
