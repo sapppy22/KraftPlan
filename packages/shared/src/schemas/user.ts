@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { EXPERIENCE_LEVELS, UNITS, USER_ROLES } from '../constants.js';
+import { EXPERIENCE_LEVELS, PLAN_CATEGORIES, UNITS, USER_ROLES } from '../constants.js';
 
 export const registerSchema = z.object({
   email: z.string().email(),
@@ -8,6 +8,8 @@ export const registerSchema = z.object({
   units: z.enum(UNITS).default('metric'),
   experience: z.enum(EXPERIENCE_LEVELS).default('beginner'),
   bodyweightKg: z.number().positive().optional(),
+  heightCm: z.number().positive().optional(),
+  goal: z.enum(PLAN_CATEGORIES).optional(),
 });
 export type RegisterInput = z.infer<typeof registerSchema>;
 
@@ -22,6 +24,8 @@ export const profileUpdateSchema = z.object({
   units: z.enum(UNITS).optional(),
   experience: z.enum(EXPERIENCE_LEVELS).optional(),
   bodyweightKg: z.number().positive().optional().nullable(),
+  heightCm: z.number().positive().optional().nullable(),
+  goal: z.enum(PLAN_CATEGORIES).optional().nullable(),
   avatarUrl: z.string().url().optional().nullable(),
 });
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;
@@ -34,6 +38,8 @@ export const userSchema = z.object({
   units: z.enum(UNITS),
   experience: z.enum(EXPERIENCE_LEVELS),
   bodyweightKg: z.number().nullable(),
+  heightCm: z.number().nullable(),
+  goal: z.string().nullable(),
   role: z.enum(USER_ROLES),
   createdAt: z.string().datetime(),
 });

@@ -6,6 +6,96 @@ import type { AppEnv } from '../context';
 
 export const workouts = new Hono<AppEnv>();
 
+// POST /workouts/custom — start an ad-hoc workout (no plan required)
+workouts.post('/custom', async (c) => {
+  const userId = c.get('userId');
+  const body = await c.req.json().catch(() => ({}));
+  const db = c.get('db');
+
+  const { exercises, title } = body;
+  if (!exercises?.length) return c.json({ error: 'exercises array required' }, 400);
+
+  // We need a planDayId — create a throwaway one-off plan+day
+  const [plan] = await db
+    .insert(schema.plans)
+    .values({
+      category: 'strength',
+      title: title || 'Custom Workout',
+      description: 'Ad-hoc custom workout',
+      durationWeeks: 1,
+      daysPerWeek: 1,
+      difficulty: 'intermediate',
+      equipment: [],
+    })
+    .returning();
+
+  const [week] = await db
+    .insert(schema.planWeeks)
+    .values({ planId: plan.id, weekNumber: 1 })
+    .returning();
+
+  const [day] = await db
+    .insert(schema.planDays)
+    .values({ weekId: week.id, dayNumber: 1, title: title || 'Custom Workout', isRestDay: false })
+    .returning();
+
+  const [block] = await db
+    .insert(schema.planBlocks)
+    .values({ dayId: day.id, blockType: 'main', sortOrder: 0 })
+    .returning();
+
+  for (let i = 0; i < exercises.length; i++) {
+    const ex = exercises[i];
+    await db.insert(schema.blockExercises).values({
+      blockId: block.id,
+      exerciseId: ex.exerciseId,
+      sortOrder: i,
+      sets: ex.sets || 3,
+      repsScheme: ex.repsScheme || '8-12',
+      loadScheme: 'rpe',
+      targetLoad: null,
+      restSec: ex.restSec || 60,
+    });
+  }
+
+  const [session] = await db
+    .insert(schema.workoutSessions)
+    .values({ userId, planDayId: day.id, status: 'active', startedAt: new Date() })
+    .returning();
+
+  // Return full manifest so the player can render immediately
+  const manifest = {
+    dayId: day.id,
+    title: title || 'Custom Workout',
+    estimatedMinutes: exercises.length * 5,
+    isRestDay: false,
+    blocks: [
+      {
+        id: block.id,
+        blockType: 'main',
+        exercises: exercises.map((ex: any) => ({
+          exerciseId: ex.exerciseId,
+          name: ex.name,
+          primaryMuscles: ex.primaryMuscles || [],
+          category: ex.category || 'resistance',
+          sets: ex.sets || 3,
+          repsScheme: ex.repsScheme || '8-12',
+          loadScheme: 'rpe',
+          targetLoad: null,
+          restSec: ex.restSec || 60,
+          tempo: null,
+          tutorialUrl: ex.tutorialUrl || null,
+          instructions: ex.instructions || [],
+          cues: ex.cues || [],
+          mistakes: ex.mistakes || [],
+        })),
+      },
+    ],
+  };
+
+  return c.json({ sessionId: session.id, manifest }, 201);
+});
+
 // POST /workouts — start a session
 workouts.post('/', async (c) => {
   const userId = c.get('userId');

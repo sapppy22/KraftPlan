@@ -25,6 +25,8 @@ export const users = pgTable('users', {
   units: text('units').default('metric').notNull(),
   experience: text('experience').default('beginner').notNull(),
   bodyweightKg: numeric('bodyweight_kg'),
+  heightCm: numeric('height_cm'),
+  goal: text('goal'),
   role: text('role').default('user').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });

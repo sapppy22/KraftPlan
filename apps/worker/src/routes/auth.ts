@@ -13,7 +13,9 @@ function publicUser(u: typeof schema.users.$inferSelect) {
     avatarUrl: u.avatarUrl,
     units: u.units,
     experience: u.experience,
-    bodyweightKg: u.bodyweightKg ? parseFloat(u.bodyweightKg) : null,
+    bodyweightKg: u.bodyweightKg ? parseFloat(u.bodyweightKg as string) : null,
+    heightCm: (u as any).heightCm ? parseFloat((u as any).heightCm as string) : null,
+    goal: (u as any).goal ?? null,
     role: u.role,
     createdAt: u.createdAt.toISOString(),
   };
@@ -24,7 +26,7 @@ export const auth = new Hono<AppEnv>();
 auth.post('/register', async (c) => {
   const parsed = registerSchema.safeParse(await c.req.json().catch(() => ({})));
   if (!parsed.success) return c.json({ error: 'Validation failed', details: parsed.error.flatten() }, 400);
-  const { email, password, name, units, experience, bodyweightKg } = parsed.data;
+  const { email, password, name, units, experience, bodyweightKg, heightCm, goal } = parsed.data;
   const db = c.get('db');
 
   const existing = await db.select().from(schema.users).where(eq(schema.users.email, email)).limit(1);
@@ -33,7 +35,16 @@ auth.post('/register', async (c) => {
   const passwordHash = await hashPassword(password);
   const [user] = await db
     .insert(schema.users)
-    .values({ email, passwordHash, name, units, experience, bodyweightKg: bodyweightKg?.toString() || null })
+    .values({
+      email,
+      passwordHash,
+      name,
+      units,
+      experience,
+      bodyweightKg: bodyweightKg?.toString() || null,
+      ...(heightCm !== undefined && { heightCm: heightCm.toString() }),
+      ...(goal !== undefined && { goal }),
+    } as any)
     .returning();
 
   const accessToken = await signAccessToken({ userId: user.id, role: user.role || 'user' }, c.env.JWT_SECRET);
@@ -77,9 +88,11 @@ auth.patch('/me', async (c) => {
   if (d.units !== undefined) update.units = d.units;
   if (d.experience !== undefined) update.experience = d.experience;
   if (d.bodyweightKg !== undefined) update.bodyweightKg = d.bodyweightKg?.toString() || null;
+  if (d.heightCm !== undefined) update.heightCm = d.heightCm?.toString() || null;
+  if (d.goal !== undefined) update.goal = d.goal;
   if (d.avatarUrl !== undefined) update.avatarUrl = d.avatarUrl;
 
   const db = c.get('db');
-  const [user] = await db.update(schema.users).set(update).where(eq(schema.users.id, uid)).returning();
+  const [user] = await db.update(schema.users).set(update as any).where(eq(schema.users.id, uid)).returning();
   return c.json(publicUser(user));
 });

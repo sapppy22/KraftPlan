@@ -206,6 +206,90 @@ plans.get('/:id', async (c) => {
   });
 });
 
+// POST /plans/custom — create a user-built plan
+plans.post('/custom', async (c) => {
+  const userId = c.get('userId');
+  const db = c.get('db');
+  const body = await c.req.json().catch(() => null);
+  if (!body) return c.json({ error: 'Invalid body' }, 400);
+
+  const { title, category, difficulty, daysPerWeek, days } = body;
+  if (!title || !category || !daysPerWeek || !days?.length) {
+    return c.json({ error: 'title, category, daysPerWeek and days are required' }, 400);
+  }
+
+  // Create the plan
+  const [plan] = await db
+    .insert(schema.plans)
+    .values({
+      category: category || 'strength',
+      title,
+      description: body.description || `Custom plan created by user`,
+      durationWeeks: 1,
+      daysPerWeek: parseInt(daysPerWeek),
+      difficulty: difficulty || 'intermediate',
+      equipment: [],
+    })
+    .returning();
+
+  // Create week 1
+  const [week] = await db
+    .insert(schema.planWeeks)
+    .values({ planId: plan.id, weekNumber: 1 })
+    .returning();
+
+  // Create days with blocks & exercises
+  for (let i = 0; i < days.length; i++) {
+    const dayData = days[i];
+    const [day] = await db
+      .insert(schema.planDays)
+      .values({
+        weekId: week.id,
+        dayNumber: i + 1,
+        title: dayData.title || `Day ${i + 1}`,
+        isRestDay: false,
+      })
+      .returning();
+
+    if (dayData.exercises?.length) {
+      const [block] = await db
+        .insert(schema.planBlocks)
+        .values({ dayId: day.id, blockType: 'main', sortOrder: 0 })
+        .returning();
+
+      for (let j = 0; j < dayData.exercises.length; j++) {
+        const ex = dayData.exercises[j];
+        await db.insert(schema.blockExercises).values({
+          blockId: block.id,
+          exerciseId: ex.exerciseId,
+          sortOrder: j,
+          sets: ex.sets || 3,
+          repsScheme: ex.repsScheme || '8-12',
+          loadScheme: 'rpe',
+          targetLoad: ex.targetLoad || null,
+          restSec: ex.restSec || 60,
+        });
+      }
+    }
+  }
+
+  // Auto-assign to user
+  await db
+    .update(schema.userPlanAssignments)
+    .set({ status: 'completed' })
+    .where(and(eq(schema.userPlanAssignments.userId, userId), eq(schema.userPlanAssignments.status, 'active')));
+
+  await db.insert(schema.userPlanAssignments).values({
+    userId,
+    planId: plan.id,
+    startDate: new Date().toISOString().split('T')[0],
+    currentWeek: 1,
+    status: 'active',
+  });
+
+  return c.json({ id: plan.id, title: plan.title, message: 'Custom plan created and assigned' }, 201);
+});
+
 // ── /users/me/plan ──
 export const userPlan = new Hono<AppEnv>();
 

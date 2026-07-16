@@ -22,6 +22,10 @@ interface PlayerStore {
   loggedSets: Record<string, LoggedSet>; // key: `${exerciseId}-${setIndex}`
   restTimerActive: boolean;
 
+  // Last logged values per exercise (for pre-filling)
+  lastWeight: Record<string, number>; // key: exerciseId
+  lastReps: Record<string, number>;   // key: exerciseId
+
   // Actions
   initSession: (sessionId: string, manifest: any) => void;
   advanceSet: () => void;
@@ -30,6 +34,8 @@ interface PlayerStore {
   setElapsed: (sec: number) => void;
   setStatus: (status: 'active' | 'paused' | 'completed') => void;
   setRestTimer: (active: boolean) => void;
+  setLastWeight: (key: string, weight: number) => void;
+  setLastReps: (key: string, reps: number) => void;
   reset: () => void;
 }
 
@@ -43,6 +49,8 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   elapsedSec: 0,
   loggedSets: {},
   restTimerActive: false,
+  lastWeight: {},
+  lastReps: {},
 
   initSession: (sessionId, manifest) =>
     set({
@@ -54,6 +62,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       status: 'active',
       elapsedSec: 0,
       loggedSets: {},
+      restTimerActive: false,
     }),
 
   advanceSet: () => {
@@ -112,6 +121,17 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   setElapsed: (sec) => set({ elapsedSec: sec }),
   setStatus: (status) => set({ status }),
   setRestTimer: (active) => set({ restTimerActive: active }),
+
+  setLastWeight: (key, weight) =>
+    set((state) => ({
+      lastWeight: { ...state.lastWeight, [key]: weight },
+    })),
+
+  setLastReps: (key, reps) =>
+    set((state) => ({
+      lastReps: { ...state.lastReps, [key]: reps },
+    })),
+
   reset: () =>
     set({
       sessionId: null,
@@ -123,5 +143,6 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       elapsedSec: 0,
       loggedSets: {},
       restTimerActive: false,
+      // Intentionally preserve lastWeight/lastReps across sessions
     }),
 }));

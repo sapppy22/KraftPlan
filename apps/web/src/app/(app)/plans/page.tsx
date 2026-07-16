@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { Loader2, Search, Dumbbell } from 'lucide-react';
+import { Loader2, Search, Dumbbell, Plus, Wand2 } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { Card } from '@/components/ui/Card';
 import { PLAN_CATEGORIES, DIFFICULTY_LEVELS } from '@kraftplan/shared';
@@ -35,10 +35,31 @@ export default function PlansPage() {
 
   return (
     <div className="space-y-6 pb-20 lg:pb-0">
-      <div>
-        <h1 className="font-display text-3xl font-bold">Plans</h1>
-        <p className="text-text-secondary mt-1">Find the perfect program for your goals</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-3xl font-bold">Plans</h1>
+          <p className="text-text-secondary mt-1">Find the perfect program for your goals</p>
+        </div>
+        <Link href="/plans/custom">
+          <button className="shrink-0 flex items-center gap-2 px-4 py-2.5 gradient-bg rounded-xl text-white font-semibold text-sm shadow-lg">
+            <Wand2 className="w-4 h-4" />
+            Build Custom
+          </button>
+        </Link>
       </div>
+
+      {/* Quick-start custom workout */}
+      <Link href="/workout/custom">
+        <Card interactive className="p-4 flex items-center gap-4 border-brand-orange/30 bg-brand-orange/5">
+          <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center shrink-0">
+            <Plus className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <p className="font-semibold text-sm">Quick Custom Workout</p>
+            <p className="text-xs text-text-secondary mt-0.5">Pick exercises and start now — no plan needed</p>
+          </div>
+        </Card>
+      </Link>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2">

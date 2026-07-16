@@ -22,7 +22,6 @@ export async function apiFetch<T>(path: string, options: FetchOptions = {}): Pro
     ...(fetchOptions.headers as Record<string, string>),
   };
 
-  // Add auth token if available
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('accessToken');
     if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -38,11 +37,9 @@ export async function apiFetch<T>(path: string, options: FetchOptions = {}): Pro
   return res.json();
 }
 
-// ── Typed API helpers ──
-
 export const api = {
   // Auth
-  register: (data: { email: string; password: string; name: string }) =>
+  register: (data: { email: string; password: string; name: string; bodyweightKg?: number; heightCm?: number; goal?: string; experience?: string }) =>
     apiFetch<{ accessToken: string; user: any }>('/auth/register', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -57,10 +54,7 @@ export const api = {
   getProfile: () => apiFetch<any>('/auth/me'),
 
   updateProfile: (data: any) =>
-    apiFetch<any>('/auth/me', {
-      method: 'PATCH',
-      body: JSON.stringify(data),
-    }),
+    apiFetch<any>('/auth/me', { method: 'PATCH', body: JSON.stringify(data) }),
 
   // Plans
   getPlans: (params?: Record<string, string | undefined>) =>
@@ -68,11 +62,32 @@ export const api = {
 
   getPlanDetail: (id: string) => apiFetch<any>(`/plans/${id}`),
 
+  createCustomPlan: (data: {
+    title: string;
+    category: string;
+    difficulty: string;
+    daysPerWeek: number;
+    description?: string;
+    days: Array<{
+      title: string;
+      exercises: Array<{
+        exerciseId: string;
+        name: string;
+        sets: number;
+        repsScheme: string;
+        restSec: number;
+        category?: string;
+        primaryMuscles?: string[];
+        tutorialUrl?: string | null;
+        instructions?: string[];
+        cues?: string[];
+      }>;
+    }>;
+  }) =>
+    apiFetch<any>('/plans/custom', { method: 'POST', body: JSON.stringify(data) }),
+
   assignPlan: (data: { planId: string; startDate: string }) =>
-    apiFetch<any>('/users/me/plan', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    apiFetch<any>('/users/me/plan', { method: 'POST', body: JSON.stringify(data) }),
 
   getTodaySession: (date?: string) =>
     apiFetch<any>(`/plans/today?date=${date || new Date().toISOString().split('T')[0]}`),
@@ -81,7 +96,10 @@ export const api = {
 
   // Workouts
   startSession: (data: { planDayId: string; date: string }) =>
-    apiFetch<any>('/workouts', {
+    apiFetch<any>('/workouts', { method: 'POST', body: JSON.stringify(data) }),
+
+  startCustomSession: (data: { exercises: any[]; title?: string }) =>
+    apiFetch<{ sessionId: string; manifest: any }>('/workouts/custom', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
@@ -103,24 +121,18 @@ export const api = {
 
   // Progress
   getDashboard: () => apiFetch<any>('/dashboard'),
-
   getPRs: () => apiFetch<any[]>('/progress/prs'),
-
   getPRHistory: (exerciseId: string, range?: string) =>
     apiFetch<any[]>(`/progress/prs/${exerciseId}/history`, { params: { range } }),
-
   getVolume: (range?: string) =>
     apiFetch<any[]>('/progress/volume', { params: { range } }),
-
   getAdherence: (range?: string) =>
     apiFetch<any[]>('/progress/adherence', { params: { range } }),
-
   getEndurance: (range?: string) =>
     apiFetch<any[]>('/progress/endurance', { params: { range } }),
 
   // Exercises
   getExercises: (params?: Record<string, string | undefined>) =>
     apiFetch<{ exercises: any[]; total: number }>('/exercises', { params }),
-
   getExerciseDetail: (id: string) => apiFetch<any>(`/exercises/${id}`),
 };
