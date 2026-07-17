@@ -32,19 +32,4 @@ feedback.post('/', async (c) => {
   return c.json({ success: true }, 201);
 });
 
-// Admin ONLY: Get feedback
-feedback.get('/', async (c) => {
-  const uid = await authUserId(c);
-  if (!uid) return c.json({ error: 'Unauthorized' }, 401);
 
-  const db = c.get('db');
-  
-  // Verify admin role
-  const [user] = await db.select({ role: schema.users.role }).from(schema.users).where(eq(schema.users.id, uid)).limit(1);
-  if (!user || user.role !== 'admin') {
-    return c.json({ error: 'Forbidden' }, 403);
-  }
-
-  const results = await db.select().from(schema.feedback).orderBy(schema.feedback.createdAt);
-  return c.json(results);
-});
