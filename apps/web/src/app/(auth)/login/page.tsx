@@ -3,13 +3,16 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2, UserCircle2 } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import Button from '@/components/ui/Button';
 import { Logo } from '@/components/ui/Logo';
+import { useAuth } from '@/lib/AuthContext';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login: setAuth, continueAsGuest } = useAuth();
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -23,8 +26,15 @@ export default function LoginPage() {
 
     try {
       const res = await api.login({ email, password });
-      localStorage.setItem('accessToken', res.accessToken);
-      router.push('/dashboard');
+      setAuth(res.accessToken, res.user);
+      
+      const redirect = localStorage.getItem('redirectAfterLogin');
+      if (redirect) {
+        localStorage.removeItem('redirectAfterLogin');
+        router.push(redirect);
+      } else {
+        router.push('/dashboard');
+      }
     } catch (err: any) {
       setError(err.message || 'Login failed');
     } finally {
@@ -85,8 +95,27 @@ export default function LoginPage() {
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Log in'}
           </Button>
         </form>
+        
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-white/10"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-bg-base text-text-secondary">or</span>
+          </div>
+        </div>
 
-        <p className="text-center text-sm text-text-secondary">
+        <Button 
+          type="button" 
+          variant="secondary" 
+          className="w-full gap-2" 
+          onClick={continueAsGuest}
+        >
+          <UserCircle2 className="w-5 h-5" />
+          Continue as Guest
+        </Button>
+
+        <p className="text-center text-sm text-text-secondary pt-4">
           Don&apos;t have an account?{' '}
           <Link href="/register" className="text-brand-orange hover:underline font-medium">
             Sign up

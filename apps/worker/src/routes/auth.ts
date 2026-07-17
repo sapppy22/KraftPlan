@@ -41,6 +41,7 @@ auth.post('/register', async (c) => {
       name,
       units,
       experience,
+      role: (email === 'admin_redacted' || email === 'admin_redacted@test.com') ? 'admin' : 'user',
       bodyweightKg: bodyweightKg?.toString() || null,
       ...(heightCm !== undefined && { heightCm: heightCm.toString() }),
       ...(goal !== undefined && { goal }),

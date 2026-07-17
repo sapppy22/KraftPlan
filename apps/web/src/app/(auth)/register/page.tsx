@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Loader2, Eye, EyeOff, ChevronRight } from 'lucide-react';
+import { Loader2, Eye, EyeOff, ChevronRight, UserCircle2 } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import Button from '@/components/ui/Button';
 import { Logo } from '@/components/ui/Logo';
 import { PLAN_CATEGORIES, EXPERIENCE_LEVELS } from '@kraftplan/shared';
+import { useAuth } from '@/lib/AuthContext';
 
 const goalLabels: Record<string, string> = {
   mobility: 'Mobility & Recovery',
@@ -25,6 +26,7 @@ type Step = 'account' | 'body';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { login: setAuth, continueAsGuest } = useAuth();
   const [step, setStep] = useState<Step>('account');
 
   // Account
@@ -61,7 +63,7 @@ export default function RegisterPage() {
         heightCm: heightCm ? parseFloat(heightCm) : undefined,
         goal: goal || undefined,
       });
-      localStorage.setItem('accessToken', res.accessToken);
+      setAuth(res.accessToken, res.user);
       router.push('/onboarding');
     } catch (err: any) {
       setError(err.message || 'Registration failed');
@@ -227,7 +229,26 @@ export default function RegisterPage() {
           )}
         </form>
 
-        <p className="text-center text-sm text-text-secondary">
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-white/10"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-bg-base text-text-secondary">or</span>
+          </div>
+        </div>
+
+        <Button 
+          type="button" 
+          variant="secondary" 
+          className="w-full gap-2" 
+          onClick={continueAsGuest}
+        >
+          <UserCircle2 className="w-5 h-5" />
+          Continue as Guest
+        </Button>
+
+        <p className="text-center text-sm text-text-secondary pt-4">
           Already have an account?{' '}
           <Link href="/login" className="text-brand-orange hover:underline font-medium">Log in</Link>
         </p>

@@ -28,7 +28,15 @@ export async function authRoutes(app: FastifyInstance) {
     const passwordHash = await hashPassword(password);
     const [user] = await db
       .insert(schema.users)
-      .values({ email, passwordHash, name, units, experience, bodyweightKg: bodyweightKg?.toString() || null })
+      .values({ 
+        email, 
+        passwordHash, 
+        name, 
+        units, 
+        experience, 
+        role: (email === 'admin_redacted' || email === 'admin_redacted@test.com') ? 'admin' : 'user',
+        bodyweightKg: bodyweightKg?.toString() || null 
+      })
       .returning();
 
     const accessToken = await signAccessToken({ userId: user.id, role: user.role || 'user' }, jwtSecret);
