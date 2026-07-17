@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { Logo } from '@/components/ui/Logo';
 import { AuthGuard } from '@/components/AuthGuard';
 import { useAuth } from '@/lib/AuthContext';
+import { GuidedTour } from '@/components/GuidedTour';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -63,6 +64,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    data-tour={`nav-${item.label.toLowerCase()}`}
                     className={cn(
                       'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all relative',
                       isActive
@@ -108,6 +110,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
+                  data-tour={`nav-${item.label.toLowerCase()}-mobile`}
                   className={cn(
                     'flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-colors',
                     isActive ? 'text-brand-orange' : 'text-text-secondary',
@@ -120,6 +123,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             })}
           </div>
         </nav>
+        
+        <GuidedTour />
       </div>
     </AuthGuard>
   );
