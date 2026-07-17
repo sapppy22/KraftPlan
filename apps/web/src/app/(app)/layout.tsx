@@ -8,6 +8,7 @@ import { Logo } from '@/components/ui/Logo';
 import { AuthGuard } from '@/components/AuthGuard';
 import { useAuth } from '@/lib/AuthContext';
 import { GuidedTour } from '@/components/GuidedTour';
+import { FeedbackButton } from '@/components/FeedbackButton';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -125,6 +126,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </nav>
         
         <GuidedTour />
+        <FeedbackButton />
       </div>
     </AuthGuard>
   );

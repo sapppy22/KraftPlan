@@ -27,6 +27,8 @@ app.use('*', async (c, next) => {
 app.get('/', (c) => c.json({ name: 'KraftPlan API', runtime: 'cloudflare-workers', status: 'ok' }));
 app.get('/health', (c) => c.json({ status: 'ok', service: 'kraftplan-api', time: new Date().toISOString() }));
 
+import { feedback } from './routes/feedback';
+
 app.route('/auth', auth);
 app.route('/exercises', library);
 app.route('/plans', plans);
@@ -34,6 +36,7 @@ app.route('/users/me/plan', userPlan);
 app.route('/workouts', workouts);
 app.route('/progress', progress);
 app.route('/dashboard', dashboard);
+app.route('/feedback', feedback);
 
 app.onError((err, c) => {
   console.error(err);

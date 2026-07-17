@@ -251,3 +251,15 @@ export const eventOutbox = pgTable('event_outbox', {
   status: text('status').default('pending').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
+
+// ══════════════════════════════════════
+// FEEDBACK
+// ══════════════════════════════════════
+export const feedback = pgTable('feedback', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
+  type: text('type').notNull(),
+  message: text('message').notNull(),
+  status: text('status').default('open').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
