@@ -12,13 +12,18 @@ export function RestTimer({ restSec, onComplete, onSkip }: RestTimerProps) {
   const [remaining, setRemaining] = useState(restSec);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
   useEffect(() => {
     setRemaining(restSec);
     intervalRef.current = setInterval(() => {
       setRemaining((prev) => {
         if (prev <= 1) {
           clearInterval(intervalRef.current!);
-          onComplete();
+          onCompleteRef.current();
           return 0;
         }
         return prev - 1;

@@ -1,6 +1,8 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Play, Flame, TrendingUp, Calendar, Dumbbell, Loader2 } from 'lucide-react';
 import { api } from '@/lib/api/client';
@@ -8,10 +10,28 @@ import { Card } from '@/components/ui/Card';
 import { formatDuration, formatKg, formatDate } from '@/lib/utils';
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const [startingSession, setStartingSession] = useState(false);
+
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard'],
     queryFn: () => api.getDashboard(),
   });
+
+  const handleStartSession = async () => {
+    if (!data?.today || data.today.isRestDay || startingSession) return;
+    setStartingSession(true);
+    try {
+      const res = await api.startSession({
+        planDayId: data.today.dayId,
+        date: new Date().toISOString(),
+      });
+      router.push(`/workout/${res.id}`);
+    } catch (err) {
+      console.error('Failed to start session', err);
+      setStartingSession(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -30,7 +50,10 @@ export default function DashboardPage() {
       </div>
 
       {/* Today's session */}
-      <Link href={data?.today?.isRestDay ? '#' : '/workout/new'}>
+      <div 
+        onClick={handleStartSession}
+        className={data?.today?.isRestDay || startingSession ? 'cursor-default' : 'cursor-pointer'}
+      >
         <Card hero className="p-6 space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-white/70 text-sm font-medium uppercase tracking-wider">
@@ -47,13 +70,13 @@ export default function DashboardPage() {
             {data?.today?.title || 'No session scheduled'}
           </h2>
           {!data?.today?.isRestDay && (
-            <button className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 rounded-pill text-white font-semibold transition-all backdrop-blur-sm">
-              <Play className="w-5 h-5 fill-white" />
+            <button disabled={startingSession} className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 rounded-pill text-white font-semibold transition-all backdrop-blur-sm disabled:opacity-50">
+              {startingSession ? <Loader2 className="w-5 h-5 animate-spin fill-white" /> : <Play className="w-5 h-5 fill-white" />}
               Start session
             </button>
           )}
         </Card>
-      </Link>
+      </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-4">

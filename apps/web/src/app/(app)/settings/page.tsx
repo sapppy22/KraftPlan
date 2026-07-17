@@ -1,15 +1,17 @@
 'use client';
 
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { Loader2, Dumbbell, LogOut } from 'lucide-react';
+import { Loader2, Dumbbell, LogOut, Check } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { Card } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 
 export default function SettingsPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const { data: profile, isLoading } = useQuery({
     queryKey: ['profile'],
     queryFn: () => api.getProfile(),
@@ -18,6 +20,25 @@ export default function SettingsPage() {
   const [name, setName] = useState('');
   const [units, setUnits] = useState('metric');
   const [experience, setExperience] = useState('');
+
+  useEffect(() => {
+    if (profile) {
+      setName(profile.name || '');
+      setExperience(profile.experience || '');
+      // If backend adds units, set it here. We default to metric.
+    }
+  }, [profile]);
+
+  const updateProfile = useMutation({
+    mutationFn: async (data: any) => api.updateProfile(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+    }
+  });
+
+  function handleSave() {
+    updateProfile.mutate({ name, experience });
+  }
 
   function handleLogout() {
     localStorage.removeItem('accessToken');
@@ -50,7 +71,7 @@ export default function SettingsPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full px-4 py-3 bg-bg-elevated border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
-            placeholder={profile?.name || 'Your name'}
+            placeholder="Your name"
           />
         </div>
 
@@ -79,6 +100,11 @@ export default function SettingsPage() {
             <option value="advanced">Advanced</option>
           </select>
         </div>
+
+        <Button onClick={handleSave} disabled={updateProfile.isPending} className="w-full">
+          {updateProfile.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Check className="w-4 h-4 mr-2" />}
+          Save Changes
+        </Button>
       </Card>
 
       {/* Danger Zone */}

@@ -191,6 +191,9 @@ workouts.post('/:sessionId/sets', async (c) => {
   // Lightweight PR flag (full PR computed on session complete)
   let prCandidate = false;
   if (weightKg && reps) {
+    const { epley1RM } = await import('@kraftplan/shared');
+    const currentE1rm = epley1RM(weightKg, reps);
+
     const [pr] = await db
       .select()
       .from(schema.personalRecords)
@@ -198,11 +201,11 @@ workouts.post('/:sessionId/sets', async (c) => {
         and(
           eq(schema.personalRecords.userId, userId),
           eq(schema.personalRecords.exerciseId, exerciseId),
-          eq(schema.personalRecords.metric, 'max_weight'),
+          eq(schema.personalRecords.metric, 'e1rm'),
         ),
       )
       .limit(1);
-    if (!pr || weightKg > parseFloat(pr.value.toString())) prCandidate = true;
+    if (!pr || currentE1rm > parseFloat(pr.value.toString())) prCandidate = true;
   }
 
   return c.json({ saved: true, prCandidate, previousPr: null });
