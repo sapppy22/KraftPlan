@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "set NODE_ENV=development&& next dev --port 3000",
+    "dev": "NODE_ENV=development next dev --port 3000",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
