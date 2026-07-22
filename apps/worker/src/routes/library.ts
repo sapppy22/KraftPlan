@@ -38,6 +38,7 @@ library.get('/', async (c) => {
       difficulty: schema.exercises.difficulty,
       thumbnailUrl: schema.exercises.thumbnailUrl,
       category: schema.exercises.category,
+      tutorialUrl: schema.exercises.tutorialUrl,
     })
     .from(schema.exercises)
     .where(where)

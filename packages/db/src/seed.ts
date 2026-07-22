@@ -187,7 +187,7 @@ async function seed() {
               tempo: '3010',
             } : null;
           })
-          .filter(Boolean);
+          .filter((x): x is NonNullable<typeof x> => x != null);
 
         if (exerciseInserts.length > 0) {
           await db.insert(s.blockExercises).values(exerciseInserts);

@@ -1,6 +1,6 @@
 # ============================================================
 # KraftPlan -- Full Cloudflare Deployment Script
-# Worker (kraftplan-api) + Pages (kraftplan)
+# Worker (kraftplan-api) + Pages (kraftplan) + Pinger (kraftplan-pinger)
 #
 # Windows workarounds applied automatically:
 #   1. patch-next-on-pages.js  -- fixes shellac pnpm detection
@@ -11,6 +11,7 @@ $ErrorActionPreference = "Stop"
 $Root      = "D:\Gym ai project"
 $WorkerDir = "$Root\apps\worker"
 $WebDir    = "$Root\apps\web"
+$PingerDir = "$Root\apps\pinger"
 
 # Load secrets from tmp files
 $CF_TOKEN   = (Get-Content "$WorkerDir\.cf-token.tmp"   -Raw).Trim()
@@ -19,10 +20,10 @@ $JWT_SECRET = (Get-Content "$WorkerDir\.jwt-secret.tmp" -Raw).Trim()
 
 $env:CLOUDFLARE_API_TOKEN = $CF_TOKEN
 
-# ── STEP 1: Deploy Cloudflare Worker ────────────────────────
+# ── STEP 1: Deploy Cloudflare Worker (API) ──────────────────
 Write-Host ""
 Write-Host "============================================================" -ForegroundColor Cyan
-Write-Host " STEP 1/4 -- Deploy Cloudflare Worker (kraftplan-api)" -ForegroundColor Cyan
+Write-Host " STEP 1/5 -- Deploy Cloudflare Worker (kraftplan-api)" -ForegroundColor Cyan
 Write-Host "============================================================" -ForegroundColor Cyan
 
 Set-Location $WorkerDir
@@ -41,10 +42,24 @@ if ($LASTEXITCODE -ne 0) { throw "Worker deployment failed" }
 
 Write-Host "`n[OK] Worker deployed!" -ForegroundColor Green
 
-# ── STEP 2: Apply Windows patches ───────────────────────────
+# ── STEP 2: Deploy Pinger Worker ────────────────────────────
 Write-Host ""
 Write-Host "============================================================" -ForegroundColor Cyan
-Write-Host " STEP 2/4 -- Apply Windows patches + build for Cloudflare Pages" -ForegroundColor Cyan
+Write-Host " STEP 2/5 -- Deploy Pinger Worker (kraftplan-pinger)" -ForegroundColor Cyan
+Write-Host "============================================================" -ForegroundColor Cyan
+
+Set-Location $PingerDir
+
+Write-Host "`n-> Deploying Pinger Worker..." -ForegroundColor Yellow
+pnpm run deploy
+if ($LASTEXITCODE -ne 0) { throw "Pinger deployment failed" }
+
+Write-Host "`n[OK] Pinger deployed!" -ForegroundColor Green
+
+# ── STEP 3: Apply Windows patches ───────────────────────────
+Write-Host ""
+Write-Host "============================================================" -ForegroundColor Cyan
+Write-Host " STEP 3/5 -- Apply Windows patches + build for Cloudflare Pages" -ForegroundColor Cyan
 Write-Host "============================================================" -ForegroundColor Cyan
 
 Set-Location $Root
@@ -62,8 +77,8 @@ Remove-Item ".vercel\output" -Recurse -Force -ErrorAction SilentlyContinue
 
 # Patch 2: run vercel build with symlink->copy patch (avoids admin requirement)
 Write-Host "`n-> Running vercel build (with symlink patch for Windows)..." -ForegroundColor Yellow
-$env:VERCEL_TOKEN = "dummy"
-node --require "$Root\symlink-patch.js" "C:\Users\user\AppData\Roaming\npm\node_modules\vercel\dist\vc.js" build --yes
+$env:VERCEL_TOKEN = "vercel_local_dummy"
+node --require "$Root\symlink-patch.js" "$WebDir\node_modules\vercel\dist\index.js" build --yes
 if ($LASTEXITCODE -ne 0) { throw "vercel build failed" }
 Remove-Item Env:VERCEL_TOKEN -ErrorAction SilentlyContinue
 
@@ -74,10 +89,10 @@ if ($LASTEXITCODE -ne 0) { throw "next-on-pages --skip-build failed" }
 
 Write-Host "`n[OK] Pages build complete!" -ForegroundColor Green
 
-# ── STEP 3: Deploy to Cloudflare Pages ───────────────────────
+# ── STEP 4: Deploy to Cloudflare Pages ───────────────────────
 Write-Host ""
 Write-Host "============================================================" -ForegroundColor Cyan
-Write-Host " STEP 3/4 -- Deploy to Cloudflare Pages (kraftplan)" -ForegroundColor Cyan
+Write-Host " STEP 4/5 -- Deploy to Cloudflare Pages (kraftplan)" -ForegroundColor Cyan
 Write-Host "============================================================" -ForegroundColor Cyan
 
 Write-Host "`n-> Deploying to Pages..." -ForegroundColor Yellow
@@ -86,10 +101,10 @@ if ($LASTEXITCODE -ne 0) { throw "Pages deployment failed" }
 
 Write-Host "`n[OK] Pages deployed!" -ForegroundColor Green
 
-# ── STEP 4: Verify ───────────────────────────────────────────
+# ── STEP 5: Verify ───────────────────────────────────────────
 Write-Host ""
 Write-Host "============================================================" -ForegroundColor Cyan
-Write-Host " STEP 4/4 -- Verifying deployments" -ForegroundColor Cyan
+Write-Host " STEP 5/5 -- Verifying deployments" -ForegroundColor Cyan
 Write-Host "============================================================" -ForegroundColor Cyan
 
 $workerHealth = "https://kraftplan-api.dassaptarshi13.workers" + ".dev/health"

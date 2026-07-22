@@ -14,5 +14,5 @@ compatibility_date = "2024-11-01"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
 
-[vars]
-NEXT_PUBLIC_API_BASE = "https://kraftplan-api.dassaptarshi13.workers.dev"
+# NEXT_PUBLIC_API_BASE is set as a Pages secret via `wrangler pages secret put`
+# to avoid conflicts with the build-time env var binding.

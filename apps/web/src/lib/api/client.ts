@@ -135,4 +135,7 @@ export const api = {
   getExercises: (params?: Record<string, string | undefined>) =>
     apiFetch<{ exercises: any[]; total: number }>('/exercises', { params }),
   getExerciseDetail: (id: string) => apiFetch<any>(`/exercises/${id}`),
+
+  // Generic low-level fetch for admin routes
+  fetch: <T = any>(path: string, options?: FetchOptions) => apiFetch<T>(path, options),
 };

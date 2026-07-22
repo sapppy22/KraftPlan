@@ -39,14 +39,20 @@ function extractYouTubeId(url: string): string | null {
   return null;
 }
 
-function buildEmbedSrc(exerciseName: string, tutorialUrl?: string | null): string {
-  if (tutorialUrl && tutorialUrl.includes('youtube')) {
-    const vid = extractYouTubeId(tutorialUrl);
+import { STATIC_EXERCISES } from '@/lib/exerciseData';
+
+/** Map exercise name to YouTube tutorial URL from static data */
+const TUTORIAL_URL_BY_NAME = new Map(
+  STATIC_EXERCISES.map((ex) => [ex.name, ex.tutorialUrl]),
+);
+
+function buildEmbedSrc(exerciseName: string, tutorialUrl?: string | null): string | null {
+  const url = tutorialUrl || TUTORIAL_URL_BY_NAME.get(exerciseName);
+  if (url && url.includes('youtube')) {
+    const vid = extractYouTubeId(url);
     if (vid) return `https://www.youtube.com/embed/${vid}?rel=0`;
   }
-  return `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(
-    exerciseName + ' exercise tutorial',
-  )}`;
+  return null;
 }
 
 export default function ExerciseDetailPage() {
@@ -97,16 +103,42 @@ export default function ExerciseDetailPage() {
       </button>
 
       {/* YouTube embed — full-width 16:9 */}
-      <div className="relative w-full rounded-2xl overflow-hidden" style={{ paddingTop: '56.25%' }}>
-        <iframe
-          src={buildEmbedSrc(exercise.name, exercise.tutorialUrl)}
-          className="absolute inset-0 w-full h-full border-0"
-          allow="autoplay; encrypted-media"
-          allowFullScreen
-          title={`${exercise.name} tutorial`}
-          loading="lazy"
-        />
-      </div>
+      {(() => {
+        const embedSrc = buildEmbedSrc(exercise.name, exercise.tutorialUrl);
+        if (!embedSrc) {
+          return (
+            <div className="relative w-full rounded-2xl overflow-hidden bg-bg-surface border border-white/5" style={{ paddingTop: '56.25%' }}>
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-text-secondary">
+                <Dumbbell className="w-12 h-12 mb-4 opacity-50" />
+                <p className="text-sm">No tutorial video available</p>
+                <a
+                  href={
+                    exercise.tutorialUrl ||
+                    TUTORIAL_URL_BY_NAME.get(exercise.name) ||
+                    `https://www.youtube.com/results?search_query=${encodeURIComponent(exercise.name + ' exercise tutorial')}`
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 text-brand-orange underline text-sm"
+                >
+                  Watch on YouTube
+                </a>
+              </div>
+            </div>
+          );
+        }
+        return (
+          <div className="relative w-full rounded-2xl overflow-hidden" style={{ paddingTop: '56.25%' }}>
+            <iframe
+              src={embedSrc}
+              className="absolute inset-0 w-full h-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              title={`${exercise.name} tutorial`}
+            />
+          </div>
+        );
+      })()}
 
       {/* Title + badges */}
       <div>

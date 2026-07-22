@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { ShieldAlert, Users, MessageSquare, LayoutDashboard } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, isLoading: loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 

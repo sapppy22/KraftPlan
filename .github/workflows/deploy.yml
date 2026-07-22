@@ -1,9 +1,8 @@
-name: CI & Deploy
+name: Deploy
 
+# PRs and feature branches are validated by ci.yml; this runs only on main.
 on:
   push:
-    branches: [main]
-  pull_request:
     branches: [main]
 
 concurrency:
@@ -47,7 +46,7 @@ jobs:
         working-directory: apps/web
         env:
           NEXT_PUBLIC_API_BASE: ${{ vars.NEXT_PUBLIC_API_BASE }}
-        run: npx @cloudflare/next-on-pages@1
+        run: pnpm exec next-on-pages
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
@@ -80,5 +79,31 @@ jobs:
           workingDirectory: apps/worker
           command: deploy
         # DATABASE_URL and JWT_SECRET must be set once via `wrangler secret put`.
+
+  deploy-pinger:
+    name: Deploy pinger → Cloudflare Workers
+    needs: ci
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.1.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Deploy Pinger Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: apps/pinger
+          command: deploy
+        # Set RENDER_API_URL as a wrangler secret or var pointing to your Render backend.
+        # e.g. npx wrangler secret put RENDER_API_URL --name kraftplan-pinger
+        #       (value: https://kraftplan-api.onrender.com)
 
   # Alternative: the Node build (apps/api) can deploy to Render via render.yaml.

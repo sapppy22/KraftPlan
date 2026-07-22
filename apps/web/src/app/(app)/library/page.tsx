@@ -7,7 +7,12 @@ import { Loader2, Search, Dumbbell, Youtube } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { EXERCISE_CATEGORIES, DIFFICULTY_LEVELS } from '@kraftplan/shared';
 
-/** Map exercise categories to accent colours */
+import { STATIC_EXERCISES } from '@/lib/exerciseData';
+
+/** Map exercise name to YouTube tutorial URL from static data */
+const TUTORIAL_URL_BY_NAME = new Map(
+  STATIC_EXERCISES.map((ex) => [ex.name, ex.tutorialUrl]),
+);
 const CATEGORY_COLORS: Record<string, string> = {
   resistance: 'bg-blue-500',
   cardio: 'bg-green-500',
@@ -119,9 +124,12 @@ export default function LibraryPage() {
           {data.exercises.map((ex: any) => {
             const accentColor = CATEGORY_COLORS[ex.category] ?? 'bg-brand-orange';
             const diffBadge = DIFFICULTY_BADGE[ex.difficulty] ?? 'bg-white/10 text-text-secondary';
-            const ytUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(
-              ex.name + ' exercise tutorial',
-            )}`;
+            const ytUrl = ex.tutorialUrl
+              ? ex.tutorialUrl
+              : TUTORIAL_URL_BY_NAME.get(ex.name) ||
+                `https://www.youtube.com/results?search_query=${encodeURIComponent(
+                  ex.name + ' exercise tutorial',
+                )}`;
             return (
               <div key={ex.id} className="relative group">
                 <Link href={`/library/${ex.id}`}>

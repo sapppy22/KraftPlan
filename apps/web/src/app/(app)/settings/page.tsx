@@ -24,8 +24,8 @@ export default function SettingsPage() {
   useEffect(() => {
     if (profile) {
       setName(profile.name || '');
+      setUnits(profile.units || 'metric');
       setExperience(profile.experience || '');
-      // If backend adds units, set it here. We default to metric.
     }
   }, [profile]);
 
@@ -37,7 +37,7 @@ export default function SettingsPage() {
   });
 
   function handleSave() {
-    updateProfile.mutate({ name, experience });
+    updateProfile.mutate({ name, units, ...(experience ? { experience } : {}) });
   }
 
   function handleLogout() {
@@ -105,6 +105,13 @@ export default function SettingsPage() {
           {updateProfile.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Check className="w-4 h-4 mr-2" />}
           Save Changes
         </Button>
+
+        {updateProfile.isSuccess && (
+          <p className="text-sm text-green-500">Changes saved.</p>
+        )}
+        {updateProfile.isError && (
+          <p className="text-sm text-red-500">{updateProfile.error.message}</p>
+        )}
       </Card>
 
       {/* Danger Zone */}

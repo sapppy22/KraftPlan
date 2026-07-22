@@ -2,13 +2,18 @@
 # Create a Render account, "New +" → "Blueprint", point it at this repo.
 # Then set the secret env vars (DATABASE_URL, JWT_SECRET, CORS_ORIGIN) in the
 # Render dashboard. The web frontend is deployed separately to Cloudflare Pages.
+#
+# A Cloudflare Worker pinger (apps/pinger) keeps this service awake by pinging
+# /health every 10 minutes — Render free tier sleeps after ~15 min of inactivity.
+# The pinger is deployed automatically via the CI/CD workflow.
 services:
   - type: web
     name: kraftplan-api
     runtime: node
     plan: free
-    region: singapore # matches the Neon ap-southeast-1 region for low latency
+    region: singapore
     branch: main
+    numInstances: 1
     buildCommand: corepack enable && pnpm install --frozen-lockfile
     startCommand: pnpm --filter @kraftplan/api start
     healthCheckPath: /health
@@ -18,9 +23,9 @@ services:
         value: "20"
       - key: NODE_ENV
         value: production
-      - key: DATABASE_URL # Neon POOLED connection string — set in dashboard
+      - key: DATABASE_URL
         sync: false
-      - key: JWT_SECRET # set in dashboard
+      - key: JWT_SECRET
         sync: false
-      - key: CORS_ORIGIN # e.g. https://kraftplan.pages.dev
+      - key: CORS_ORIGIN
         sync: false

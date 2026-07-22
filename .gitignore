@@ -28,3 +28,6 @@ gen-jwt.bat
 apps/worker/deploy-worker.bat
 apps/worker/deploy-worker-only.bat
 apps/worker/deploy-remaining.bat
+# Added by code-review-graph
+.code-review-graph/
+.pnpm-store/
