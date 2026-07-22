@@ -2,13 +2,14 @@ import { Hono } from 'hono';
 import { eq, and } from 'drizzle-orm';
 import { createSessionSchema, setLogSchema, sessionCompleteSchema } from '@kraftplan/shared';
 import { schema } from '../db';
-import type { AppEnv } from '../context';
+import { requireUserId, type AppEnv } from '../context';
 
 export const workouts = new Hono<AppEnv>();
 
 // POST /workouts/custom — start an ad-hoc workout (no plan required)
 workouts.post('/custom', async (c) => {
-  const userId = c.get('userId');
+  const userId = await requireUserId(c);
+  if (userId instanceof Response) return userId;
   const body = await c.req.json().catch(() => ({}));
   const db = c.get('db');
 
@@ -98,7 +99,8 @@ workouts.post('/custom', async (c) => {
 
 // POST /workouts — start a session
 workouts.post('/', async (c) => {
-  const userId = c.get('userId');
+  const userId = await requireUserId(c);
+  if (userId instanceof Response) return userId;
   const parsed = createSessionSchema.safeParse(await c.req.json().catch(() => ({})));
   if (!parsed.success) return c.json({ error: 'Validation failed', details: parsed.error.flatten() }, 400);
   const db = c.get('db');
@@ -114,7 +116,8 @@ workouts.post('/', async (c) => {
 // GET /workouts/:sessionId
 workouts.get('/:sessionId', async (c) => {
   const sessionId = c.req.param('sessionId');
-  const userId = c.get('userId');
+  const userId = await requireUserId(c);
+  if (userId instanceof Response) return userId;
   const db = c.get('db');
 
   const [session] = await db
@@ -153,7 +156,8 @@ workouts.get('/:sessionId', async (c) => {
 // POST /workouts/:sessionId/sets — log a set (idempotent upsert)
 workouts.post('/:sessionId/sets', async (c) => {
   const sessionId = c.req.param('sessionId');
-  const userId = c.get('userId');
+  const userId = await requireUserId(c);
+  if (userId instanceof Response) return userId;
   const idempotencyKey = c.req.header('idempotency-key') || crypto.randomUUID();
   const db = c.get('db');
 
@@ -214,7 +218,8 @@ workouts.post('/:sessionId/sets', async (c) => {
 // POST /workouts/:sessionId/complete
 workouts.post('/:sessionId/complete', async (c) => {
   const sessionId = c.req.param('sessionId');
-  const userId = c.get('userId');
+  const userId = await requireUserId(c);
+  if (userId instanceof Response) return userId;
   const parsed = sessionCompleteSchema.safeParse(await c.req.json().catch(() => ({})));
   if (!parsed.success) return c.json({ error: 'Validation failed', details: parsed.error.flatten() }, 400);
   const db = c.get('db');

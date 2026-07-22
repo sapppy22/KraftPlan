@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { eq, and } from 'drizzle-orm';
 import { assignPlanSchema } from '@kraftplan/shared';
 import { schema, type DB } from '../db';
-import type { AppEnv } from '../context';
+import { requireUserId, type AppEnv } from '../context';
 
 // ── Shared: resolve the session scheduled for a given date ──
 export async function resolveToday(db: DB, userId: string, dateStr: string) {
@@ -208,7 +208,8 @@ plans.get('/:id', async (c) => {
 
 // POST /plans/custom — create a user-built plan
 plans.post('/custom', async (c) => {
-  const userId = c.get('userId');
+  const userId = await requireUserId(c);
+  if (userId instanceof Response) return userId;
   const db = c.get('db');
   const body = await c.req.json().catch(() => null);
   if (!body) return c.json({ error: 'Invalid body' }, 400);
@@ -294,7 +295,8 @@ plans.post('/custom', async (c) => {
 export const userPlan = new Hono<AppEnv>();
 
 userPlan.post('/', async (c) => {
-  const userId = c.get('userId');
+  const userId = await requireUserId(c);
+  if (userId instanceof Response) return userId;
   const parsed = assignPlanSchema.safeParse(await c.req.json().catch(() => ({})));
   if (!parsed.success) return c.json({ error: 'Validation failed', details: parsed.error.flatten() }, 400);
   const { planId, startDate } = parsed.data;

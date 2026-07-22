@@ -24,30 +24,10 @@ const CATEGORY_BADGE: Record<string, string> = {
   mobility: 'bg-cyan-500/15 text-cyan-400',
 };
 
-/** Extract YouTube video ID from URL */
-function extractYouTubeId(url: string): string | null {
-  const patterns = [
-    /youtu\.be\/([^?&]+)/,
-    /youtube\.com\/watch\?v=([^&]+)/,
-    /youtube\.com\/embed\/([^?&]+)/,
-    /youtube\.com\/shorts\/([^?&]+)/,
-  ];
-  for (const p of patterns) {
-    const m = url.match(p);
-    if (m) return m[1];
-  }
-  return null;
-}
-
-import { STATIC_EXERCISES } from '@/lib/exerciseData';
-
-/** Map exercise name to YouTube tutorial URL from static data */
-const TUTORIAL_URL_BY_NAME = new Map(
-  STATIC_EXERCISES.map((ex) => [ex.name, ex.tutorialUrl]),
-);
+import { extractYouTubeId, getTutorialUrl } from '@/lib/exerciseData';
 
 function buildEmbedSrc(exerciseName: string, tutorialUrl?: string | null): string | null {
-  const url = tutorialUrl || TUTORIAL_URL_BY_NAME.get(exerciseName);
+  const url = getTutorialUrl(exerciseName, tutorialUrl);
   if (url && url.includes('youtube')) {
     const vid = extractYouTubeId(url);
     if (vid) return `https://www.youtube.com/embed/${vid}?rel=0`;
@@ -113,8 +93,7 @@ export default function ExerciseDetailPage() {
                 <p className="text-sm">No tutorial video available</p>
                 <a
                   href={
-                    exercise.tutorialUrl ||
-                    TUTORIAL_URL_BY_NAME.get(exercise.name) ||
+                    getTutorialUrl(exercise.name, exercise.tutorialUrl) ||
                     `https://www.youtube.com/results?search_query=${encodeURIComponent(exercise.name + ' exercise tutorial')}`
                   }
                   target="_blank"

@@ -7,12 +7,7 @@ import { Loader2, Search, Dumbbell, Youtube } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { EXERCISE_CATEGORIES, DIFFICULTY_LEVELS } from '@kraftplan/shared';
 
-import { STATIC_EXERCISES } from '@/lib/exerciseData';
-
-/** Map exercise name to YouTube tutorial URL from static data */
-const TUTORIAL_URL_BY_NAME = new Map(
-  STATIC_EXERCISES.map((ex) => [ex.name, ex.tutorialUrl]),
-);
+import { getExerciseThumb, getTutorialUrl } from '@/lib/exerciseData';
 const CATEGORY_COLORS: Record<string, string> = {
   resistance: 'bg-blue-500',
   cardio: 'bg-green-500',
@@ -124,20 +119,29 @@ export default function LibraryPage() {
           {data.exercises.map((ex: any) => {
             const accentColor = CATEGORY_COLORS[ex.category] ?? 'bg-brand-orange';
             const diffBadge = DIFFICULTY_BADGE[ex.difficulty] ?? 'bg-white/10 text-text-secondary';
-            const ytUrl = ex.tutorialUrl
-              ? ex.tutorialUrl
-              : TUTORIAL_URL_BY_NAME.get(ex.name) ||
-                `https://www.youtube.com/results?search_query=${encodeURIComponent(
-                  ex.name + ' exercise tutorial',
-                )}`;
+            const ytUrl =
+              getTutorialUrl(ex.name, ex.tutorialUrl) ||
+              `https://www.youtube.com/results?search_query=${encodeURIComponent(
+                ex.name + ' exercise tutorial',
+              )}`;
+            const thumb = getExerciseThumb(ex.name, ex.tutorialUrl);
             return (
               <div key={ex.id} className="relative group">
                 <Link href={`/library/${ex.id}`}>
-                  <div className="card-surface card-hover cursor-pointer overflow-hidden flex h-full">
-                    {/* Category colour bar */}
-                    <div className={`w-1 shrink-0 ${accentColor} rounded-l-xl`} />
+                  <div className="card-surface card-hover cursor-pointer overflow-hidden flex flex-col h-full">
+                    {thumb && (
+                      <img
+                        src={thumb}
+                        alt={`${ex.name} tutorial thumbnail`}
+                        loading="lazy"
+                        className="w-full aspect-video object-cover"
+                      />
+                    )}
+                    <div className="flex flex-1">
+                      {/* Category colour bar */}
+                      <div className={`w-1 shrink-0 ${accentColor}${thumb ? '' : ' rounded-l-xl'}`} />
 
-                    <div className="flex-1 p-4 space-y-2">
+                      <div className="flex-1 p-4 space-y-2">
                       {/* Icon + name row */}
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-lg bg-bg-elevated flex items-center justify-center shrink-0 mt-0.5">
@@ -162,6 +166,7 @@ export default function LibraryPage() {
                           {ex.difficulty}
                         </span>
                       </div>
+                    </div>
                     </div>
                   </div>
                 </Link>

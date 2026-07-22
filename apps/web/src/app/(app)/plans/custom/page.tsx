@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Plus, Trash2, Search, ChevronLeft, Loader2, Dumbbell, Play, Wand2 } from 'lucide-react';
 import { api } from '@/lib/api/client';
+import { getTutorialUrl } from '@/lib/exerciseData';
 import { Card } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { PLAN_CATEGORIES, DIFFICULTY_LEVELS } from '@kraftplan/shared';
@@ -101,7 +102,7 @@ export default function CustomPlanBuilderPage() {
                   name: ex.name,
                   category: ex.category,
                   primaryMuscles: ex.primaryMuscles || [],
-                  tutorialUrl: ex.tutorialUrl || null,
+                  tutorialUrl: getTutorialUrl(ex.name, ex.tutorialUrl) || null,
                   instructions: ex.instructions || [],
                   cues: ex.cues || [],
                   sets: 3,

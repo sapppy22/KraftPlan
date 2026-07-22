@@ -1603,3 +1603,35 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     cues: ['Drive knees', 'Stay low'],
   },
 ];
+
+const TUTORIAL_URL_BY_NAME = new Map(
+  STATIC_EXERCISES.map((ex) => [ex.name, ex.tutorialUrl]),
+);
+
+/** Curated tutorial URL for an exercise, preferring a DB-provided URL. */
+export function getTutorialUrl(name: string, dbUrl?: string | null): string | undefined {
+  return dbUrl || TUTORIAL_URL_BY_NAME.get(name);
+}
+
+/** Extract the video ID from a YouTube watch/share/embed/shorts URL. */
+export function extractYouTubeId(url: string): string | null {
+  const patterns = [
+    /youtu\.be\/([^?&]+)/,
+    /youtube\.com\/watch\?v=([^&]+)/,
+    /youtube\.com\/embed\/([^?&]+)/,
+    /youtube\.com\/shorts\/([^?&]+)/,
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+/** YouTube thumbnail for an exercise, when a curated video exists. */
+export function getExerciseThumb(name: string, dbUrl?: string | null): string | null {
+  const url = getTutorialUrl(name, dbUrl);
+  if (!url) return null;
+  const id = extractYouTubeId(url);
+  return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
+}

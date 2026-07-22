@@ -18,3 +18,10 @@ export async function authUserId(c: Context<AppEnv>): Promise<string | null> {
     return null;
   }
 }
+
+/** For write endpoints: real userId, or a ready-to-return 401 for guests. */
+export async function requireUserId(c: Context<AppEnv>): Promise<string | Response> {
+  const uid = await authUserId(c);
+  if (!uid) return c.json({ error: 'Sign in required for this action' }, 401);
+  return uid;
+}
