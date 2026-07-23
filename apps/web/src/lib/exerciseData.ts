@@ -1801,14 +1801,30 @@ export function extractYouTubeId(url: string): string | null {
   return null;
 }
 
+export const CATEGORY_FALLBACK_IMAGES: Record<string, string> = {
+  resistance: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80',
+  cardio: 'https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=600&q=80',
+  bodyweight: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80',
+  plyo: 'https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=600&q=80',
+  mobility: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80',
+  olympic: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80',
+  stretching: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80',
+};
+
+export function getCategoryFallbackImage(category?: string): string {
+  if (category && CATEGORY_FALLBACK_IMAGES[category]) {
+    return CATEGORY_FALLBACK_IMAGES[category];
+  }
+  return 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80';
+}
+
 /** YouTube thumbnail for an exercise, when a curated video exists. */
-export function getExerciseThumb(name: string, dbUrl?: string | null): string | null {
+export function getExerciseThumb(name: string, dbUrl?: string | null, category?: string): string {
   const url = getTutorialUrl(name, dbUrl);
   if (url) {
     const id = extractYouTubeId(url);
-    if (id) return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+    if (id) return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
   }
-  // High-quality fallback fitness image thumbnail if no video ID matched
-  return `https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80`;
+  return getCategoryFallbackImage(category);
 }
 

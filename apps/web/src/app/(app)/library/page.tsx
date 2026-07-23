@@ -7,7 +7,7 @@ import { Loader2, Search, Dumbbell, Youtube } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { EXERCISE_CATEGORIES, DIFFICULTY_LEVELS } from '@kraftplan/shared';
 
-import { getExerciseThumb, getTutorialUrl } from '@/lib/exerciseData';
+import { getExerciseThumb, getTutorialUrl, getCategoryFallbackImage } from '@/lib/exerciseData';
 const CATEGORY_COLORS: Record<string, string> = {
   resistance: 'bg-blue-500',
   cardio: 'bg-green-500',
@@ -124,26 +124,29 @@ export default function LibraryPage() {
               `https://www.youtube.com/results?search_query=${encodeURIComponent(
                 ex.name + ' exercise tutorial',
               )}`;
-            const thumb = getExerciseThumb(ex.name, ex.tutorialUrl);
+            const thumb = getExerciseThumb(ex.name, ex.tutorialUrl, ex.category);
+            const fallbackImg = getCategoryFallbackImage(ex.category);
             return (
               <div key={ex.id} className="relative group">
                 <Link href={`/library/${ex.id}`}>
                   <div className="card-surface card-hover cursor-pointer overflow-hidden flex flex-col h-full">
-                    {thumb ? (
-                      <div className="relative aspect-video w-full bg-black/40 overflow-hidden shrink-0">
-                        <img
-                          src={thumb}
-                          alt={`${ex.name} tutorial thumbnail`}
-                          loading="lazy"
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-bg-surface/80 via-transparent to-transparent" />
-                      </div>
-                    ) : (
-                      <div className="relative aspect-video w-full bg-bg-elevated flex items-center justify-center shrink-0">
-                        <Dumbbell className="w-8 h-8 text-text-secondary opacity-30" />
-                      </div>
-                    )}
+                    <div className="relative aspect-video w-full bg-black/40 overflow-hidden shrink-0">
+                      <img
+                        src={thumb}
+                        alt={`${ex.name} tutorial thumbnail`}
+                        loading="lazy"
+                        onLoad={(e) => {
+                          if (e.currentTarget.naturalWidth <= 120) {
+                            e.currentTarget.src = fallbackImg;
+                          }
+                        }}
+                        onError={(e) => {
+                          e.currentTarget.src = fallbackImg;
+                        }}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-bg-surface/80 via-transparent to-transparent" />
+                    </div>
                     <div className="flex flex-1">
                       {/* Category colour bar */}
                       <div className={`w-1 shrink-0 ${accentColor}${thumb ? '' : ' rounded-l-xl'}`} />
