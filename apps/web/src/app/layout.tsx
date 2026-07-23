@@ -7,6 +7,7 @@ const description =
   'Discover, customize, and execute structured gym workout plans. Track your progress and crush your PRs.';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://kraftplan.pages.dev'),
   title: {
     default: title,
     template: '%s · KraftPlan',
