@@ -269,7 +269,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-bg-base pb-32">
       {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 bg-bg-base/90 backdrop-blur-lg border-b border-white/5">
+      <header className="sticky top-0 z-40 bg-bg-base/90 backdrop-blur-lg border-b border-hairline">
         <div className="flex items-center justify-between px-4 h-14 max-w-3xl mx-auto">
           <button
             onClick={() => setShowConfirmExit(true)}
@@ -303,7 +303,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
                   } catch {/* silent */}
                   router.push('/dashboard');
                 }}
-                className="flex-1 py-2.5 bg-bg-surface rounded-pill text-text-primary font-medium text-sm border border-white/10"
+                className="flex-1 py-2.5 bg-bg-surface rounded-pill text-text-primary font-medium text-sm border border-hairline"
               >
                 Save &amp; Exit
               </button>
@@ -334,7 +334,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
                   className={cn('w-2.5 h-2.5 rounded-full transition-all', {
                     'w-4 bg-brand-orange': isCurrent,
                     'bg-success': !isCurrent && isDone,
-                    'bg-white/20': !isCurrent && !isDone,
+                    'bg-surface-2': !isCurrent && !isDone,
                   })}
                 />
               );
@@ -402,7 +402,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
                       value={timeInput}
                       onChange={(e) => setTimeInput(e.target.value)}
                       placeholder="e.g. 300"
-                      className="w-full px-3 py-2.5 bg-bg-elevated border border-white/10 rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
+                      className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
                     />
                   </div>
                   <div>
@@ -413,7 +413,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
                       value={distInput}
                       onChange={(e) => setDistInput(e.target.value)}
                       placeholder="e.g. 1000"
-                      className="w-full px-3 py-2.5 bg-bg-elevated border border-white/10 rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
+                      className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
                     />
                   </div>
                 </div>
@@ -428,7 +428,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
                       value={weightInput}
                       onChange={(e) => setWeightInput(e.target.value)}
                       placeholder="0"
-                      className="w-full px-3 py-2.5 bg-bg-elevated border border-white/10 rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
+                      className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
                     />
                   </div>
                   <div>
@@ -439,7 +439,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
                       value={repsInput}
                       onChange={(e) => setRepsInput(e.target.value)}
                       placeholder="0"
-                      className="w-full px-3 py-2.5 bg-bg-elevated border border-white/10 rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
+                      className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
                     />
                   </div>
                 </div>
@@ -456,7 +456,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
                 </button>
                 <button
                   onClick={() => handleLogSet('skipped')}
-                  className="px-4 py-3.5 bg-bg-surface border border-white/10 rounded-pill text-text-secondary hover:text-text-primary font-medium"
+                  className="px-4 py-3.5 bg-bg-surface border border-hairline rounded-pill text-text-secondary hover:text-text-primary font-medium"
                   aria-label="Skip set"
                 >
                   <SkipForward className="w-5 h-5" />
@@ -519,7 +519,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
         <button
           onClick={handleFinishSession}
           disabled={finishing}
-          className="w-full py-3.5 bg-bg-surface border border-white/10 rounded-pill text-text-primary font-semibold hover:bg-bg-elevated transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+          className="w-full py-3.5 bg-bg-surface border border-hairline rounded-pill text-text-primary font-semibold hover:bg-bg-elevated transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {finishing && <Loader2 className="w-4 h-4 animate-spin" />}
           Finish Session

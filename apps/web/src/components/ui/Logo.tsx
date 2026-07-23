@@ -23,8 +23,11 @@ export function Logo({ size = 36, showWordmark = true, className, wordmarkClassN
         width={size}
         height={size}
         priority
-        className="rounded-[22%] shadow-sm shadow-black/40 ring-1 ring-white/5"
-        style={{ width: size, height: size }}
+        className="rounded-[22%] shadow-sm shadow-black/10 ring-1 ring-hairline"
+        // Recolor the orange/amber mark into the healthcare-green palette while
+        // preserving the crossed-dumbbell "K" over a peak. hue-rotate shifts the
+        // warm gradient (~25°) toward green (~150°).
+        style={{ width: size, height: size, filter: 'hue-rotate(112deg) saturate(0.92)' }}
       />
       {showWordmark && (
         <span

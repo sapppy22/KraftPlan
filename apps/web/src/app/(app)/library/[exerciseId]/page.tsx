@@ -87,7 +87,7 @@ export default function ExerciseDetailPage() {
         const embedSrc = buildEmbedSrc(exercise.name, exercise.tutorialUrl);
         if (!embedSrc) {
           return (
-            <div className="relative w-full rounded-2xl overflow-hidden bg-bg-surface border border-white/5" style={{ paddingTop: '56.25%' }}>
+            <div className="relative w-full rounded-2xl overflow-hidden bg-bg-surface border border-hairline" style={{ paddingTop: '56.25%' }}>
               <div className="absolute inset-0 flex flex-col items-center justify-center text-text-secondary">
                 <Dumbbell className="w-12 h-12 mb-4 opacity-50" />
                 <p className="text-sm">No tutorial video available</p>
@@ -174,7 +174,7 @@ export default function ExerciseDetailPage() {
             {exercise.equipment.map((eq: string) => (
               <span
                 key={eq}
-                className="px-3 py-1.5 rounded-pill text-sm border border-white/10 capitalize"
+                className="px-3 py-1.5 rounded-pill text-sm border border-hairline capitalize"
               >
                 {eq.replace(/-/g, ' ')}
               </span>

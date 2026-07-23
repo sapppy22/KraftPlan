@@ -108,7 +108,7 @@ export default function PlansPage() {
           </Card>
         </Link>
         <Link href="/workout/custom" className="block">
-          <Card interactive className="p-4 h-full border-white/10 hover:border-white/20">
+          <Card interactive className="p-4 h-full border-hairline hover:border-hairline-strong">
             <Zap className="w-6 h-6 text-brand-amber mb-2" />
             <p className="font-semibold text-sm">Quick Workout</p>
             <p className="text-xs text-text-secondary mt-0.5">Start without a plan</p>
@@ -123,7 +123,7 @@ export default function PlansPage() {
           className={`px-4 py-2 rounded-pill text-sm border whitespace-nowrap shrink-0 transition-all ${
             !activeSection
               ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
-              : 'border-white/10 bg-bg-surface text-text-secondary'
+              : 'border-hairline bg-bg-surface text-text-secondary'
           }`}
         >
           All Plans
@@ -135,7 +135,7 @@ export default function PlansPage() {
             className={`flex items-center gap-1.5 px-4 py-2 rounded-pill text-sm border whitespace-nowrap shrink-0 transition-all ${
               activeSection === s.id
                 ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
-                : 'border-white/10 bg-bg-surface text-text-secondary'
+                : 'border-hairline bg-bg-surface text-text-secondary'
             }`}
           >
             {s.label}
@@ -183,7 +183,7 @@ export default function PlansPage() {
                             <span className="px-2.5 py-1 rounded-pill text-xs font-medium bg-brand-orange/10 text-brand-orange capitalize">
                               {GOAL_LABELS[plan.category] || plan.category}
                             </span>
-                            <span className={`px-2.5 py-1 rounded-pill text-xs font-medium capitalize ${DIFFICULTY_BADGE[plan.difficulty] ?? 'bg-white/10 text-text-secondary'}`}>
+                            <span className={`px-2.5 py-1 rounded-pill text-xs font-medium capitalize ${DIFFICULTY_BADGE[plan.difficulty] ?? 'bg-surface-2 text-text-secondary'}`}>
                               {plan.difficulty}
                             </span>
                           </div>

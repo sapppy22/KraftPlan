@@ -129,14 +129,14 @@ export function GuidedTour() {
 
       {/* Tooltip Card */}
       <div 
-        className="bg-bg-surface border border-white/10 p-5 rounded-2xl shadow-2xl w-[320px] max-w-[90vw]"
+        className="bg-bg-surface border border-hairline p-5 rounded-2xl shadow-2xl w-[320px] max-w-[90vw]"
         style={tooltipStyle}
       >
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs font-bold uppercase tracking-wider text-brand-orange">
             Step {currentStep + 1} of {TOUR_STEPS.length}
           </span>
-          <button onClick={completeTour} className="text-text-secondary hover:text-white">
+          <button onClick={completeTour} className="text-text-secondary hover:text-text-primary">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -151,7 +151,7 @@ export function GuidedTour() {
             {TOUR_STEPS.map((_, i) => (
               <div 
                 key={i} 
-                className={`w-1.5 h-1.5 rounded-full ${i === currentStep ? 'bg-brand-orange' : 'bg-white/20'}`} 
+                className={`w-1.5 h-1.5 rounded-full ${i === currentStep ? 'bg-brand-green' : 'bg-surface-2'}`}
               />
             ))}
           </div>

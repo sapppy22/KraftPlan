@@ -20,7 +20,7 @@ const typeColors = {
 const statusColors = {
   open: 'bg-success/10 text-success',
   in_progress: 'bg-brand-orange/10 text-brand-orange',
-  closed: 'bg-white/10 text-text-secondary',
+  closed: 'bg-surface-2 text-text-secondary',
 };
 
 export default function AdminFeedbackPage() {
@@ -49,8 +49,8 @@ export default function AdminFeedbackPage() {
 
   if (!feedback?.length) {
     return (
-      <div className="text-center p-12 bg-bg-surface border border-white/5 rounded-2xl">
-        <MessageCircle className="w-12 h-12 text-white/20 mx-auto mb-4" />
+      <div className="text-center p-12 bg-bg-surface border border-hairline rounded-2xl">
+        <MessageCircle className="w-12 h-12 text-text-secondary/40 mx-auto mb-4" />
         <h3 className="text-lg font-medium text-text-primary mb-2">No feedback yet</h3>
         <p className="text-text-secondary">When users submit feedback, it will appear here.</p>
       </div>
@@ -60,7 +60,7 @@ export default function AdminFeedbackPage() {
   return (
     <div className="grid grid-cols-1 gap-4">
       {feedback.map((item: any) => (
-        <div key={item.id} className="p-5 bg-bg-surface border border-white/5 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-start">
+        <div key={item.id} className="p-5 bg-bg-surface border border-hairline rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-start">
           <div className="space-y-3 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border ${typeColors[item.type as keyof typeof typeColors]}`}>
@@ -75,7 +75,7 @@ export default function AdminFeedbackPage() {
                 {item.userId ? 'Registered User' : 'Guest'}
               </span>
             </div>
-            <p className="text-sm text-text-primary leading-relaxed whitespace-pre-wrap bg-white/5 p-4 rounded-xl border border-white/5">
+            <p className="text-sm text-text-primary leading-relaxed whitespace-pre-wrap bg-surface-1 p-4 rounded-xl border border-hairline">
               {item.message}
             </p>
           </div>
@@ -87,7 +87,7 @@ export default function AdminFeedbackPage() {
             <select
               value={item.status}
               onChange={(e) => updateStatus.mutate({ id: item.id, status: e.target.value })}
-              className="bg-bg-base border border-white/10 rounded-lg px-3 py-1.5 text-xs text-text-primary focus:outline-none focus:border-brand-orange"
+              className="bg-bg-base border border-hairline rounded-lg px-3 py-1.5 text-xs text-text-primary focus:outline-none focus:border-brand-orange"
             >
               <option value="open">Mark Open</option>
               <option value="in_progress">Mark In Progress</option>

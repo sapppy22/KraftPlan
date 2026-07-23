@@ -88,7 +88,7 @@ export default function RegisterPage() {
         {/* Step indicator */}
         <div className="flex items-center gap-2">
           <div className={`flex-1 h-1 rounded-full transition-all ${step === 'account' ? 'bg-brand-orange' : 'bg-brand-orange'}`} />
-          <div className={`flex-1 h-1 rounded-full transition-all ${step === 'body' ? 'bg-brand-orange' : 'bg-white/10'}`} />
+          <div className={`flex-1 h-1 rounded-full transition-all ${step === 'body' ? 'bg-brand-orange' : 'bg-surface-2'}`} />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -100,7 +100,7 @@ export default function RegisterPage() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3 bg-bg-surface border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-3 bg-bg-surface border border-hairline rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
                   placeholder="Alex"
                   required
                 />
@@ -111,7 +111,7 @@ export default function RegisterPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 bg-bg-surface border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-3 bg-bg-surface border border-hairline rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
                   placeholder="you@example.com"
                   required
                 />
@@ -123,7 +123,7 @@ export default function RegisterPage() {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 pr-12 bg-bg-surface border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
+                    className="w-full px-4 py-3 pr-12 bg-bg-surface border border-hairline rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
                     placeholder="At least 8 characters"
                     minLength={8}
                     required
@@ -150,7 +150,7 @@ export default function RegisterPage() {
                     type="number"
                     value={weightKg}
                     onChange={(e) => setWeightKg(e.target.value)}
-                    className="w-full px-4 py-3 bg-bg-surface border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
+                    className="w-full px-4 py-3 bg-bg-surface border border-hairline rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
                     placeholder="70"
                     min={20}
                     max={300}
@@ -162,7 +162,7 @@ export default function RegisterPage() {
                     type="number"
                     value={heightCm}
                     onChange={(e) => setHeightCm(e.target.value)}
-                    className="w-full px-4 py-3 bg-bg-surface border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
+                    className="w-full px-4 py-3 bg-bg-surface border border-hairline rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
                     placeholder="175"
                     min={100}
                     max={250}
@@ -182,7 +182,7 @@ export default function RegisterPage() {
                       className={`py-2.5 rounded-xl border text-sm font-medium capitalize transition-all ${
                         experience === lvl
                           ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
-                          : 'border-white/10 bg-bg-surface text-text-secondary'
+                          : 'border-hairline bg-bg-surface text-text-secondary'
                       }`}
                     >
                       {lvl}
@@ -203,7 +203,7 @@ export default function RegisterPage() {
                       className={`px-3 py-2.5 rounded-xl border text-left text-xs font-medium transition-all ${
                         goal === cat
                           ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
-                          : 'border-white/10 bg-bg-surface text-text-secondary'
+                          : 'border-hairline bg-bg-surface text-text-secondary'
                       }`}
                     >
                       {goalLabels[cat]}
@@ -218,7 +218,7 @@ export default function RegisterPage() {
 
               <div className="flex gap-3">
                 <button type="button" onClick={() => setStep('account')}
-                  className="px-4 py-3 bg-bg-surface border border-white/10 rounded-xl text-text-secondary text-sm">
+                  className="px-4 py-3 bg-bg-surface border border-hairline rounded-xl text-text-secondary text-sm">
                   Back
                 </button>
                 <Button type="submit" className="flex-1" disabled={loading}>
@@ -231,7 +231,7 @@ export default function RegisterPage() {
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-white/10"></div>
+            <div className="w-full border-t border-hairline"></div>
           </div>
           <div className="relative flex justify-center text-sm">
             <span className="px-2 bg-bg-base text-text-secondary">or</span>

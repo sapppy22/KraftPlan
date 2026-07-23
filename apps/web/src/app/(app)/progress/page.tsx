@@ -11,14 +11,14 @@ import { api } from '@/lib/api/client';
 import { Card } from '@/components/ui/Card';
 import { formatDate } from '@/lib/utils';
 
-const ORANGE = '#F97316';
-const AMBER  = '#FBBF24';
-const GREEN  = '#22C55E';
+const ORANGE = '#059669'; // primary emerald
+const AMBER  = '#0D9488'; // teal
+const GREEN  = '#34D399'; // mint
 
 function CustomTooltip({ active, payload, label, unit }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-bg-elevated border border-white/10 rounded-xl px-3 py-2 text-sm shadow-xl">
+    <div className="bg-bg-elevated border border-hairline rounded-xl px-3 py-2 text-sm shadow-xl">
       <p className="text-text-secondary text-xs mb-1">{label}</p>
       <p className="font-bold text-text-primary">{payload[0].value} {unit}</p>
     </div>
@@ -219,7 +219,7 @@ export default function ProgressPage() {
                     <div key={day.date}
                       title={`${day.date}: ${day.completed ? 'Completed ✓' : 'No session'}`}
                       className={`w-4 h-4 rounded-sm transition-colors cursor-default ${
-                        day.completed ? 'bg-success' : 'bg-white/10'
+                        day.completed ? 'bg-success' : 'bg-surface-2'
                       }`}
                     />
                   ))}
@@ -234,7 +234,7 @@ export default function ProgressPage() {
                 <h3 className="font-semibold mb-3">Session Log</h3>
                 <div className="space-y-1.5 max-h-64 overflow-y-auto pr-1">
                   {adherence.slice().reverse().map((day: any) => (
-                    <div key={day.date} className="flex items-center justify-between py-1.5 border-b border-white/5 last:border-0">
+                    <div key={day.date} className="flex items-center justify-between py-1.5 border-b border-hairline last:border-0">
                       <span className="text-sm">{formatDate(day.date)}</span>
                       <span className={`text-sm font-medium ${day.completed ? 'text-success' : 'text-text-secondary'}`}>
                         {day.completed ? '✓ Done' : '—'}

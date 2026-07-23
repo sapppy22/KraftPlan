@@ -205,21 +205,21 @@ export default function CustomPlanBuilderPage() {
             value={planName}
             onChange={(e) => setPlanName(e.target.value)}
             placeholder="e.g. My Push Pull Legs"
-            className="w-full px-4 py-3 bg-bg-elevated border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
+            className="w-full px-4 py-3 bg-bg-elevated border border-hairline rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
           />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-1.5">Category</label>
             <select value={category} onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-4 py-3 bg-bg-elevated border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-brand-orange">
+              className="w-full px-4 py-3 bg-bg-elevated border border-hairline rounded-xl text-text-primary focus:outline-none focus:border-brand-orange">
               {PLAN_CATEGORIES.map((c) => <option key={c} value={c}>{categoryLabels[c]}</option>)}
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium mb-1.5">Difficulty</label>
             <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}
-              className="w-full px-4 py-3 bg-bg-elevated border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-brand-orange capitalize">
+              className="w-full px-4 py-3 bg-bg-elevated border border-hairline rounded-xl text-text-primary focus:outline-none focus:border-brand-orange capitalize">
               {DIFFICULTY_LEVELS.map((d) => <option key={d} value={d}>{d}</option>)}
             </select>
           </div>
@@ -246,7 +246,7 @@ export default function CustomPlanBuilderPage() {
           {day.exercises.length > 0 && (
             <div className="space-y-3">
               {day.exercises.map((ex, exIdx) => (
-                <div key={exIdx} className="p-3 rounded-xl bg-bg-elevated border border-white/5 space-y-3">
+                <div key={exIdx} className="p-3 rounded-xl bg-bg-elevated border border-hairline space-y-3">
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <p className="font-medium text-sm">{ex.name}</p>
@@ -275,7 +275,7 @@ export default function CustomPlanBuilderPage() {
                             updateExercise(dayIdx, exIdx, field,
                               type === 'number' ? (parseInt(e.target.value) || (min ?? 0)) : e.target.value)
                           }
-                          className="w-full px-2 py-2 bg-bg-surface border border-white/10 rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange"
+                          className="w-full px-2 py-2 bg-bg-surface border border-hairline rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange"
                         />
                       </div>
                     ))}
@@ -287,7 +287,7 @@ export default function CustomPlanBuilderPage() {
 
           <button
             onClick={() => openPicker(dayIdx)}
-            className="w-full py-3 border-2 border-dashed border-white/15 rounded-xl text-text-secondary hover:border-brand-orange hover:text-brand-orange transition-all flex items-center justify-center gap-2 text-sm font-medium"
+            className="w-full py-3 border-2 border-dashed border-hairline rounded-xl text-text-secondary hover:border-brand-orange hover:text-brand-orange transition-all flex items-center justify-center gap-2 text-sm font-medium"
           >
             <Plus className="w-4 h-4" />
             Add exercise to {day.title}
@@ -298,7 +298,7 @@ export default function CustomPlanBuilderPage() {
       {/* Add Day */}
       <button
         onClick={() => setDays((d) => [...d, { title: `Day ${d.length + 1}`, exercises: [] }])}
-        className="w-full py-3 border-2 border-dashed border-white/15 rounded-xl text-text-secondary hover:border-white/30 hover:text-text-primary transition-all flex items-center justify-center gap-2 font-medium text-sm"
+        className="w-full py-3 border-2 border-dashed border-hairline rounded-xl text-text-secondary hover:border-hairline-strong hover:text-text-primary transition-all flex items-center justify-center gap-2 font-medium text-sm"
       >
         <Plus className="w-4 h-4" />
         Add another training day
@@ -322,10 +322,10 @@ export default function CustomPlanBuilderPage() {
       {/* ── Exercise Picker Modal ── */}
       {pickerOpen && (
         <div className="fixed inset-0 z-[100] bg-black/80 flex items-end sm:items-center justify-center p-0 sm:p-4">
-          <div className="bg-bg-base border border-white/10 rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg flex flex-col"
+          <div className="bg-bg-base border border-hairline rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg flex flex-col"
             style={{ maxHeight: '90vh' }}>
             {/* Modal header */}
-            <div className="flex items-center justify-between px-4 py-4 border-b border-white/10 shrink-0">
+            <div className="flex items-center justify-between px-4 py-4 border-b border-hairline shrink-0">
               <h3 className="font-semibold">Add to &quot;{days[pickerDayIndex]?.title}&quot;</h3>
               <button
                 onClick={() => setPickerOpen(false)}
@@ -336,7 +336,7 @@ export default function CustomPlanBuilderPage() {
             </div>
 
             {/* Search + filters */}
-            <div className="px-4 py-3 space-y-3 shrink-0 border-b border-white/5">
+            <div className="px-4 py-3 space-y-3 shrink-0 border-b border-hairline">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary pointer-events-none" />
                 <input
@@ -345,7 +345,7 @@ export default function CustomPlanBuilderPage() {
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search by name or muscle..."
                   autoFocus
-                  className="w-full pl-10 pr-4 py-2.5 bg-bg-surface border border-white/10 rounded-xl text-sm placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
+                  className="w-full pl-10 pr-4 py-2.5 bg-bg-surface border border-hairline rounded-xl text-sm placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
                 />
               </div>
               <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
@@ -356,7 +356,7 @@ export default function CustomPlanBuilderPage() {
                     className={`px-3 py-1.5 rounded-pill text-xs border capitalize whitespace-nowrap shrink-0 transition-all ${
                       filterCat === c
                         ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
-                        : 'border-white/10 text-text-secondary hover:border-white/20'
+                        : 'border-hairline text-text-secondary hover:border-hairline-strong'
                     }`}
                   >
                     {c || 'All'}
@@ -388,8 +388,8 @@ export default function CustomPlanBuilderPage() {
                       onClick={() => addExerciseToDayFromPicker(ex)}
                       className={`w-full p-3 rounded-xl border text-left flex items-center gap-3 transition-all ${
                         alreadyAdded
-                          ? 'opacity-40 cursor-not-allowed border-white/5 bg-bg-surface/50'
-                          : 'border-white/10 bg-bg-surface hover:border-brand-orange/60 hover:bg-brand-orange/5 active:scale-[0.98]'
+                          ? 'opacity-40 cursor-not-allowed border-hairline bg-bg-surface/50'
+                          : 'border-hairline bg-bg-surface hover:border-brand-orange/60 hover:bg-brand-orange/5 active:scale-[0.98]'
                       }`}
                     >
                       <div className="w-10 h-10 rounded-lg bg-bg-elevated flex items-center justify-center shrink-0">

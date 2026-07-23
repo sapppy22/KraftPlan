@@ -57,7 +57,7 @@
   }
 
   .gradient-bg {
-    background: var(--gradient-brand);
+    background: var(--gradient-brand) !important;
   }
 
   /* Clean clinical card — solid surface, hairline stroke, subtle shadow */

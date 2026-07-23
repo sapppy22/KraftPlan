@@ -149,19 +149,19 @@ export default function CustomWorkoutPage() {
                   <label className="block text-[10px] text-text-secondary mb-1">Sets</label>
                   <input type="number" min={1} max={20} value={ex.sets}
                     onChange={(e) => updateExercise(idx, 'sets', parseInt(e.target.value) || 1)}
-                    className="w-full px-2 py-2 bg-bg-surface border border-white/10 rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange" />
+                    className="w-full px-2 py-2 bg-bg-surface border border-hairline rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange" />
                 </div>
                 <div>
                   <label className="block text-[10px] text-text-secondary mb-1">Reps / Time</label>
                   <input type="text" value={ex.repsScheme}
                     onChange={(e) => updateExercise(idx, 'repsScheme', e.target.value)}
-                    className="w-full px-2 py-2 bg-bg-surface border border-white/10 rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange" />
+                    className="w-full px-2 py-2 bg-bg-surface border border-hairline rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange" />
                 </div>
                 <div>
                   <label className="block text-[10px] text-text-secondary mb-1">Rest (sec)</label>
                   <input type="number" min={0} max={600} value={ex.restSec}
                     onChange={(e) => updateExercise(idx, 'restSec', parseInt(e.target.value) || 60)}
-                    className="w-full px-2 py-2 bg-bg-surface border border-white/10 rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange" />
+                    className="w-full px-2 py-2 bg-bg-surface border border-hairline rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange" />
                 </div>
               </div>
             </Card>
@@ -171,7 +171,7 @@ export default function CustomWorkoutPage() {
 
       <button
         onClick={openPicker}
-        className="w-full py-4 border-2 border-dashed border-white/15 rounded-2xl text-text-secondary hover:border-brand-orange hover:text-brand-orange transition-all flex items-center justify-center gap-2 font-medium"
+        className="w-full py-4 border-2 border-dashed border-hairline rounded-2xl text-text-secondary hover:border-brand-orange hover:text-brand-orange transition-all flex items-center justify-center gap-2 font-medium"
       >
         <Plus className="w-5 h-5" />
         {exercises.length === 0 ? 'Add your first exercise' : 'Add another exercise'}
@@ -194,8 +194,8 @@ export default function CustomWorkoutPage() {
       {/* Exercise Picker Modal */}
       {pickerOpen && (
         <div className="fixed inset-0 z-[100] bg-black/80 flex items-end sm:items-center justify-center p-0 sm:p-4">
-          <div className="bg-bg-base border border-white/10 rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg flex flex-col" style={{ maxHeight: '90vh' }}>
-            <div className="flex items-center justify-between px-4 py-4 border-b border-white/10 shrink-0">
+          <div className="bg-bg-base border border-hairline rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg flex flex-col" style={{ maxHeight: '90vh' }}>
+            <div className="flex items-center justify-between px-4 py-4 border-b border-hairline shrink-0">
               <h3 className="font-semibold">Add Exercise</h3>
               <button onClick={() => setPickerOpen(false)}
                 className="w-8 h-8 flex items-center justify-center rounded-lg bg-bg-surface text-text-secondary hover:text-text-primary text-lg">
@@ -203,7 +203,7 @@ export default function CustomWorkoutPage() {
               </button>
             </div>
 
-            <div className="px-4 py-3 space-y-3 shrink-0 border-b border-white/5">
+            <div className="px-4 py-3 space-y-3 shrink-0 border-b border-hairline">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary pointer-events-none" />
                 <input
@@ -212,14 +212,14 @@ export default function CustomWorkoutPage() {
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search exercises..."
                   autoFocus
-                  className="w-full pl-10 pr-4 py-2.5 bg-bg-surface border border-white/10 rounded-xl text-sm placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
+                  className="w-full pl-10 pr-4 py-2.5 bg-bg-surface border border-hairline rounded-xl text-sm placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
                 />
               </div>
               <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
                 {EXERCISE_CATS.map((c) => (
                   <button key={c} onClick={() => setFilterCat(c)}
                     className={`px-3 py-1.5 rounded-pill text-xs border capitalize whitespace-nowrap shrink-0 transition-all ${
-                      filterCat === c ? 'border-brand-orange bg-brand-orange/10 text-brand-orange' : 'border-white/10 text-text-secondary hover:border-white/20'
+                      filterCat === c ? 'border-brand-orange bg-brand-orange/10 text-brand-orange' : 'border-hairline text-text-secondary hover:border-hairline-strong'
                     }`}>
                     {c || 'All'}
                   </button>
@@ -244,7 +244,7 @@ export default function CustomWorkoutPage() {
                   return (
                     <button key={ex.id} disabled={added} onClick={() => addExercise(ex)}
                       className={`w-full p-3 rounded-xl border text-left flex items-center gap-3 transition-all ${
-                        added ? 'opacity-40 cursor-not-allowed border-white/5' : 'border-white/10 bg-bg-surface hover:border-brand-orange/60 active:scale-[0.98]'
+                        added ? 'opacity-40 cursor-not-allowed border-hairline' : 'border-hairline bg-bg-surface hover:border-brand-orange/60 active:scale-[0.98]'
                       }`}>
                       <div className="w-10 h-10 rounded-lg bg-bg-elevated flex items-center justify-center shrink-0">
                         <Dumbbell className="w-5 h-5 text-text-secondary opacity-60" />

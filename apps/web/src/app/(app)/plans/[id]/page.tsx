@@ -117,7 +117,7 @@ export default function PlanDetailPage() {
             {plan.equipment.map((eq: string) => (
               <span
                 key={eq}
-                className="px-4 py-2 rounded-pill text-sm border border-white/10 capitalize"
+                className="px-4 py-2 rounded-pill text-sm border border-hairline capitalize"
               >
                 {eq.replace(/-/g, ' ')}
               </span>

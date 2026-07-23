@@ -30,7 +30,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3 pb-6 border-b border-white/5">
+      <div className="flex items-center gap-3 pb-6 border-b border-hairline">
         <div className="w-12 h-12 rounded-xl bg-danger/10 flex items-center justify-center">
           <ShieldAlert className="w-6 h-6 text-danger" />
         </div>
@@ -40,7 +40,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </div>
 
-      <div className="flex gap-2 border-b border-white/5 pb-4 overflow-x-auto no-scrollbar">
+      <div className="flex gap-2 border-b border-hairline pb-4 overflow-x-auto no-scrollbar">
         {tabs.map((tab) => {
           const isActive = tab.href === '/admin' ? pathname === tab.href : pathname.startsWith(tab.href);
           const Icon = tab.icon;
@@ -50,9 +50,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               href={tab.href}
               className={cn(
                 'flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors whitespace-nowrap',
-                isActive 
-                  ? 'bg-white/10 text-white' 
-                  : 'text-text-secondary hover:text-white hover:bg-white/5'
+                isActive
+                  ? 'bg-brand-green/10 text-brand-green'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-surface-1'
               )}
             >
               <Icon className="w-4 h-4" />

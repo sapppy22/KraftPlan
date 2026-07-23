@@ -97,7 +97,7 @@ export default function OnboardingPage() {
                 {currentIdx > i ? <Check className="w-3.5 h-3.5" /> : i + 1}
               </div>
               {i < stepsOrder.length - 1 && (
-                <div className={`flex-1 h-0.5 transition-all ${currentIdx > i ? 'bg-brand-orange' : 'bg-white/10'}`} />
+                <div className={`flex-1 h-0.5 transition-all ${currentIdx > i ? 'bg-brand-orange' : 'bg-surface-2'}`} />
               )}
             </div>
           ))}
@@ -116,7 +116,7 @@ export default function OnboardingPage() {
                   type="number"
                   value={weightKg}
                   onChange={(e) => setWeightKg(e.target.value)}
-                  className="w-full px-4 py-3 bg-bg-surface border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-3 bg-bg-surface border border-hairline rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
                   placeholder="70"
                   min={20} max={300}
                 />
@@ -127,14 +127,14 @@ export default function OnboardingPage() {
                   type="number"
                   value={heightCm}
                   onChange={(e) => setHeightCm(e.target.value)}
-                  className="w-full px-4 py-3 bg-bg-surface border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-3 bg-bg-surface border border-hairline rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
                   placeholder="175"
                   min={100} max={250}
                 />
               </div>
             </div>
             {weightKg && heightCm && (
-              <div className="p-4 rounded-xl bg-bg-surface border border-white/10">
+              <div className="p-4 rounded-xl bg-bg-surface border border-hairline">
                 <p className="text-sm text-text-secondary">BMI</p>
                 <p className="text-2xl font-bold mt-0.5">
                   {(parseFloat(weightKg) / Math.pow(parseFloat(heightCm) / 100, 2)).toFixed(1)}
@@ -156,7 +156,7 @@ export default function OnboardingPage() {
             {PLAN_CATEGORIES.map((cat) => (
               <button key={cat} onClick={() => { setGoal(cat); next(); }}
                 className={`p-4 rounded-xl border text-left transition-all ${
-                  goal === cat ? 'border-brand-orange bg-brand-orange/10' : 'border-white/10 bg-bg-surface hover:border-white/20'
+                  goal === cat ? 'border-brand-orange bg-brand-orange/10' : 'border-hairline bg-bg-surface hover:border-hairline-strong'
                 }`}>
                 <span className="text-sm font-medium">{goalLabels[cat]}</span>
               </button>
@@ -170,7 +170,7 @@ export default function OnboardingPage() {
             {DIFFICULTY_LEVELS.map((level) => (
               <button key={level} onClick={() => { setExperience(level); next(); }}
                 className={`p-4 rounded-xl border text-left capitalize transition-all ${
-                  experience === level ? 'border-brand-orange bg-brand-orange/10' : 'border-white/10 bg-bg-surface hover:border-white/20'
+                  experience === level ? 'border-brand-orange bg-brand-orange/10' : 'border-hairline bg-bg-surface hover:border-hairline-strong'
                 }`}>
                 <span className="font-medium">{level}</span>
                 <p className="text-xs text-text-secondary mt-1">
@@ -191,7 +191,7 @@ export default function OnboardingPage() {
               {EQUIPMENT_TYPES.map((eq) => (
                 <button key={eq} onClick={() => toggleEquipment(eq)}
                   className={`px-4 py-2 rounded-pill text-sm border transition-all capitalize ${
-                    equipment.includes(eq) ? 'border-brand-orange bg-brand-orange/10 text-brand-orange' : 'border-white/10 bg-bg-surface text-text-secondary'
+                    equipment.includes(eq) ? 'border-brand-orange bg-brand-orange/10 text-brand-orange' : 'border-hairline bg-bg-surface text-text-secondary'
                   }`}>
                   {eq.replace(/-/g, ' ')}
                 </button>

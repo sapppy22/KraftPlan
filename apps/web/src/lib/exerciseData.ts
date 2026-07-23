@@ -1635,13 +1635,155 @@ export const STATIC_EXERCISES: StaticExercise[] = [
   },
 ];
 
+const ALL_EXERCISE_TUTORIALS: Record<string, string> = {
+  // Chest
+  'barbell bench press': 'https://www.youtube.com/watch?v=vcBig73ojpE',
+  'bench press': 'https://www.youtube.com/watch?v=vcBig73ojpE',
+  'dumbbell bench press': 'https://www.youtube.com/watch?v=VmB1G1K7v80',
+  'incline barbell bench press': 'https://www.youtube.com/watch?v=SrqOu55lrYU',
+  'incline dumbbell press': 'https://www.youtube.com/watch?v=8iPEnn-ltC8',
+  'decline bench press': 'https://www.youtube.com/watch?v=LfyQBUKR8SE',
+  'dumbbell fly': 'https://www.youtube.com/watch?v=eozdVDA78K0',
+  'cable crossover': 'https://www.youtube.com/watch?v=Iwe6AmxVf7o',
+  'pushup': 'https://www.youtube.com/watch?v=IODxDxX7oi4',
+  'push up': 'https://www.youtube.com/watch?v=IODxDxX7oi4',
+  'diamond pushup': 'https://www.youtube.com/watch?v=J0DnG1_S92I',
+  'diamond push up': 'https://www.youtube.com/watch?v=J0DnG1_S92I',
+  'decline pushup': 'https://www.youtube.com/watch?v=SKPab2YC8BE',
+  'decline push up': 'https://www.youtube.com/watch?v=SKPab2YC8BE',
+
+  // Back
+  'barbell deadlift': 'https://www.youtube.com/watch?v=vl5a9R9CqgA',
+  'deadlift': 'https://www.youtube.com/watch?v=vl5a9R9CqgA',
+  'pullup': 'https://www.youtube.com/watch?v=eGo4IYlbE5g',
+  'pull up': 'https://www.youtube.com/watch?v=eGo4IYlbE5g',
+  'lat pulldown': 'https://www.youtube.com/watch?v=CAwf7n6Luuc',
+  'barbell row': 'https://www.youtube.com/watch?v=FWJR5YbTboU',
+  'bent over row': 'https://www.youtube.com/watch?v=FWJR5YbTboU',
+  'seated cable row': 'https://www.youtube.com/watch?v=GZbfZ033f74',
+  'seated row': 'https://www.youtube.com/watch?v=GZbfZ033f74',
+  'dumbbell row': 'https://www.youtube.com/watch?v=roCP6wCXPqo',
+  'tbar row': 'https://www.youtube.com/watch?v=j3Igk5nyZE4',
+  't bar row': 'https://www.youtube.com/watch?v=j3Igk5nyZE4',
+  'face pull': 'https://www.youtube.com/watch?v=rep-qVOkqgk',
+  'dead hang': 'https://www.youtube.com/watch?v=_LxFwZ1p33E',
+  'chest supported row': 'https://www.youtube.com/watch?v=xQNrFHEMhI4',
+
+  // Shoulders
+  'overhead press ohp': 'https://www.youtube.com/watch?v=2yjwXTZQDDI',
+  'overhead press': 'https://www.youtube.com/watch?v=2yjwXTZQDDI',
+  'ohp': 'https://www.youtube.com/watch?v=2yjwXTZQDDI',
+  'dumbbell shoulder press': 'https://www.youtube.com/watch?v=qEwKCR5JCog',
+  'lateral raise': 'https://www.youtube.com/watch?v=3VcKaXpzqRo',
+  'front raise': 'https://www.youtube.com/watch?v=-t7fuZ0KhDA',
+  'bentover lateral raise': 'https://www.youtube.com/watch?v=ttvfGg9d070',
+  'bent over lateral raise': 'https://www.youtube.com/watch?v=ttvfGg9d070',
+  'arnold press': 'https://www.youtube.com/watch?v=6Z15_WdxmVw',
+  'upright row': 'https://www.youtube.com/watch?v=amCU-ziHITM',
+  'shrug': 'https://www.youtube.com/watch?v=cJRVVxmytaM',
+
+  // Arms
+  'barbell curl': 'https://www.youtube.com/watch?v=kwG2ipFRgfo',
+  'bicep curl': 'https://www.youtube.com/watch?v=kwG2ipFRgfo',
+  'dumbbell curl': 'https://www.youtube.com/watch?v=sAq_ocpRh_I',
+  'hammer curl': 'https://www.youtube.com/watch?v=zC3nLlEvin4',
+  'preacher curl': 'https://www.youtube.com/watch?v=fIWP-FRFNU0',
+  'cable bicep curl': 'https://www.youtube.com/watch?v=AsAVbk76a5w',
+  'concentration curl': 'https://www.youtube.com/watch?v=Jvj2wV0vOYU',
+  'closegrip bench press': 'https://www.youtube.com/watch?v=nEF0bv2fw94',
+  'close grip bench press': 'https://www.youtube.com/watch?v=nEF0bv2fw94',
+  'tricep pushdown': 'https://www.youtube.com/watch?v=2-LAMcpzODU',
+  'overhead tricep extension': 'https://www.youtube.com/watch?v=_gsU15g15is',
+  'skull crusher': 'https://www.youtube.com/watch?v=d_KZxkY_0cM',
+  'tricep kickback': 'https://www.youtube.com/watch?v=6SS6K3lAwZ8',
+  'tricep dip': 'https://www.youtube.com/watch?v=2z8JmcrW-As',
+  'dip': 'https://www.youtube.com/watch?v=2z8JmcrW-As',
+  'chinup': 'https://www.youtube.com/watch?v=brhRXlOhsAM',
+  'chin up': 'https://www.youtube.com/watch?v=brhRXlOhsAM',
+
+  // Legs
+  'barbell back squat': 'https://www.youtube.com/watch?v=i7J5h7GpNmA',
+  'back squat': 'https://www.youtube.com/watch?v=i7J5h7GpNmA',
+  'squat': 'https://www.youtube.com/watch?v=i7J5h7GpNmA',
+  'front squat': 'https://www.youtube.com/watch?v=v-mqmOWcRey',
+  'leg press': 'https://www.youtube.com/watch?v=IZxyjW7MPJQ',
+  'bulgarian split squat': 'https://www.youtube.com/watch?v=2C-uNgKwPLE',
+  'goblet squat': 'https://www.youtube.com/watch?v=MxsFDhcyFyE',
+  'walking lunge': 'https://www.youtube.com/watch?v=D7KaRcUTQeE',
+  'dumbbell lunges': 'https://www.youtube.com/watch?v=D7KaRcUTQeE',
+  'lunge': 'https://www.youtube.com/watch?v=D7KaRcUTQeE',
+  'romanian deadlift rdl': 'https://www.youtube.com/watch?v=JCXUYuzwNrM',
+  'romanian deadlift': 'https://www.youtube.com/watch?v=JCXUYuzwNrM',
+  'rdl': 'https://www.youtube.com/watch?v=JCXUYuzwNrM',
+  'leg curl': 'https://www.youtube.com/watch?v=1Tq3QdYUuHs',
+  'hip thrust': 'https://www.youtube.com/watch?v=LM8XHLYJoYs',
+  'glute bridge': 'https://www.youtube.com/watch?v=OUgsJ8-Vi0E',
+  'cable pullthrough': 'https://www.youtube.com/watch?v=A0z6vC32k3s',
+  'cable pull through': 'https://www.youtube.com/watch?v=A0z6vC32k3s',
+  'standing calf raise': 'https://www.youtube.com/watch?v=-M4-G8p1fCI',
+  'calf raise': 'https://www.youtube.com/watch?v=-M4-G8p1fCI',
+  'seated calf raise': 'https://www.youtube.com/watch?v=JbyjNymZOt0',
+  'sumo deadlift': 'https://www.youtube.com/watch?v=dlDiRbUFLG0',
+  'hack squat': 'https://www.youtube.com/watch?v=EdtPBSuRfOY',
+
+  // Core & Cardio & Plyo & Mobility
+  'plank': 'https://www.youtube.com/watch?v=ASdvN_XEl_c',
+  'side plank': 'https://www.youtube.com/watch?v=N_q-jGqd368',
+  'cable woodchop': 'https://www.youtube.com/watch?v=pApyJzB4_4w',
+  'dead bug': 'https://www.youtube.com/watch?v=4XLEnwUr1d8',
+  'hanging leg raise': 'https://www.youtube.com/watch?v=Pr1ieGZ5atk',
+  'russian twist': 'https://www.youtube.com/watch?v=wkD8rjkodUI',
+  'ab wheel rollout': 'https://www.youtube.com/watch?v=0M8COjQ1HLY',
+  'bird dog': 'https://www.youtube.com/watch?v=wiFNA3sqjCA',
+  'treadmill run': 'https://www.youtube.com/watch?v=p-PXJmGGV3s',
+  'rowing machine': 'https://www.youtube.com/watch?v=H0r9jLlKoC4',
+  'assault bike': 'https://www.youtube.com/watch?v=xV3fU2u0Nfs',
+  'jump rope': 'https://www.youtube.com/watch?v=u3zgHI8QnqE',
+  'box jump': 'https://www.youtube.com/watch?v=52r_Ul5k03g',
+  'burpee': 'https://www.youtube.com/watch?v=JZQA08SlJnM',
+  'broad jump': 'https://www.youtube.com/watch?v=0l-2mBsmP74',
+  'kettlebell swing': 'https://www.youtube.com/watch?v=sSESeQAir2M',
+  'medicine ball slam': 'https://www.youtube.com/watch?v=g4m6EeqT42U',
+  'mountain climber': 'https://www.youtube.com/watch?v=nmwgirgXLYM',
+  'worlds greatest stretch': 'https://www.youtube.com/watch?v=-Vj6Jp6Y74g',
+  'catcow': 'https://www.youtube.com/watch?v=w_UKcI1F2Sc',
+  'cat cow': 'https://www.youtube.com/watch?v=w_UKcI1F2Sc',
+  'childs pose': 'https://www.youtube.com/watch?v=2MJGg-fUKh0',
+  'figure4 stretch piriformis': 'https://www.youtube.com/watch?v=tJnK1Y1Wz28',
+  '9090 hip stretch': 'https://www.youtube.com/watch?v=P_Yw8B73j0g',
+  'thoracic spine rotation': 'https://www.youtube.com/watch?v=Gj4bVv1uXW8',
+  'wall ball': 'https://www.youtube.com/watch?v=eqd_7h4A28A',
+  'sled push': 'https://www.youtube.com/watch?v=2P_KkS98E2E',
+  'sled pull': 'https://www.youtube.com/watch?v=gT_qE1R8D6w',
+  'farmers carry': 'https://www.youtube.com/watch?v=Fkzk_RqlYig',
+  'farmer carry': 'https://www.youtube.com/watch?v=Fkzk_RqlYig',
+  'battle ropes': 'https://www.youtube.com/watch?v=Mn_gc5dFJhM',
+  'sandbag shoulder': 'https://www.youtube.com/watch?v=cW_q6R6V-E8',
+  'prowler sprint': 'https://www.youtube.com/watch?v=83Xy1L5oKEE',
+  'jump squat': 'https://www.youtube.com/watch?v=CVaEhXotL7M',
+};
+
 const TUTORIAL_URL_BY_NAME = new Map(
   STATIC_EXERCISES.map((ex) => [ex.name, ex.tutorialUrl]),
 );
 
+function normalizeName(str: string): string {
+  return str.toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
 /** Curated tutorial URL for an exercise, preferring a DB-provided URL. */
 export function getTutorialUrl(name: string, dbUrl?: string | null): string | undefined {
-  return dbUrl || TUTORIAL_URL_BY_NAME.get(name);
+  if (dbUrl) return dbUrl;
+  const staticMatch = TUTORIAL_URL_BY_NAME.get(name);
+  if (staticMatch) return staticMatch;
+
+  const key = normalizeName(name);
+  for (const [dictKey, url] of Object.entries(ALL_EXERCISE_TUTORIALS)) {
+    if (normalizeName(dictKey) === key || key.includes(normalizeName(dictKey))) {
+      return url;
+    }
+  }
+  return undefined;
 }
 
 /** Extract the video ID from a YouTube watch/share/embed/shorts URL. */
@@ -1662,7 +1804,11 @@ export function extractYouTubeId(url: string): string | null {
 /** YouTube thumbnail for an exercise, when a curated video exists. */
 export function getExerciseThumb(name: string, dbUrl?: string | null): string | null {
   const url = getTutorialUrl(name, dbUrl);
-  if (!url) return null;
-  const id = extractYouTubeId(url);
-  return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
+  if (url) {
+    const id = extractYouTubeId(url);
+    if (id) return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+  }
+  // High-quality fallback fitness image thumbnail if no video ID matched
+  return `https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80`;
 }
+

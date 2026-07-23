@@ -57,9 +57,9 @@ export function RestTimer({ restSec, onComplete, onSkip }: RestTimerProps) {
           />
           <defs>
             <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#EF4423" />
-              <stop offset="50%" stopColor="#F97316" />
-              <stop offset="100%" stopColor="#FBBF24" />
+              <stop offset="0%" stopColor="#0D9488" />
+              <stop offset="50%" stopColor="#059669" />
+              <stop offset="100%" stopColor="#10B981" />
             </linearGradient>
           </defs>
         </svg>

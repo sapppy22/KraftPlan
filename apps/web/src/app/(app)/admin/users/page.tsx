@@ -32,10 +32,10 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <div className="bg-bg-surface border border-white/5 rounded-2xl overflow-hidden">
+    <div className="bg-bg-surface border border-hairline rounded-2xl overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm whitespace-nowrap">
-          <thead className="bg-white/5 text-text-secondary">
+          <thead className="bg-surface-1 text-text-secondary">
             <tr>
               <th className="px-6 py-4 font-medium">Name</th>
               <th className="px-6 py-4 font-medium">Email</th>
@@ -44,9 +44,9 @@ export default function AdminUsersPage() {
               <th className="px-6 py-4 font-medium text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-hairline">
             {users?.map((user: any) => (
-              <tr key={user.id} className="hover:bg-white/[0.02] transition-colors">
+              <tr key={user.id} className="hover:bg-surface-1 transition-colors">
                 <td className="px-6 py-4">
                   <div className="font-medium text-text-primary">{user.name}</div>
                   {user.id === currentUser?.id && (
@@ -58,7 +58,7 @@ export default function AdminUsersPage() {
                 <td className="px-6 py-4 text-text-secondary">{user.email}</td>
                 <td className="px-6 py-4">
                   <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium ${
-                    user.role === 'admin' ? 'bg-success/10 text-success' : 'bg-white/10 text-text-secondary'
+                    user.role === 'admin' ? 'bg-success/10 text-success' : 'bg-surface-2 text-text-secondary'
                   }`}>
                     {user.role === 'admin' ? <Shield className="w-3.5 h-3.5" /> : <User className="w-3.5 h-3.5" />}
                     <span className="capitalize">{user.role}</span>
@@ -72,7 +72,7 @@ export default function AdminUsersPage() {
                     value={user.role}
                     disabled={user.id === currentUser?.id}
                     onChange={(e) => updateRole.mutate({ id: user.id, role: e.target.value as 'admin' | 'user' })}
-                    className="bg-bg-base border border-white/10 rounded-lg px-3 py-1.5 text-xs text-text-primary focus:outline-none focus:border-brand-orange disabled:opacity-50"
+                    className="bg-bg-base border border-hairline rounded-lg px-3 py-1.5 text-xs text-text-primary focus:outline-none focus:border-brand-orange disabled:opacity-50"
                   >
                     <option value="user">User</option>
                     <option value="admin">Admin</option>

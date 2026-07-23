@@ -127,7 +127,7 @@ export default function DashboardPage() {
               Week {data.programProgress.currentWeek} of {data.programProgress.totalWeeks}
             </span>
           </div>
-          <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+          <div className="h-2 bg-surface-2 rounded-full overflow-hidden">
             <div
               className="h-full gradient-bg rounded-full transition-all duration-500"
               style={{ width: `${data.programProgress.percent}%` }}

@@ -61,7 +61,7 @@ export default function LibraryPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search exercises..."
-          className="w-full pl-12 pr-4 py-3 bg-bg-surface border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
+          className="w-full pl-12 pr-4 py-3 bg-bg-surface border border-hairline rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
         />
       </div>
 
@@ -72,7 +72,7 @@ export default function LibraryPage() {
           className={`px-3 py-1.5 rounded-pill text-xs border transition-all ${
             !category
               ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
-              : 'border-white/10 bg-bg-surface text-text-secondary hover:border-white/30'
+              : 'border-hairline bg-bg-surface text-text-secondary hover:border-hairline-strong'
           }`}
         >
           All
@@ -84,7 +84,7 @@ export default function LibraryPage() {
             className={`px-3 py-1.5 rounded-pill text-xs border transition-all capitalize ${
               category === cat
                 ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
-                : 'border-white/10 bg-bg-surface text-text-secondary hover:border-white/30'
+                : 'border-hairline bg-bg-surface text-text-secondary hover:border-hairline-strong'
             }`}
           >
             {cat}
@@ -101,7 +101,7 @@ export default function LibraryPage() {
             className={`px-3 py-1.5 rounded-pill text-xs border transition-all capitalize ${
               muscle === m
                 ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
-                : 'border-white/10 bg-bg-surface text-text-secondary hover:border-white/30'
+                : 'border-hairline bg-bg-surface text-text-secondary hover:border-hairline-strong'
             }`}
           >
             {m}
@@ -118,7 +118,7 @@ export default function LibraryPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {data.exercises.map((ex: any) => {
             const accentColor = CATEGORY_COLORS[ex.category] ?? 'bg-brand-orange';
-            const diffBadge = DIFFICULTY_BADGE[ex.difficulty] ?? 'bg-white/10 text-text-secondary';
+            const diffBadge = DIFFICULTY_BADGE[ex.difficulty] ?? 'bg-surface-2 text-text-secondary';
             const ytUrl =
               getTutorialUrl(ex.name, ex.tutorialUrl) ||
               `https://www.youtube.com/results?search_query=${encodeURIComponent(
@@ -185,7 +185,7 @@ export default function LibraryPage() {
                   rel="noopener noreferrer"
                   title={`Watch ${ex.name} tutorial on YouTube`}
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute top-2 right-2 z-10 px-2 py-1 rounded-md bg-black/80 hover:bg-red-600 text-white text-[11px] font-medium flex items-center gap-1.5 backdrop-blur-md border border-white/15 transition-all shadow-lg"
+                  className="absolute top-2 right-2 z-10 px-2 py-1 rounded-md bg-black/80 hover:bg-red-600 text-white text-[11px] font-medium flex items-center gap-1.5 backdrop-blur-md border border-white/20 transition-all shadow-lg"
                 >
                   <Youtube className="w-3.5 h-3.5 text-red-500 fill-current" />
                   <span>Tutorial</span>

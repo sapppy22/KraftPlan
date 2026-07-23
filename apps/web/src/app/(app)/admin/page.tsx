@@ -6,7 +6,7 @@ import { Users, MessageSquare, CalendarDays, Dumbbell } from 'lucide-react';
 
 function StatCard({ title, value, icon: Icon, colorClass }: any) {
   return (
-    <div className="p-6 bg-bg-surface border border-white/5 rounded-2xl">
+    <div className="p-6 bg-bg-surface border border-hairline rounded-2xl">
       <div className="flex items-center gap-4">
         <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${colorClass}`}>
           <Icon className="w-6 h-6" />
@@ -60,7 +60,7 @@ export default function AdminDashboard() {
       </div>
       
       {/* Could add a chart or recent activity here in the future */}
-      <div className="p-6 bg-bg-surface border border-white/5 rounded-2xl">
+      <div className="p-6 bg-bg-surface border border-hairline rounded-2xl">
         <h3 className="font-bold text-lg mb-2">System Status</h3>
         <p className="text-text-secondary text-sm">All services are operating normally. Use the tabs above to manage specific sections of the platform.</p>
       </div>
