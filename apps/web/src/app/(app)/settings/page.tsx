@@ -9,9 +9,12 @@ import { Card } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
+import { useAuth } from '@/lib/AuthContext';
+
 export default function SettingsPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { logout } = useAuth();
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ['profile'],
@@ -42,8 +45,7 @@ export default function SettingsPage() {
   }
 
   function handleLogout() {
-    localStorage.removeItem('accessToken');
-    router.push('/login');
+    logout();
   }
 
   if (isLoading) {

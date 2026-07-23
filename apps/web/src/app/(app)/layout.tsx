@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, CalendarDays, BarChart3, Library, Settings, UserCircle } from 'lucide-react';
+import { LayoutDashboard, CalendarDays, BarChart3, Library, Settings, UserCircle, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/ui/Logo';
 import { AuthGuard } from '@/components/AuthGuard';
@@ -21,7 +21,7 @@ const navItems = [
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { user, isGuest } = useAuth();
+  const { user, isGuest, logout } = useAuth();
 
   return (
     <AuthGuard>
@@ -32,7 +32,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <Link href="/dashboard" aria-label="KraftPlan home">
               <Logo size={30} wordmarkClassName="text-lg" />
             </Link>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <ThemeToggle variant="compact" />
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-text-secondary hidden sm:inline">{isGuest ? 'Guest' : user?.name}</span>
@@ -40,6 +40,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   <UserCircle className="w-5 h-5 text-text-secondary" />
                 </div>
               </div>
+              <button
+                onClick={logout}
+                title="Log Out"
+                className="p-2 rounded-xl text-text-secondary hover:text-danger hover:bg-danger/10 transition-colors"
+                aria-label="Log Out"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </header>
@@ -90,11 +98,33 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               })}
             </nav>
 
-            {/* Sidebar Theme Switcher Footer */}
-            <div className="px-6 py-4 border-t border-hairline flex items-center justify-between">
-              <span className="text-xs font-medium text-text-secondary">Theme</span>
-              <ThemeToggle variant="pill" />
+            {/* Sidebar Theme & Logout Switcher Footer */}
+            <div className="px-6 py-4 border-t border-hairline space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-text-secondary">Theme</span>
+                <ThemeToggle variant="pill" />
+              </div>
+              <button
+                onClick={logout}
+                className="flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-xs font-medium text-text-secondary hover:text-danger hover:bg-danger/10 transition-all group"
+              >
+                <LogOut className="w-4 h-4 transition-colors group-hover:text-danger" />
+                <span>Log Out</span>
+              </button>
             </div>
+
+            {user?.role === 'admin' && (
+              <div className="px-4 py-3 border-t border-hairline">
+                <Link
+                  href="/admin"
+                  className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-text-secondary hover:text-text-primary transition-all group"
+                >
+                  <Settings className="w-5 h-5 transition-colors group-hover:text-success" />
+                  <span className="text-success font-semibold">Admin Portal</span>
+                </Link>
+              </div>
+            )}
+          </aside>
 
             {user?.role === 'admin' && (
               <div className="px-4 py-3 border-t border-hairline">

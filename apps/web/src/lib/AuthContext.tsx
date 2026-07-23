@@ -73,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('accessToken');
     setToken(null);
     queryClient.clear();
-    router.push('/login');
+    router.push('/');
   };
 
   const continueAsGuest = () => {
