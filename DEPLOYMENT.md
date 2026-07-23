@@ -15,8 +15,7 @@ Browser ─▶ Cloudflare Pages (Next.js)  ─▶  Cloudflare Worker (Hono API) 
 ```
 
 The API is a single Cloudflare Worker (`apps/worker`, Hono + `drizzle-orm/neon-http`)
-— **zero cold starts**, unlike a sleeping Node host. A Node/Fastify equivalent
-(`apps/api`) is kept as an optional Render fallback (see the end).
+— **zero cold starts**, unlike a sleeping Node host.
 
 ---
 
@@ -93,14 +92,7 @@ and (optionally) the Worker on push. Copy them into `.github/workflows/` via the
 web UI (a token without the `workflow` scope can't push them). Add repo secrets
 `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
 
-## Fallback: Node API on Render (only if you can't use Workers)
 
-`apps/api` is the same API as a Fastify server. Deploy it via the Render Blueprint
-(`render.yaml`, free, no card) and set `NEXT_PUBLIC_API_BASE` to the Render URL. Note
-Render's free tier sleeps after ~15 min idle (cold starts) — the Worker path above
-avoids this entirely, which is why it's the default.
-
----
 
 ## Local development
 
