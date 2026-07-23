@@ -1172,6 +1172,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['chest', 'triceps'],
     equipment: ['dumbbells', 'bench'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=VmB1G1K7v94',
     instructions: [
       'Lie on bench holding dumbbells at chest',
       'Press up until arms extended',
@@ -1186,6 +1187,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['upper chest', 'front delts', 'triceps'],
     equipment: ['barbell', 'bench'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=SrqOu55lrYU',
     instructions: [
       'Set bench to 30-45°',
       'Press bar from upper chest',
@@ -1200,6 +1202,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['lower chest', 'triceps'],
     equipment: ['barbell', 'bench'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=LfyQBUKR8SE',
     instructions: [
       'Lie on decline bench',
       'Press bar from lower chest',
@@ -1214,6 +1217,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['triceps', 'chest'],
     equipment: ['none'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=J0DnG1_S92I',
     instructions: [
       'Hands together forming diamond under chest',
       'Lower until chest touches hands',
@@ -1228,6 +1232,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['upper chest', 'front delts'],
     equipment: ['bench'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=SKPab2YC8BE',
     instructions: [
       'Feet on bench, hands on floor',
       'Lower chest to floor',
@@ -1242,6 +1247,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['upper back', 'lats', 'biceps'],
     equipment: ['barbell'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=FWJR5Ve8bnQ',
     instructions: [
       'Hinge at hips with flat back',
       'Grip bar shoulder width',
@@ -1257,6 +1263,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['upper back', 'lats', 'rear delts'],
     equipment: ['barbell'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=j3Igk5nyZE4',
     instructions: [
       'Straddle bar with T-bar handle',
       'Hinge at hips',
@@ -1272,6 +1279,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['lats', 'forearms'],
     equipment: ['pull-up-bar'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=UX9YhDfl4jY',
     instructions: [
       'Grip bar and hang fully extended',
       'Relax shoulders',
@@ -1286,6 +1294,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['front delts'],
     equipment: ['dumbbells'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=-t7fuZ0KhDA',
     instructions: [
       'Hold dumbbells in front of thighs',
       'Raise arms forward to shoulder height',
@@ -1300,6 +1309,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['traps', 'side delts'],
     equipment: ['barbell', 'dumbbells'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=amCU-ziHITM',
     instructions: [
       'Hold bar/dumbbells in front of thighs',
       'Pull up along body to chin',
@@ -1314,6 +1324,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['traps'],
     equipment: ['dumbbells', 'barbell'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=g6qbq4a1_hU',
     instructions: [
       'Stand holding weight at sides',
       'Shrug shoulders straight up',
@@ -1328,6 +1339,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['biceps'],
     equipment: ['dumbbells'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=sAq_ocpRn_w',
     instructions: [
       'Stand with dumbbells at sides, palms forward',
       'Curl one or both to shoulders',
@@ -1342,6 +1354,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['biceps'],
     equipment: ['barbell', 'bench'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=fIWP-FRFNU0',
     instructions: [
       'Sit at preacher bench with arms on pad',
       'Curl bar toward shoulders',
@@ -1356,6 +1369,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['biceps'],
     equipment: ['cable-machine'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=NFzTWp2qacE',
     instructions: [
       'Set cable to low position',
       'Grip handle and curl to shoulder',
@@ -1370,6 +1384,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['biceps'],
     equipment: ['dumbbells'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=Jvj2wV0vOYU',
     instructions: [
       'Sit on bench, legs apart',
       'Brace elbow against inner thigh',
@@ -1384,6 +1399,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['triceps (long head)'],
     equipment: ['dumbbells', 'cable-machine'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=-Vyt2QdsR7E',
     instructions: [
       'Hold dumbbell overhead with both hands',
       'Lower behind head by bending elbows',
@@ -1398,6 +1414,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['triceps'],
     equipment: ['dumbbells'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=6SS6K3lAwZ8',
     instructions: [
       'Hinge at hips with flat back',
       'Elbows at 90°',
@@ -1412,6 +1429,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'advanced',
     primaryMuscles: ['quads', 'glutes', 'upper back'],
     equipment: ['barbell', 'squat-rack'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=v-mQm_droOI',
     instructions: [
       'Bar on front shoulders, clean grip',
       'Sit straight down keeping torso upright',
@@ -1426,6 +1444,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['glutes', 'hamstrings'],
     equipment: ['cable-machine'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=A7d_vE_39Yk',
     instructions: [
       'Set cable low, face away',
       'Hinge at hips holding rope between legs',
@@ -1440,6 +1459,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['calves (soleus)'],
     equipment: ['dumbbells'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=JbyjNymZOt0',
     instructions: [
       'Sit with weight on knees',
       'Raise heels up',
@@ -1454,6 +1474,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['obliques', 'shoulders'],
     equipment: ['mat'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=N_s9T326fU0',
     instructions: [
       'Lie on side, forearm on floor',
       'Lift hips forming straight line',
@@ -1468,6 +1489,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['obliques', 'core'],
     equipment: ['cable-machine'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=pZapBMiC444',
     instructions: [
       'Set cable at shoulder height',
       'Stand sideways, pull diagonally across body',
@@ -1482,6 +1504,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['quads', 'glutes', 'core', 'shoulders'],
     equipment: ['cardio-machine'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=xV3fU2u0Nfs',
     instructions: [
       'Pedal with arms and legs',
       'Maintain steady pace or sprint',
@@ -1496,6 +1519,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['calves', 'quads', 'shoulders'],
     equipment: ['none'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=u3zgHI8QnqE',
     instructions: [
       'Hold handles at hip height',
       'Jump with soft knees',
@@ -1510,6 +1534,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['lats', 'lower back', 'hips'],
     equipment: ['mat'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=2MJGg-fUKh0',
     instructions: [
       'Kneel then sit back on heels',
       'Extend arms forward on floor',
@@ -1525,6 +1550,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['glutes', 'piriformis', 'hips'],
     equipment: ['mat'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=tJnK1Y1Wz28',
     instructions: [
       'Lie on back, knees bent',
       'Cross one ankle over opposite knee',
@@ -1539,6 +1565,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['hips', 'glutes'],
     equipment: ['mat'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=P_Yw8B73j0g',
     instructions: [
       'Sit with front leg bent 90° external, back leg 90° internal',
       'Lean forward over front leg',
@@ -1553,6 +1580,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['quads', 'glutes', 'shoulders', 'core'],
     equipment: ['medicine-ball'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=eqd_7h4A28A',
     instructions: [
       'Hold ball at chest, squat down',
       'Explode up and throw ball to target',
@@ -1567,6 +1595,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['upper back', 'hamstrings', 'glutes', 'core'],
     equipment: ['sled'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=gT_qE1R8D6w',
     instructions: [
       'Face away from sled',
       'Grip rope, walk forward, drag sled behind',
@@ -1581,6 +1610,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['shoulders', 'core', 'glutes', 'quads'],
     equipment: ['medicine-ball'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=cW_q6R6V-E8',
     instructions: [
       'Squat to pick up sandbag',
       'Clean it to one shoulder',
@@ -1595,6 +1625,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'advanced',
     primaryMuscles: ['quads', 'glutes', 'hamstrings', 'calves'],
     equipment: ['sled'],
+    tutorialUrl: 'https://www.youtube.com/watch?v=83Xy1L5oKEE',
     instructions: [
       'Load sled, grip handles',
       'Sprint pushing sled for distance',

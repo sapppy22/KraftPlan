@@ -5,7 +5,7 @@ export const runtime = 'edge';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Loader2, ChevronLeft, Dumbbell, AlertCircle, Plus } from 'lucide-react';
+import { Loader2, ChevronLeft, Dumbbell, AlertCircle, Plus, Youtube, ExternalLink } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { Card } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -119,15 +119,35 @@ export default function ExerciseDetailPage() {
         );
       })()}
 
-      {/* Title + badges */}
+      {/* Title + badges + direct link */}
       <div>
-        <div className="flex flex-wrap gap-2 mb-2">
-          <span className={`px-3 py-1 rounded-pill text-xs font-semibold capitalize ${catBadge}`}>
-            {exercise.category}
-          </span>
-          <span className={`px-3 py-1 rounded-pill text-xs font-semibold capitalize ${diffBadge}`}>
-            {exercise.difficulty}
-          </span>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
+          <div className="flex flex-wrap gap-2">
+            <span className={`px-3 py-1 rounded-pill text-xs font-semibold capitalize ${catBadge}`}>
+              {exercise.category}
+            </span>
+            <span className={`px-3 py-1 rounded-pill text-xs font-semibold capitalize ${diffBadge}`}>
+              {exercise.difficulty}
+            </span>
+          </div>
+
+          {/* Direct YouTube link button */}
+          {(() => {
+            const ytUrl = getTutorialUrl(exercise.name, exercise.tutorialUrl);
+            if (!ytUrl) return null;
+            return (
+              <a
+                href={ytUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-600/15 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/20 transition-all text-xs font-semibold shadow-sm"
+              >
+                <Youtube className="w-4 h-4 text-red-500 fill-current" />
+                <span>Watch on YouTube</span>
+                <ExternalLink className="w-3 h-3 opacity-70" />
+              </a>
+            );
+          })()}
         </div>
         <h1 className="font-display text-3xl font-bold">{exercise.name}</h1>
 

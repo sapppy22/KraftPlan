@@ -129,58 +129,66 @@ export default function LibraryPage() {
               <div key={ex.id} className="relative group">
                 <Link href={`/library/${ex.id}`}>
                   <div className="card-surface card-hover cursor-pointer overflow-hidden flex flex-col h-full">
-                    {thumb && (
-                      <img
-                        src={thumb}
-                        alt={`${ex.name} tutorial thumbnail`}
-                        loading="lazy"
-                        className="w-full aspect-video object-cover"
-                      />
+                    {thumb ? (
+                      <div className="relative aspect-video w-full bg-black/40 overflow-hidden shrink-0">
+                        <img
+                          src={thumb}
+                          alt={`${ex.name} tutorial thumbnail`}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-bg-surface/80 via-transparent to-transparent" />
+                      </div>
+                    ) : (
+                      <div className="relative aspect-video w-full bg-bg-elevated flex items-center justify-center shrink-0">
+                        <Dumbbell className="w-8 h-8 text-text-secondary opacity-30" />
+                      </div>
                     )}
                     <div className="flex flex-1">
                       {/* Category colour bar */}
                       <div className={`w-1 shrink-0 ${accentColor}${thumb ? '' : ' rounded-l-xl'}`} />
 
                       <div className="flex-1 p-4 space-y-2">
-                      {/* Icon + name row */}
-                      <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-bg-elevated flex items-center justify-center shrink-0 mt-0.5">
-                          <Dumbbell className="w-5 h-5 text-text-secondary opacity-60" />
+                        {/* Icon + name row */}
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-bg-elevated flex items-center justify-center shrink-0 mt-0.5">
+                            <Dumbbell className="w-5 h-5 text-text-secondary opacity-60" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-sm leading-snug line-clamp-2">
+                              {ex.name}
+                            </h3>
+                            <p className="text-xs text-text-secondary mt-0.5 capitalize line-clamp-1">
+                              {ex.primaryMuscles?.slice(0, 2).join(', ')}
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-sm leading-snug line-clamp-2">
-                            {ex.name}
-                          </h3>
-                          <p className="text-xs text-text-secondary mt-0.5 capitalize line-clamp-1">
-                            {ex.primaryMuscles?.slice(0, 2).join(', ')}
-                          </p>
-                        </div>
-                      </div>
 
-                      {/* Badges row */}
-                      <div className="flex flex-wrap gap-1.5 items-center">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-bg-elevated text-text-secondary capitalize">
-                          {ex.category}
-                        </span>
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-medium capitalize ${diffBadge}`}>
-                          {ex.difficulty}
-                        </span>
+                        {/* Badges row */}
+                        <div className="flex flex-wrap gap-1.5 items-center">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-bg-elevated text-text-secondary capitalize">
+                            {ex.category}
+                          </span>
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-medium capitalize ${diffBadge}`}>
+                            {ex.difficulty}
+                          </span>
+                        </div>
                       </div>
-                    </div>
                     </div>
                   </div>
                 </Link>
 
-                {/* YouTube icon — opens in new tab, z-index above the card link */}
+                {/* Direct clickable YouTube tutorial button */}
                 <a
                   href={ytUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   title={`Watch ${ex.name} tutorial on YouTube`}
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute top-2 right-2 z-10 w-7 h-7 rounded-lg bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                  className="absolute top-2 right-2 z-10 px-2 py-1 rounded-md bg-black/80 hover:bg-red-600 text-white text-[11px] font-medium flex items-center gap-1.5 backdrop-blur-md border border-white/15 transition-all shadow-lg"
                 >
-                  <Youtube className="w-4 h-4" />
+                  <Youtube className="w-3.5 h-3.5 text-red-500 fill-current" />
+                  <span>Tutorial</span>
                 </a>
               </div>
             );
