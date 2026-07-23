@@ -9,6 +9,7 @@ import { AuthGuard } from '@/components/AuthGuard';
 import { useAuth } from '@/lib/AuthContext';
 import { GuidedTour } from '@/components/GuidedTour';
 import { FeedbackButton } from '@/components/FeedbackButton';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -24,17 +25,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-bg-base">
+      <div className="min-h-screen bg-bg-base transition-colors duration-300">
         {/* Mobile header */}
-        <header className="sticky top-0 z-40 bg-bg-base/80 backdrop-blur-lg border-b border-white/5 lg:hidden">
+        <header className="sticky top-0 z-40 bg-bg-base/80 backdrop-blur-lg border-b border-hairline lg:hidden">
           <div className="flex items-center justify-between px-4 h-14">
             <Link href="/dashboard" aria-label="KraftPlan home">
               <Logo size={30} wordmarkClassName="text-lg" />
             </Link>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-text-secondary">{isGuest ? 'Guest' : user?.name}</span>
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                <UserCircle className="w-5 h-5 text-text-secondary" />
+            <div className="flex items-center gap-3">
+              <ThemeToggle variant="compact" />
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-text-secondary hidden sm:inline">{isGuest ? 'Guest' : user?.name}</span>
+                <div className="w-8 h-8 rounded-full bg-surface-2 flex items-center justify-center">
+                  <UserCircle className="w-5 h-5 text-text-secondary" />
+                </div>
               </div>
             </div>
           </div>
@@ -42,18 +46,21 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
         <div className="flex">
           {/* Sidebar (desktop) */}
-          <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 bg-bg-surface border-r border-white/5">
-            <div className="flex items-center px-6 h-16 border-b border-white/5">
+          <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 bg-bg-surface border-r border-hairline transition-colors duration-300">
+            <div className="flex items-center justify-between px-6 h-16 border-b border-hairline">
               <Logo size={38} wordmarkClassName="text-xl" />
+              <ThemeToggle variant="compact" />
             </div>
             
-            <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                <UserCircle className="w-6 h-6 text-text-secondary" />
-              </div>
-              <div className="overflow-hidden">
-                <p className="text-sm font-medium text-text-primary truncate">{isGuest ? 'Guest User' : user?.name}</p>
-                <p className="text-xs text-text-secondary truncate">{isGuest ? 'Explore Mode' : user?.email}</p>
+            <div className="px-6 py-4 border-b border-hairline flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 overflow-hidden">
+                <div className="w-10 h-10 rounded-full bg-surface-2 flex items-center justify-center shrink-0">
+                  <UserCircle className="w-6 h-6 text-text-secondary" />
+                </div>
+                <div className="overflow-hidden">
+                  <p className="text-sm font-medium text-text-primary truncate">{isGuest ? 'Guest User' : user?.name}</p>
+                  <p className="text-xs text-text-secondary truncate">{isGuest ? 'Explore Mode' : user?.email}</p>
+                </div>
               </div>
             </div>
 
@@ -69,8 +76,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     className={cn(
                       'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all relative',
                       isActive
-                        ? 'bg-brand-orange/10 text-brand-orange'
-                        : 'text-text-secondary hover:text-text-primary hover:bg-white/5',
+                        ? 'bg-brand-orange/10 text-brand-orange font-semibold'
+                        : 'text-text-secondary hover:text-text-primary hover:bg-surface-1',
                     )}
                   >
                     {isActive && (
@@ -82,11 +89,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 );
               })}
             </nav>
+
+            {/* Sidebar Theme Switcher Footer */}
+            <div className="px-6 py-4 border-t border-hairline flex items-center justify-between">
+              <span className="text-xs font-medium text-text-secondary">Theme</span>
+              <ThemeToggle variant="pill" />
+            </div>
+
             {user?.role === 'admin' && (
-              <div className="px-4 py-4 border-t border-white/5">
+              <div className="px-4 py-3 border-t border-hairline">
                 <Link
                   href="/admin"
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-text-secondary hover:text-text-primary transition-all group"
+                  className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-text-secondary hover:text-text-primary transition-all group"
                 >
                   <Settings className="w-5 h-5 transition-colors group-hover:text-success" />
                   <span className="text-success font-semibold">Admin Portal</span>
@@ -102,7 +116,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Mobile bottom nav */}
-        <nav className="fixed bottom-0 inset-x-0 z-40 bg-bg-surface/90 backdrop-blur-lg border-t border-white/5 lg:hidden pb-safe">
+        <nav className="fixed bottom-0 inset-x-0 z-40 bg-bg-surface/90 backdrop-blur-lg border-t border-hairline lg:hidden pb-safe">
           <div className="flex items-center justify-around h-16 px-2">
             {navItems.slice(0, 5).map((item) => {
               const Icon = item.icon;

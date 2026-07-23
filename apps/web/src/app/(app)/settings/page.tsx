@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { Loader2, Dumbbell, LogOut, Check } from 'lucide-react';
+import { Loader2, Dumbbell, LogOut, Check, SunMoon } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { Card } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -60,6 +61,21 @@ export default function SettingsPage() {
         <p className="text-text-secondary mt-1">Manage your profile and preferences</p>
       </div>
 
+      {/* Appearance */}
+      <Card className="p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <SunMoon className="w-5 h-5 text-brand-green" />
+            <h2 className="font-semibold text-lg">Appearance</h2>
+          </div>
+          <ThemeToggle variant="pill" />
+        </div>
+        <p className="text-xs text-text-secondary">
+          Choose your preferred theme mode. Deep Forest dark mode provides a soothing, low-glare experience.
+        </p>
+        <ThemeToggle variant="segmented" className="mt-2" />
+      </Card>
+
       {/* Profile */}
       <Card className="p-6 space-y-5">
         <h2 className="font-semibold text-lg">Profile</h2>
@@ -70,7 +86,7 @@ export default function SettingsPage() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-3 bg-bg-elevated border border-white/10 rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
+            className="w-full px-4 py-3 bg-bg-elevated border border-hairline rounded-xl text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:border-brand-orange"
             placeholder="Your name"
           />
         </div>
@@ -80,7 +96,7 @@ export default function SettingsPage() {
           <select
             value={units}
             onChange={(e) => setUnits(e.target.value)}
-            className="w-full px-4 py-3 bg-bg-elevated border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-brand-orange"
+            className="w-full px-4 py-3 bg-bg-elevated border border-hairline rounded-xl text-text-primary focus:outline-none focus:border-brand-orange"
           >
             <option value="metric">Metric (kg, km)</option>
             <option value="imperial">Imperial (lb, mi)</option>
@@ -92,7 +108,7 @@ export default function SettingsPage() {
           <select
             value={experience}
             onChange={(e) => setExperience(e.target.value)}
-            className="w-full px-4 py-3 bg-bg-elevated border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-brand-orange"
+            className="w-full px-4 py-3 bg-bg-elevated border border-hairline rounded-xl text-text-primary focus:outline-none focus:border-brand-orange"
           >
             <option value="">Select...</option>
             <option value="beginner">Beginner</option>
