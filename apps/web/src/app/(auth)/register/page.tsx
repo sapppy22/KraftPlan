@@ -85,7 +85,7 @@ export default function RegisterPage() {
 
       {/* Main Card */}
       <main className="flex-1 flex items-center justify-center py-8">
-        <div className="w-full max-w-md space-y-6 bg-bg-surface p-6 sm:p-8 rounded-3xl border border-hairline shadow-2xl">
+        <div className="w-full max-w-md space-y-6 bg-bg-surface p-6 sm:p-8 rounded-3xl border border-hairline shadow-xl">
           <div className="text-center">
             <Logo size={56} showWordmark={false} className="mx-auto mb-3" />
             <h1 className="font-display text-3xl font-bold">

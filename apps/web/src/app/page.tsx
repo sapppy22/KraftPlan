@@ -103,7 +103,7 @@ export default function RootPage() {
             </Link>
 
             <Link href="/register">
-              <Button size="sm" className="shadow-md">
+              <Button size="sm">
                 Get Started
               </Button>
             </Link>
@@ -131,7 +131,7 @@ export default function RootPage() {
           {/* Action CTAs */}
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
             <Link href="/register" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto group shadow-xl">
+              <Button size="lg" className="w-full sm:w-auto group">
                 Get Started Free
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
@@ -139,7 +139,7 @@ export default function RootPage() {
 
             <button
               onClick={continueAsGuest}
-              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-surface-1 border border-hairline hover:bg-surface-2 text-text-primary text-sm font-semibold transition-all flex items-center justify-center gap-2 shadow-sm"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-surface-1 border border-hairline hover:bg-surface-2 text-text-primary text-sm font-semibold transition-all flex items-center justify-center gap-2"
             >
               <span>Explore Demo as Guest</span>
               <ChevronRight className="w-4 h-4 text-text-secondary" />
@@ -148,9 +148,9 @@ export default function RootPage() {
 
           {/* ── Interactive Hero UI Showcase Card ── */}
           <div className="mt-16 sm:mt-20 max-w-4xl mx-auto relative">
-            <div className="absolute -inset-1 rounded-3xl gradient-bg opacity-25 blur-xl pointer-events-none" />
+            <div className="absolute -inset-1 rounded-3xl gradient-bg opacity-15 blur-xl pointer-events-none" />
             
-            <div className="relative rounded-3xl bg-bg-surface border border-hairline shadow-2xl p-4 sm:p-8 text-left space-y-6 overflow-hidden">
+            <div className="relative rounded-3xl bg-bg-surface border border-hairline shadow-lg p-4 sm:p-8 text-left space-y-6 overflow-hidden">
               {/* Fake App Bar */}
               <div className="flex items-center justify-between border-b border-hairline pb-4">
                 <div className="flex items-center gap-2">
@@ -165,7 +165,7 @@ export default function RootPage() {
               </div>
 
               {/* Demo Hero Card */}
-              <div className="p-6 rounded-2xl gradient-bg text-white space-y-4 shadow-lg">
+              <div className="p-6 rounded-2xl gradient-bg text-white space-y-4 shadow-sm">
                 <div className="flex items-center justify-between text-xs font-medium uppercase tracking-wider text-white/80">
                   <span>Today's Session</span>
                   <span className="flex items-center gap-1">
@@ -312,7 +312,7 @@ export default function RootPage() {
                 onClick={() => setActiveTab(idx)}
                 className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all whitespace-nowrap ${
                   activeTab === idx
-                    ? 'gradient-bg text-white shadow-md'
+                    ? 'gradient-bg text-white shadow-sm'
                     : 'bg-surface-1 border border-hairline text-text-secondary hover:text-text-primary'
                 }`}
               >
@@ -400,7 +400,7 @@ export default function RootPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/register">
-              <Button size="lg" className="w-full sm:w-auto shadow-2xl">
+              <Button size="lg" className="w-full sm:w-auto">
                 Create Free Account
               </Button>
             </Link>

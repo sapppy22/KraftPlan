@@ -83,7 +83,7 @@ export default function ForgotPasswordPage() {
 
       {/* Main Form Container */}
       <main className="flex-1 flex items-center justify-center py-12">
-        <div className="w-full max-w-md space-y-6 bg-bg-surface p-6 sm:p-8 rounded-3xl border border-hairline shadow-2xl">
+        <div className="w-full max-w-md space-y-6 bg-bg-surface p-6 sm:p-8 rounded-3xl border border-hairline shadow-xl">
           <Link
             href="/login"
             className="inline-flex items-center gap-1.5 text-xs text-text-secondary hover:text-text-primary transition-colors font-medium"
