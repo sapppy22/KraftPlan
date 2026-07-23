@@ -1,53 +1,101 @@
 /* ── KraftPlan design tokens ──
-   Palette sampled from the KraftPlan logo: deep charcoal base with a
-   red → orange → amber gradient (no blues). Accent token names are kept
-   as aliases so existing components restyle automatically. */
+   HealthTech design language: light-first, airy, "healthcare green" accent
+   (calm, muted, saturation capped). Surfaces are white / off-white; dark is a
+   green-tinted charcoal (never pure black). The legacy brand-* alias names are
+   kept and remapped onto the green ramp so every existing component restyles
+   automatically. */
 
 :root {
-  /* Surfaces (dark = default) */
-  --bg-base: #0F0F10;
-  --bg-surface: #17171A;
-  --bg-elevated: #1F1F23;
-  --text-primary: #F6F5F3;
-  --text-secondary: #A1A1AA;
+  /* ── Light theme (default) ── */
 
-  /* Brand ramp (from the logo) */
-  --brand-red: #EF4423;
-  --brand-orange: #F97316;
-  --brand-amber: #FBBF24;
-  --brand-gold: #F9DC66;
+  /* Surfaces — airy, clinical-clean */
+  --bg-base: #F8F9FA;      /* page — soft white */
+  --bg-surface: #FFFFFF;   /* cards / panels */
+  --bg-elevated: #FFFFFF;  /* inputs / raised */
+  --text-primary: #212529; /* dark slate */
+  --text-secondary: #56685F;
+
+  /* Healthcare-green ramp (vibrant mint accent) */
+  --brand-green: #00A36C;  /* primary accent — vibrant mint */
+  --brand-teal: #0D9488;   /* cooler support tone */
+  --brand-mint: #10B981;   /* brighter step */
+  --brand-soft: #34D399;   /* highlight / end of gradient */
+  --brand-deep: #047857;   /* readable green for text/links on white */
+
+  /* Legacy aliases → green ramp (keeps existing usages working) */
+  --brand-red: #0D9488;    /* was red  → teal */
+  --brand-orange: #00A36C; /* was orange → primary green (button/nav/focus) */
+  --brand-amber: #10B981;  /* was amber → mint */
+  --brand-gold: #34D399;   /* was gold → soft green */
 
   /* Semantic */
+  --success: #00A36C;
+  --warning: #D97706;
+  --danger: #DC2626;
+
+  /* Gradients — vibrant mint → emerald → soft mint */
+  --gradient-brand: linear-gradient(135deg, #00A36C 0%, #059669 52%, #10B981 100%);
+  --gradient-card: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+
+  /* Focus / soft glow (green) */
+  --brand-glow: rgba(0, 163, 108, 0.22);
+
+  /* Theme-adaptive overlays */
+  --hairline: rgba(33, 37, 41, 0.08);
+  --hairline-strong: rgba(33, 37, 41, 0.16);
+  --surface-1: rgba(33, 37, 41, 0.035);
+  --surface-2: rgba(33, 37, 41, 0.07);
+  --surface-3: rgba(0, 163, 108, 0.10);
+
+  /* Shadows */
+  --shadow-card: 0 2px 12px rgba(33, 37, 41, 0.05);
+  --shadow-lift: 0 10px 28px rgba(33, 37, 41, 0.09);
+
+  /* Radius scale */
+  --radius-sm: 12px;
+  --radius-md: 24px;
+  --radius-lg: 36px;
+
+  color-scheme: light;
+}
+
+:root.dark {
+  /* ── Soothing Dark theme (Deep Forest & Tinted Charcoal Green) ── */
+  --bg-base: #0E1611;      /* main background — deep forest off-black */
+  --bg-surface: #17231B;   /* cards / sidebar fills — tinted charcoal green */
+  --bg-elevated: #1E2E24;  /* inputs / raised panels */
+  --text-primary: #E6ECF7; /* primary text — soft off-white / ice blue */
+  --text-secondary: #94A3B8; /* muted ice-slate text */
+
+  /* Pastel Mint Green accent ramp */
+  --brand-green: #10B981;  /* primary accent button — pastel mint green */
+  --brand-teal: #14B8A6;
+  --brand-mint: #34D399;   /* pastel mint highlight */
+  --brand-soft: #6EE7B7;
+  --brand-deep: #A7F3D0;
+
+  --brand-red: #14B8A6;
+  --brand-orange: #10B981;
+  --brand-amber: #34D399;
+  --brand-gold: #6EE7B7;
+
   --success: #34D399;
   --warning: #FBBF24;
   --danger: #F87171;
 
-  /* Gradients */
-  --gradient-brand: linear-gradient(135deg, #EF4423 0%, #F97316 52%, #FBBF24 100%);
-  --gradient-card: linear-gradient(135deg, #1F1F23 0%, #17171A 100%);
+  --gradient-brand: linear-gradient(135deg, #10B981 0%, #059669 52%, #34D399 100%);
+  --gradient-card: linear-gradient(135deg, #17231B 0%, #121C16 100%);
 
-  /* Focus / glow */
-  --brand-glow: rgba(249, 115, 22, 0.25);
-}
+  --brand-glow: rgba(16, 185, 129, 0.28);
 
-:root.light {
-  --bg-base: #FAF8F5;
-  --bg-surface: #FFFFFF;
-  --bg-elevated: #FFFFFF;
-  --text-primary: #1A1613;
-  --text-secondary: #6B6560;
+  --hairline: rgba(230, 236, 247, 0.08);
+  --hairline-strong: rgba(230, 236, 247, 0.18);
+  --surface-1: rgba(230, 236, 247, 0.04);
+  --surface-2: rgba(230, 236, 247, 0.08);
+  --surface-3: rgba(16, 185, 129, 0.16);
 
-  --brand-red: #E23A1C;
-  --brand-orange: #EA6A0E;
-  --brand-amber: #F59E0B;
-  --brand-gold: #F5B841;
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lift: 0 16px 40px rgba(0, 0, 0, 0.55);
 
-  --success: #16A34A;
-  --warning: #D97706;
-  --danger: #DC2626;
-
-  --gradient-brand: linear-gradient(135deg, #E23A1C 0%, #EA6A0E 52%, #F59E0B 100%);
-  --gradient-card: linear-gradient(135deg, #FFFFFF 0%, #F7F3EE 100%);
-
-  --brand-glow: rgba(234, 106, 14, 0.2);
+  color-scheme: dark;
 }
