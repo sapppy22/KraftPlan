@@ -31,3 +31,22 @@ apps/worker/deploy-remaining.bat
 # Added by code-review-graph
 .code-review-graph/
 .pnpm-store/
+
+# AI tool configs — local only, not for the repo
+.claude/
+.codebuddy/
+.cursor/
+.cursorrules
+.gemini/
+.kiro/
+.mcp.json
+.qoder/
+.vscode/
+.windsurfrules
+AGENTS.md
+CLAUDE.md
+CODEBUDDY.md
+GEMINI.md
+QODER.md
+opencode.jsonc
+.github/code-review-graph.instruction.md
