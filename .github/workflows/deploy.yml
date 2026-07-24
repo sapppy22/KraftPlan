@@ -45,7 +45,7 @@ jobs:
       - name: Build for Cloudflare Pages
         working-directory: apps/web
         env:
-          NEXT_PUBLIC_API_BASE: ${{ vars.NEXT_PUBLIC_API_BASE }}
+          NEXT_PUBLIC_API_BASE: ${{ vars.NEXT_PUBLIC_API_BASE || secrets.NEXT_PUBLIC_API_BASE }}
         run: pnpm exec next-on-pages
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
@@ -78,5 +78,10 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: apps/worker
           command: deploy
-        # DATABASE_URL and JWT_SECRET must be set once via `wrangler secret put`.
+          secrets: |
+            DATABASE_URL
+            JWT_SECRET
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
