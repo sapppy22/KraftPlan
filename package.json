@@ -6,8 +6,8 @@
     "dev": "turbo dev --concurrency 16",
     "dev:local": "turbo dev --filter=@kraftplan/worker --filter=@kraftplan/web --concurrency 16",
     "dev:web": "pnpm --filter @kraftplan/web dev",
-    "dev:api": "pnpm --filter @kraftplan/api dev",
-    "start:api": "pnpm --filter @kraftplan/api start",
+    "dev:worker": "pnpm --filter @kraftplan/worker dev",
+    "dev:api": "pnpm --filter @kraftplan/worker dev",
     "build": "turbo build",
     "build:web": "pnpm --filter @kraftplan/web build",
     "lint": "turbo lint",
@@ -19,7 +19,10 @@
     "db:migrate": "pnpm --filter @kraftplan/db migrate",
     "db:seed": "pnpm --filter @kraftplan/db seed",
     "db:studio": "pnpm --filter @kraftplan/db studio",
-    "deploy:pinger": "pnpm --filter @kraftplan/pinger deploy",
+    "deploy": "pnpm --filter @kraftplan/worker deploy",
+    "deploy:worker": "pnpm --filter @kraftplan/worker deploy",
+    "deploy:web": "pnpm --filter @kraftplan/web pages:deploy",
+    "pages:build": "pnpm --filter @kraftplan/web pages:build",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,css,md}\""
   },
   "devDependencies": {
