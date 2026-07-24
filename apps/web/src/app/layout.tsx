@@ -29,14 +29,17 @@ export const metadata: Metadata = {
     title,
     description,
     siteName: 'KraftPlan',
-    images: [{ url: '/logo-kraftplan.png', width: 784, height: 1168, alt: 'KraftPlan' }],
+    images: [
+      { url: '/og-image.png', width: 1200, height: 630, alt: 'KraftPlan — AI-Powered Workout Plans' },
+      { url: '/logo-kraftplan.png', width: 1200, height: 630, alt: 'KraftPlan' },
+    ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title,
     description,
-    images: ['/logo-kraftplan.png'],
+    images: ['/og-image.png'],
   },
 };
 
