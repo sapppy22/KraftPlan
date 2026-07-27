@@ -3,6 +3,7 @@
 
 // Cloudflare Pages: dynamic routes must run on the Edge runtime.
 export const runtime = 'edge';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import { Loader2, ChevronLeft, Dumbbell, Clock, Calendar } from 'lucide-react';
@@ -13,6 +14,8 @@ import { Card } from '@/components/ui/Card';
 export default function PlanDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
+  const [starting, setStarting] = useState(false);
+  const [startError, setStartError] = useState('');
 
   const { data: plan, isLoading } = useQuery({
     queryKey: ['plan', id],
@@ -37,14 +40,19 @@ export default function PlanDetailPage() {
   }
 
   async function startPlan() {
+    if (starting) return;
+    setStarting(true);
+    setStartError('');
     try {
       await api.assignPlan({
         planId: plan.id,
         startDate: new Date().toISOString().split('T')[0],
       });
       router.push('/dashboard');
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      setStartError(err?.message || 'Could not start this plan. Please try again.');
+      setStarting(false);
     }
   }
 
@@ -127,11 +135,20 @@ export default function PlanDetailPage() {
       )}
 
       {/* Actions */}
-      <div className="flex gap-3">
-        <Button size="lg" onClick={startPlan}>
-          <Dumbbell className="w-4 h-4 mr-2" />
-          Start this plan
-        </Button>
+      <div className="space-y-2">
+        <div className="flex gap-3">
+          <Button size="lg" onClick={startPlan} disabled={starting}>
+            {starting ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Dumbbell className="w-4 h-4 mr-2" />
+            )}
+            {starting ? 'Starting…' : 'Start this plan'}
+          </Button>
+        </div>
+        {startError && (
+          <p className="text-sm text-danger">{startError}</p>
+        )}
       </div>
     </div>
   );
