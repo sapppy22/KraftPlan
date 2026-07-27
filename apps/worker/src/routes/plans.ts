@@ -39,10 +39,23 @@ export async function resolveToday(db: DB, userId: string, dateStr: string) {
     return { dayId: day?.id || null, title: day?.title || 'Rest Day', estimatedMinutes: 0, isRestDay: true, blocks: [] };
   }
 
+  const { blocks: blocksWithExs, totalMinutes } = await resolveDayBlocks(db, day.id);
+
+  return {
+    dayId: day.id,
+    title: day.title || `${plan.title} — Day ${day.dayNumber}`,
+    estimatedMinutes: totalMinutes,
+    isRestDay: false,
+    blocks: blocksWithExs,
+  };
+}
+
+// ── Shared: build the ordered blocks (+ estimated minutes) for a plan day ──
+export async function resolveDayBlocks(db: DB, dayId: string) {
   const blocks = await db
     .select()
     .from(schema.planBlocks)
-    .where(eq(schema.planBlocks.dayId, day.id))
+    .where(eq(schema.planBlocks.dayId, dayId))
     .orderBy(schema.planBlocks.sortOrder);
 
   const blocksWithExs = [];
@@ -94,12 +107,24 @@ export async function resolveToday(db: DB, userId: string, dateStr: string) {
     });
   }
 
+  return { blocks: blocksWithExs, totalMinutes };
+}
+
+// ── Shared: build a full session manifest for a specific plan day ──
+// Used by the workout player to load ANY session (plan-based or custom) by id.
+export async function buildDayManifest(db: DB, dayId: string) {
+  const [day] = await db.select().from(schema.planDays).where(eq(schema.planDays.id, dayId)).limit(1);
+  if (!day) return { dayId: null, title: 'Workout', estimatedMinutes: 0, isRestDay: true, blocks: [] };
+  if (day.isRestDay) {
+    return { dayId: day.id, title: day.title || 'Rest Day', estimatedMinutes: 0, isRestDay: true, blocks: [] };
+  }
+  const { blocks, totalMinutes } = await resolveDayBlocks(db, day.id);
   return {
     dayId: day.id,
-    title: day.title || `${plan.title} — Day ${day.dayNumber}`,
+    title: day.title || `Day ${day.dayNumber}`,
     estimatedMinutes: totalMinutes,
     isRestDay: false,
-    blocks: blocksWithExs,
+    blocks,
   };
 }
 

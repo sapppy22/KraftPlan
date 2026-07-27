@@ -3,6 +3,7 @@ import { eq, and } from 'drizzle-orm';
 import { createSessionSchema, setLogSchema, sessionCompleteSchema } from '@kraftplan/shared';
 import { schema } from '../db';
 import { requireUserId, type AppEnv } from '../context';
+import { buildDayManifest } from './plans';
 
 export const workouts = new Hono<AppEnv>();
 
@@ -133,6 +134,10 @@ workouts.get('/:sessionId', async (c) => {
     .where(eq(schema.workoutSets.sessionId, sessionId))
     .orderBy(schema.workoutSets.setIndex);
 
+  // Resolve the exercise manifest for this session's plan day so the player can
+  // render the correct workout (plan-based OR custom) when loading by id.
+  const manifest = await buildDayManifest(db, session.planDayId);
+
   return c.json({
     id: session.id,
     planDayId: session.planDayId,
@@ -140,6 +145,10 @@ workouts.get('/:sessionId', async (c) => {
     startedAt: session.startedAt.toISOString(),
     endedAt: session.endedAt?.toISOString() || null,
     totalVolumeKg: session.totalVolumeKg ? parseFloat(session.totalVolumeKg.toString()) : null,
+    title: manifest.title,
+    estimatedMinutes: manifest.estimatedMinutes,
+    isRestDay: manifest.isRestDay,
+    blocks: manifest.blocks,
     sets: sets.map((s) => ({
       exerciseId: s.exerciseId,
       setIndex: s.setIndex,

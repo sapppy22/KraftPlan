@@ -56,6 +56,26 @@ function buildEmbedSrc(exerciseName: string, tutorialUrl?: string | null): strin
   return `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(exerciseName + ' tutorial')}`;
 }
 
+/** Find the first set that hasn't been logged yet, so we resume where the user left off. */
+function firstUnloggedPosition(
+  manifest: any,
+  logged: Record<string, unknown>,
+): { block: number; ex: number; set: number } {
+  const blocks = manifest?.blocks ?? [];
+  let last = { block: 0, ex: 0, set: 0 };
+  for (let b = 0; b < blocks.length; b++) {
+    const exs = blocks[b].exercises ?? [];
+    for (let e = 0; e < exs.length; e++) {
+      const total = exs[e].sets ?? 1;
+      for (let s = 0; s < total; s++) {
+        last = { block: b, ex: e, set: s };
+        if (!logged[`${exs[e].exerciseId}-${s}`]) return { block: b, ex: e, set: s };
+      }
+    }
+  }
+  return last; // everything already logged — sit on the final set
+}
+
 export default function WorkoutPlayerPage({ params }: Props) {
   const { sessionId } = params;
   const router = useRouter();
@@ -77,19 +97,52 @@ export default function WorkoutPlayerPage({ params }: Props) {
   const elapsedRef = useRef(store.elapsedSec);
   elapsedRef.current = store.elapsedSec;
 
-  // Initialize session if not already loaded
+  // Initialize the session by id (works for plan-based AND custom sessions),
+  // restoring already-logged sets and the real start time so the counter resumes.
   useEffect(() => {
     if (store.sessionManifest && store.sessionId === sessionId) return;
 
     async function initFromApi() {
       setLoading(true);
+      setInitError('');
       try {
-        const session = await api.getTodaySession();
-        if (session && !session.isRestDay) {
-          store.initSession(sessionId, session);
-        } else {
-          setInitError('No session found for today.');
+        const session = await api.getSession(sessionId);
+        if (!session || session.isRestDay || !session.blocks?.length) {
+          setInitError('This session has no exercises.');
+          return;
         }
+
+        const manifest = {
+          dayId: session.planDayId,
+          title: session.title,
+          estimatedMinutes: session.estimatedMinutes,
+          isRestDay: false,
+          blocks: session.blocks,
+        };
+
+        // Restore already-logged sets so progress + counter resume correctly.
+        const loggedSets: Record<string, any> = {};
+        for (const s of session.sets ?? []) {
+          loggedSets[`${s.exerciseId}-${s.setIndex}`] = {
+            exerciseId: s.exerciseId,
+            setIndex: s.setIndex,
+            weightKg: s.weightKg ?? undefined,
+            reps: s.reps ?? undefined,
+            timeSec: s.timeSec ?? undefined,
+            distanceM: s.distanceM ?? undefined,
+            rpe: s.rpe ?? undefined,
+            status: s.status,
+          };
+        }
+
+        const startedAtMs = session.startedAt ? new Date(session.startedAt).getTime() : Date.now();
+
+        store.initSession(sessionId, manifest, {
+          startedAtMs,
+          loggedSets,
+          status: session.status === 'completed' ? 'completed' : 'active',
+          position: firstUnloggedPosition(manifest, loggedSets),
+        });
       } catch (e: any) {
         setInitError(e.message || 'Failed to load session');
       } finally {
@@ -101,14 +154,16 @@ export default function WorkoutPlayerPage({ params }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionId]);
 
-  // Elapsed timer
+  // Elapsed timer — derived from the wall-clock start time so it stays accurate
+  // across refreshes, resume, and background-tab throttling.
   useEffect(() => {
-    if (store.status !== 'active') return;
-    const interval = setInterval(() => {
-      store.setElapsed(elapsedRef.current + 1);
-    }, 1000);
+    if (store.status !== 'active' || store.startedAtMs == null) return;
+    const startedAtMs = store.startedAtMs;
+    const tick = () => store.setElapsed(Math.max(0, Math.floor((Date.now() - startedAtMs) / 1000)));
+    tick();
+    const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
-  }, [store.status]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [store.status, store.startedAtMs]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Pre-fill inputs when exercise/set changes
   const currentBlock = store.sessionManifest?.blocks?.[store.currentBlockIndex];
@@ -185,8 +240,12 @@ export default function WorkoutPlayerPage({ params }: Props) {
     } catch {/* silent */}
   }
 
+  // Only trust store data once it belongs to THIS session (the store is a global
+  // singleton, so a previous session could still be loaded during navigation).
+  const sessionReady = !!store.sessionManifest && store.sessionId === sessionId;
+
   // ─── Loading / error ──────────────────────────────────────────────────────
-  if (loading || (!store.sessionManifest && !initError)) {
+  if (loading || (!sessionReady && !initError)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="w-8 h-8 animate-spin text-brand-orange" />
@@ -194,7 +253,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
     );
   }
 
-  if (initError && !store.sessionManifest) {
+  if (initError && !sessionReady) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4 px-4">
         <p className="text-danger">{initError}</p>
@@ -206,7 +265,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
   }
 
   // ─── Session complete ─────────────────────────────────────────────────────
-  if (store.status === 'completed') {
+  if (sessionReady && store.status === 'completed') {
     const setsDone = Object.values(store.loggedSets).filter((s) => s.status === 'completed').length;
     const totalVolume = Object.values(store.loggedSets)
       .filter((s) => s.status === 'completed' && s.weightKg && s.reps)

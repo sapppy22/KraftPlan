@@ -11,6 +11,17 @@ export interface LoggedSet {
   status: 'completed' | 'failed' | 'skipped';
 }
 
+export interface InitSessionOpts {
+  /** Wall-clock start time (ms). Defaults to now for brand-new sessions. */
+  startedAtMs?: number;
+  /** Previously logged sets, to resume an in-progress session. */
+  loggedSets?: Record<string, LoggedSet>;
+  /** Session status from the server. */
+  status?: 'active' | 'completed';
+  /** Where to resume playback. */
+  position?: { block: number; ex: number; set: number };
+}
+
 interface PlayerStore {
   sessionId: string | null;
   sessionManifest: any | null;
@@ -18,6 +29,7 @@ interface PlayerStore {
   currentExerciseIndex: number;
   currentSetIndex: number;
   status: 'idle' | 'active' | 'paused' | 'completed';
+  startedAtMs: number | null; // wall-clock start, source of truth for the elapsed counter
   elapsedSec: number;
   loggedSets: Record<string, LoggedSet>; // key: `${exerciseId}-${setIndex}`
   restTimerActive: boolean;
@@ -27,7 +39,7 @@ interface PlayerStore {
   lastReps: Record<string, number>;   // key: exerciseId
 
   // Actions
-  initSession: (sessionId: string, manifest: any) => void;
+  initSession: (sessionId: string, manifest: any, opts?: InitSessionOpts) => void;
   advanceSet: () => void;
   advanceExercise: () => void;
   logSet: (set: LoggedSet) => void;
@@ -46,24 +58,28 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   currentExerciseIndex: 0,
   currentSetIndex: 0,
   status: 'idle',
+  startedAtMs: null,
   elapsedSec: 0,
   loggedSets: {},
   restTimerActive: false,
   lastWeight: {},
   lastReps: {},
 
-  initSession: (sessionId, manifest) =>
+  initSession: (sessionId, manifest, opts = {}) => {
+    const startedAtMs = opts.startedAtMs ?? Date.now();
     set({
       sessionId,
       sessionManifest: manifest,
-      currentBlockIndex: 0,
-      currentExerciseIndex: 0,
-      currentSetIndex: 0,
-      status: 'active',
-      elapsedSec: 0,
-      loggedSets: {},
+      currentBlockIndex: opts.position?.block ?? 0,
+      currentExerciseIndex: opts.position?.ex ?? 0,
+      currentSetIndex: opts.position?.set ?? 0,
+      status: opts.status === 'completed' ? 'completed' : 'active',
+      startedAtMs,
+      elapsedSec: Math.max(0, Math.floor((Date.now() - startedAtMs) / 1000)),
+      loggedSets: opts.loggedSets ?? {},
       restTimerActive: false,
-    }),
+    });
+  },
 
   advanceSet: () => {
     const state = get();
@@ -140,6 +156,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       currentExerciseIndex: 0,
       currentSetIndex: 0,
       status: 'idle',
+      startedAtMs: null,
       elapsedSec: 0,
       loggedSets: {},
       restTimerActive: false,
