@@ -83,7 +83,7 @@ export function FeedbackButton() {
       {/* Subtle, non-intrusive floating trigger button at bottom right */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-5 right-5 z-40 px-3.5 py-2 rounded-full bg-bg-surface/90 backdrop-blur-md border border-hairline hover:border-brand-orange/40 text-text-secondary hover:text-text-primary text-xs font-medium flex items-center gap-2 shadow-md hover:shadow-lg transition-all hover:scale-105 active:scale-95 group"
+        className="fixed bottom-20 lg:bottom-5 right-4 sm:right-5 z-40 px-3.5 py-2 rounded-full bg-bg-surface/90 backdrop-blur-md border border-hairline hover:border-brand-orange/40 text-text-secondary hover:text-text-primary text-xs font-medium flex items-center gap-2 shadow-md hover:shadow-lg transition-all hover:scale-105 active:scale-95 group"
         aria-label="Leave a review"
       >
         <MessageSquare className="w-4 h-4 text-brand-orange group-hover:rotate-12 transition-transform" />

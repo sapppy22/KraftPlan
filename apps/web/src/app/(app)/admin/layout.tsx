@@ -29,7 +29,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-24 lg:pb-0">
       <div className="flex items-center gap-3 pb-6 border-b border-hairline">
         <div className="w-12 h-12 rounded-xl bg-danger/10 flex items-center justify-center">
           <ShieldAlert className="w-6 h-6 text-danger" />
