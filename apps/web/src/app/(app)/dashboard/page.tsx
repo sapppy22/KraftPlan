@@ -105,7 +105,7 @@ export default function DashboardPage() {
               <p className="text-white/85 text-sm max-w-md">
                 Pick your own exercises or let us generate one — no plan or account needed.
               </p>
-              <span className="group inline-flex items-center gap-2 px-6 py-3 bg-white text-brand-deep rounded-pill font-semibold shadow-sm">
+              <span className="group inline-flex items-center gap-2 px-6 py-3 bg-white text-[#065f46] rounded-pill font-semibold shadow-sm">
                 <Zap className="w-5 h-5" />
                 Build a workout
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -144,7 +144,7 @@ export default function DashboardPage() {
             {!isRest && (
               <button
                 disabled={startingSession}
-                className="group inline-flex items-center gap-2 px-6 py-3 bg-white text-brand-deep hover:bg-white/90 rounded-pill font-semibold transition-all shadow-sm disabled:opacity-60"
+                className="group inline-flex items-center gap-2 px-6 py-3 bg-white text-[#065f46] hover:bg-white/90 rounded-pill font-semibold transition-all shadow-sm disabled:opacity-60"
               >
                 {startingSession ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
