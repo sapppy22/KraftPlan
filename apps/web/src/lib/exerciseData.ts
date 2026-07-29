@@ -18,7 +18,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['quads', 'glutes'],
     equipment: ['barbell', 'squat-rack'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=i7J5h7GpNmA',
+    tutorialUrl: 'https://www.youtube.com/watch?v=dW3zj79xfrc',
     instructions: [
       'Set the bar on the rack at shoulder height and step under it.',
       'Position the bar across your upper traps, grip just outside shoulder width.',
@@ -36,7 +36,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['hamstrings', 'glutes', 'back'],
     equipment: ['barbell'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=vl5a9R9CqgA',
+    tutorialUrl: 'https://www.youtube.com/watch?v=ZaTM37cfiDs',
     instructions: [
       'Stand with feet hip-width, bar over mid-foot.',
       'Hinge at the hips, grip the bar just outside your legs.',
@@ -293,7 +293,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['calves'],
     equipment: ['squat-rack'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=-M4-G8p1fCI',
+    tutorialUrl: 'https://www.youtube.com/watch?v=k8ipHzKeAkQ',
     instructions: [
       'Stand on a raised surface with heels hanging off the edge.',
       'Lower your heels as far as possible to stretch the calves.',
@@ -428,7 +428,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['glutes', 'hamstrings', 'back'],
     equipment: ['barbell'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=dlDiRbUFLG0',
+    tutorialUrl: 'https://www.youtube.com/watch?v=JF3iwfK5WI0',
     instructions: [
       'Stand with feet much wider than shoulder-width, toes pointing out.',
       'Grip the bar inside your legs, shoulder-width or closer.',
@@ -445,7 +445,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['quads', 'glutes'],
     equipment: ['squat-rack'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=EdtPBSuRfOY',
+    tutorialUrl: 'https://www.youtube.com/watch?v=g9i05umL5vc',
     instructions: [
       'Position yourself in the hack squat machine, back against the pad.',
       'Feet shoulder-width on the platform, toes slightly out.',
@@ -713,7 +713,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'advanced',
     primaryMuscles: ['core'],
     equipment: ['none'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=0M8COjQ1HLY',
+    tutorialUrl: 'https://www.youtube.com/watch?v=MinlHnG7j4k',
     instructions: [
       'Kneel on a mat holding an ab wheel with both hands.',
       'Roll forward slowly, keeping your core braced.',
@@ -761,7 +761,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['legs', 'core'],
     equipment: ['cardio-machine'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=p-PXJmGGV3s',
+    tutorialUrl: 'https://www.youtube.com/watch?v=K6I24WgiiPw',
     instructions: [
       'Set the treadmill to your desired pace and incline.',
       'Land mid-foot, not heel striking.',
@@ -778,7 +778,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['back', 'legs', 'core'],
     equipment: ['cardio-machine'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=H0r9jLlKoC4',
+    tutorialUrl: 'https://www.youtube.com/watch?v=7EQJFjM4Vs8',
     instructions: [
       'Sit in the rower, feet strapped in, grip the handle.',
       'Push with your legs first, then lean back slightly, then pull arms.',
@@ -794,7 +794,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['shoulders', 'core', 'legs'],
     equipment: ['battle-ropes'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=Mn_gc5dFJhM',
+    tutorialUrl: 'https://www.youtube.com/watch?v=5TvLW4SSlLA',
     instructions: [
       'Stand holding the ends of two heavy ropes, feet shoulder-width.',
       'Hinge slightly at the hips, keeping a soft knee.',
@@ -810,7 +810,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['legs', 'core', 'shoulders'],
     equipment: ['sled'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=sAtLoXAfnN4',
+    tutorialUrl: 'https://www.youtube.com/watch?v=i67JwbtUizY',
     instructions: [
       'Load the sled with appropriate weight.',
       'Grip the handles at shoulder height, lean forward at 45 degrees.',
@@ -826,7 +826,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['legs'],
     equipment: ['mat'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=IhF_lDTeVXA',
+    tutorialUrl: 'https://www.youtube.com/watch?v=ktgtEWGhFd8',
     instructions: [
       'Kneel on your right knee, left foot forward in a lunge position.',
       'Shift your hips forward until you feel a stretch in your right hip.',
@@ -858,7 +858,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['legs', 'back', 'shoulders'],
     equipment: ['none'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=lGUxFmjnkSM',
+    tutorialUrl: 'https://www.youtube.com/watch?v=l6vhp6LqIk0',
     instructions: [
       'Step into a deep lunge with your right foot forward.',
       'Place your right hand on the floor next to your right foot.',
@@ -875,7 +875,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['quads'],
     equipment: ['foam-roller'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=NcXUzOKkjHw',
+    tutorialUrl: 'https://www.youtube.com/watch?v=DjmPlggFONw',
     instructions: [
       'Lie face down with a foam roller under your left quad.',
       'Prop yourself up on your forearms.',
@@ -892,7 +892,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['glutes'],
     equipment: ['mat'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=L6yZJoZ7Eus',
+    tutorialUrl: 'https://www.youtube.com/watch?v=AI5A1PRYX7E',
     instructions: [
       'From a plank, bring your right knee forward toward your right wrist.',
       'Let your right shin rest on the floor at an angle.',
@@ -909,7 +909,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['back'],
     equipment: ['mat'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=0oHkFc_sKU0',
+    tutorialUrl: 'https://www.youtube.com/watch?v=l3Ze_9iXL-M',
     instructions: [
       'Lie on your side in the fetal position, knees stacked at 90 degrees.',
       'Place both arms out in front, palms together.',
@@ -926,7 +926,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['core', 'shoulders', 'back'],
     equipment: ['medicine-ball'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=1rSkAuCO4bk',
+    tutorialUrl: 'https://www.youtube.com/watch?v=cgKqNn90MEo',
     instructions: [
       'Stand with feet shoulder-width, holding a medicine ball.',
       'Raise the ball overhead, going up on your toes.',
@@ -942,7 +942,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'advanced',
     primaryMuscles: ['quads', 'glutes', 'calves'],
     equipment: ['box'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=GSRnakMuN6I',
+    tutorialUrl: 'https://www.youtube.com/watch?v=XwZkwe0PyT4',
     instructions: [
       'Stand on a box, step off (do not jump off).',
       'As soon as your feet touch the ground, jump as high as possible immediately.',
@@ -958,7 +958,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['glutes', 'quads', 'calves'],
     equipment: ['none'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=GMp9KpQfZkU',
+    tutorialUrl: 'https://www.youtube.com/watch?v=6L6CJXF5CNs',
     instructions: [
       'Stand with feet shoulder-width.',
       'Dip into a squat and swing your arms back.',
@@ -991,7 +991,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['hamstrings', 'glutes'],
     equipment: ['dumbbells'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=vFngPV39_uY',
+    tutorialUrl: 'https://www.youtube.com/watch?v=R_fJ6H3FlVw',
     instructions: [
       'Stand on one leg, holding a dumbbell in the opposite hand.',
       'Hinge at the hip, extending your free leg back for balance.',
@@ -1008,7 +1008,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['glutes'],
     equipment: ['cable-machine'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=Ex3TuXCelFo',
+    tutorialUrl: 'https://www.youtube.com/watch?v=n-cgsNePyFo',
     instructions: [
       'Attach an ankle strap and set the cable to the lowest position.',
       'Face the cable machine and hold it for support.',
@@ -1025,7 +1025,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'advanced',
     primaryMuscles: ['hamstrings'],
     equipment: ['bench'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=d8AAPr_NHPQ',
+    tutorialUrl: 'https://www.youtube.com/watch?v=_e9vFU9-tkc',
     instructions: [
       'Kneel with your ankles secured under something solid.',
       'Keeping your body straight from knees to head, lean forward slowly.',
@@ -1042,7 +1042,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['back', 'shoulders'],
     equipment: ['dumbbells'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=octMzemZe68',
+    tutorialUrl: 'https://www.youtube.com/watch?v=Kl3LEzQ5Zqs',
     instructions: [
       'Hold dumbbells and hinge forward at the hips to 45-90 degrees.',
       'With a slight bend in the elbows, raise arms out to the sides.',
@@ -1106,7 +1106,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['quads', 'glutes'],
     equipment: ['dumbbells', 'box'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=1keEpBMF7Rs',
+    tutorialUrl: 'https://www.youtube.com/watch?v=7AtIjR-QqVA',
     instructions: [
       'Hold dumbbells at your sides and stand in front of a box or bench.',
       'Step up with your right foot, driving through your heel.',
@@ -1279,7 +1279,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['lats', 'forearms'],
     equipment: ['pull-up-bar'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=UX9YhDfl4jY',
+    tutorialUrl: 'https://www.youtube.com/watch?v=dOCQjaasbGs',
     instructions: [
       'Grip bar and hang fully extended',
       'Relax shoulders',
@@ -1324,7 +1324,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['traps'],
     equipment: ['dumbbells', 'barbell'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=g6qbq4a1_hU',
+    tutorialUrl: 'https://www.youtube.com/watch?v=rFsSeClGnNA',
     instructions: [
       'Stand holding weight at sides',
       'Shrug shoulders straight up',
@@ -1339,7 +1339,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['biceps'],
     equipment: ['dumbbells'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=sAq_ocpRn_w',
+    tutorialUrl: 'https://www.youtube.com/watch?v=XE_pHwbst04',
     instructions: [
       'Stand with dumbbells at sides, palms forward',
       'Curl one or both to shoulders',
@@ -1369,7 +1369,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['biceps'],
     equipment: ['cable-machine'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=NFzTWp2qacE',
+    tutorialUrl: 'https://www.youtube.com/watch?v=CrbTqNOlFgE',
     instructions: [
       'Set cable to low position',
       'Grip handle and curl to shoulder',
@@ -1429,7 +1429,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'advanced',
     primaryMuscles: ['quads', 'glutes', 'upper back'],
     equipment: ['barbell', 'squat-rack'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=v-mQm_droOI',
+    tutorialUrl: 'https://www.youtube.com/watch?v=_qv0m3tPd3s',
     instructions: [
       'Bar on front shoulders, clean grip',
       'Sit straight down keeping torso upright',
@@ -1444,7 +1444,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['glutes', 'hamstrings'],
     equipment: ['cable-machine'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=A7d_vE_39Yk',
+    tutorialUrl: 'https://www.youtube.com/watch?v=SuTI-n84ezA',
     instructions: [
       'Set cable low, face away',
       'Hinge at hips holding rope between legs',
@@ -1474,7 +1474,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['obliques', 'shoulders'],
     equipment: ['mat'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=N_s9T326fU0',
+    tutorialUrl: 'https://www.youtube.com/watch?v=sKMD_pbNm7w',
     instructions: [
       'Lie on side, forearm on floor',
       'Lift hips forming straight line',
@@ -1489,7 +1489,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['obliques', 'core'],
     equipment: ['cable-machine'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=pZapBMiC444',
+    tutorialUrl: 'https://www.youtube.com/watch?v=90Qh5XG6mqs',
     instructions: [
       'Set cable at shoulder height',
       'Stand sideways, pull diagonally across body',
@@ -1504,7 +1504,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['quads', 'glutes', 'core', 'shoulders'],
     equipment: ['cardio-machine'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=xV3fU2u0Nfs',
+    tutorialUrl: 'https://www.youtube.com/watch?v=rp6DB13iWqw',
     instructions: [
       'Pedal with arms and legs',
       'Maintain steady pace or sprint',
@@ -1534,7 +1534,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['lats', 'lower back', 'hips'],
     equipment: ['mat'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=2MJGg-fUKh0',
+    tutorialUrl: 'https://www.youtube.com/watch?v=YAmAET3Uomk',
     instructions: [
       'Kneel then sit back on heels',
       'Extend arms forward on floor',
@@ -1550,7 +1550,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['glutes', 'piriformis', 'hips'],
     equipment: ['mat'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=tJnK1Y1Wz28',
+    tutorialUrl: 'https://www.youtube.com/watch?v=ckHZyA99Das',
     instructions: [
       'Lie on back, knees bent',
       'Cross one ankle over opposite knee',
@@ -1565,7 +1565,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'beginner',
     primaryMuscles: ['hips', 'glutes'],
     equipment: ['mat'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=P_Yw8B73j0g',
+    tutorialUrl: 'https://www.youtube.com/watch?v=PuxmfP2Rr74',
     instructions: [
       'Sit with front leg bent 90° external, back leg 90° internal',
       'Lean forward over front leg',
@@ -1580,7 +1580,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['quads', 'glutes', 'shoulders', 'core'],
     equipment: ['medicine-ball'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=eqd_7h4A28A',
+    tutorialUrl: 'https://www.youtube.com/watch?v=W7spj4bb_IA',
     instructions: [
       'Hold ball at chest, squat down',
       'Explode up and throw ball to target',
@@ -1595,7 +1595,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['upper back', 'hamstrings', 'glutes', 'core'],
     equipment: ['sled'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=gT_qE1R8D6w',
+    tutorialUrl: 'https://www.youtube.com/watch?v=gdtO9qeaiCE',
     instructions: [
       'Face away from sled',
       'Grip rope, walk forward, drag sled behind',
@@ -1610,7 +1610,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'intermediate',
     primaryMuscles: ['shoulders', 'core', 'glutes', 'quads'],
     equipment: ['medicine-ball'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=cW_q6R6V-E8',
+    tutorialUrl: 'https://www.youtube.com/watch?v=JVTG45FA_D8',
     instructions: [
       'Squat to pick up sandbag',
       'Clean it to one shoulder',
@@ -1625,7 +1625,7 @@ export const STATIC_EXERCISES: StaticExercise[] = [
     difficulty: 'advanced',
     primaryMuscles: ['quads', 'glutes', 'hamstrings', 'calves'],
     equipment: ['sled'],
-    tutorialUrl: 'https://www.youtube.com/watch?v=83Xy1L5oKEE',
+    tutorialUrl: 'https://www.youtube.com/watch?v=auNHA-EakIo',
     instructions: [
       'Load sled, grip handles',
       'Sprint pushing sled for distance',
@@ -1639,7 +1639,7 @@ const ALL_EXERCISE_TUTORIALS: Record<string, string> = {
   // Chest
   'barbell bench press': 'https://www.youtube.com/watch?v=vcBig73ojpE',
   'bench press': 'https://www.youtube.com/watch?v=vcBig73ojpE',
-  'dumbbell bench press': 'https://www.youtube.com/watch?v=VmB1G1K7v80',
+  'dumbbell bench press': 'https://www.youtube.com/watch?v=1V3vpcaxRYQ',
   'incline barbell bench press': 'https://www.youtube.com/watch?v=SrqOu55lrYU',
   'incline dumbbell press': 'https://www.youtube.com/watch?v=8iPEnn-ltC8',
   'decline bench press': 'https://www.youtube.com/watch?v=LfyQBUKR8SE',
@@ -1653,20 +1653,20 @@ const ALL_EXERCISE_TUTORIALS: Record<string, string> = {
   'decline push up': 'https://www.youtube.com/watch?v=SKPab2YC8BE',
 
   // Back
-  'barbell deadlift': 'https://www.youtube.com/watch?v=vl5a9R9CqgA',
-  'deadlift': 'https://www.youtube.com/watch?v=vl5a9R9CqgA',
+  'barbell deadlift': 'https://www.youtube.com/watch?v=ZaTM37cfiDs',
+  'deadlift': 'https://www.youtube.com/watch?v=ZaTM37cfiDs',
   'pullup': 'https://www.youtube.com/watch?v=eGo4IYlbE5g',
   'pull up': 'https://www.youtube.com/watch?v=eGo4IYlbE5g',
   'lat pulldown': 'https://www.youtube.com/watch?v=CAwf7n6Luuc',
-  'barbell row': 'https://www.youtube.com/watch?v=FWJR5YbTboU',
-  'bent over row': 'https://www.youtube.com/watch?v=FWJR5YbTboU',
+  'barbell row': 'https://www.youtube.com/watch?v=Nqh7q3zDCoQ',
+  'bent over row': 'https://www.youtube.com/watch?v=Nqh7q3zDCoQ',
   'seated cable row': 'https://www.youtube.com/watch?v=GZbfZ033f74',
   'seated row': 'https://www.youtube.com/watch?v=GZbfZ033f74',
   'dumbbell row': 'https://www.youtube.com/watch?v=roCP6wCXPqo',
   'tbar row': 'https://www.youtube.com/watch?v=j3Igk5nyZE4',
   't bar row': 'https://www.youtube.com/watch?v=j3Igk5nyZE4',
   'face pull': 'https://www.youtube.com/watch?v=rep-qVOkqgk',
-  'dead hang': 'https://www.youtube.com/watch?v=_LxFwZ1p33E',
+  'dead hang': 'https://www.youtube.com/watch?v=dOCQjaasbGs',
   'chest supported row': 'https://www.youtube.com/watch?v=xQNrFHEMhI4',
 
   // Shoulders
@@ -1676,9 +1676,9 @@ const ALL_EXERCISE_TUTORIALS: Record<string, string> = {
   'dumbbell shoulder press': 'https://www.youtube.com/watch?v=qEwKCR5JCog',
   'lateral raise': 'https://www.youtube.com/watch?v=3VcKaXpzqRo',
   'front raise': 'https://www.youtube.com/watch?v=-t7fuZ0KhDA',
-  'bentover lateral raise': 'https://www.youtube.com/watch?v=ttvfGg9d070',
-  'bent over lateral raise': 'https://www.youtube.com/watch?v=ttvfGg9d070',
-  'arnold press': 'https://www.youtube.com/watch?v=6Z15_WdxmVw',
+  'bentover lateral raise': 'https://www.youtube.com/watch?v=SWjzFaH9QXA',
+  'bent over lateral raise': 'https://www.youtube.com/watch?v=SWjzFaH9QXA',
+  'arnold press': 'https://www.youtube.com/watch?v=6K_N9AGhItQ',
   'upright row': 'https://www.youtube.com/watch?v=amCU-ziHITM',
   'shrug': 'https://www.youtube.com/watch?v=cJRVVxmytaM',
 
@@ -1688,12 +1688,12 @@ const ALL_EXERCISE_TUTORIALS: Record<string, string> = {
   'dumbbell curl': 'https://www.youtube.com/watch?v=sAq_ocpRh_I',
   'hammer curl': 'https://www.youtube.com/watch?v=zC3nLlEvin4',
   'preacher curl': 'https://www.youtube.com/watch?v=fIWP-FRFNU0',
-  'cable bicep curl': 'https://www.youtube.com/watch?v=AsAVbk76a5w',
+  'cable bicep curl': 'https://www.youtube.com/watch?v=CrbTqNOlFgE',
   'concentration curl': 'https://www.youtube.com/watch?v=Jvj2wV0vOYU',
-  'closegrip bench press': 'https://www.youtube.com/watch?v=nEF0bv2fw94',
-  'close grip bench press': 'https://www.youtube.com/watch?v=nEF0bv2fw94',
+  'closegrip bench press': 'https://www.youtube.com/watch?v=xXd7sddHGa0',
+  'close grip bench press': 'https://www.youtube.com/watch?v=xXd7sddHGa0',
   'tricep pushdown': 'https://www.youtube.com/watch?v=2-LAMcpzODU',
-  'overhead tricep extension': 'https://www.youtube.com/watch?v=_gsU15g15is',
+  'overhead tricep extension': 'https://www.youtube.com/watch?v=9Ark9S11uXw',
   'skull crusher': 'https://www.youtube.com/watch?v=d_KZxkY_0cM',
   'tricep kickback': 'https://www.youtube.com/watch?v=6SS6K3lAwZ8',
   'tricep dip': 'https://www.youtube.com/watch?v=2z8JmcrW-As',
@@ -1702,10 +1702,10 @@ const ALL_EXERCISE_TUTORIALS: Record<string, string> = {
   'chin up': 'https://www.youtube.com/watch?v=brhRXlOhsAM',
 
   // Legs
-  'barbell back squat': 'https://www.youtube.com/watch?v=i7J5h7GpNmA',
-  'back squat': 'https://www.youtube.com/watch?v=i7J5h7GpNmA',
-  'squat': 'https://www.youtube.com/watch?v=i7J5h7GpNmA',
-  'front squat': 'https://www.youtube.com/watch?v=v-mqmOWcRey',
+  'barbell back squat': 'https://www.youtube.com/watch?v=dW3zj79xfrc',
+  'back squat': 'https://www.youtube.com/watch?v=dW3zj79xfrc',
+  'squat': 'https://www.youtube.com/watch?v=dW3zj79xfrc',
+  'front squat': 'https://www.youtube.com/watch?v=_qv0m3tPd3s',
   'leg press': 'https://www.youtube.com/watch?v=IZxyjW7MPJQ',
   'bulgarian split squat': 'https://www.youtube.com/watch?v=2C-uNgKwPLE',
   'goblet squat': 'https://www.youtube.com/watch?v=MxsFDhcyFyE',
@@ -1718,48 +1718,48 @@ const ALL_EXERCISE_TUTORIALS: Record<string, string> = {
   'leg curl': 'https://www.youtube.com/watch?v=1Tq3QdYUuHs',
   'hip thrust': 'https://www.youtube.com/watch?v=LM8XHLYJoYs',
   'glute bridge': 'https://www.youtube.com/watch?v=OUgsJ8-Vi0E',
-  'cable pullthrough': 'https://www.youtube.com/watch?v=A0z6vC32k3s',
-  'cable pull through': 'https://www.youtube.com/watch?v=A0z6vC32k3s',
-  'standing calf raise': 'https://www.youtube.com/watch?v=-M4-G8p1fCI',
-  'calf raise': 'https://www.youtube.com/watch?v=-M4-G8p1fCI',
+  'cable pullthrough': 'https://www.youtube.com/watch?v=SuTI-n84ezA',
+  'cable pull through': 'https://www.youtube.com/watch?v=SuTI-n84ezA',
+  'standing calf raise': 'https://www.youtube.com/watch?v=k8ipHzKeAkQ',
+  'calf raise': 'https://www.youtube.com/watch?v=k8ipHzKeAkQ',
   'seated calf raise': 'https://www.youtube.com/watch?v=JbyjNymZOt0',
-  'sumo deadlift': 'https://www.youtube.com/watch?v=dlDiRbUFLG0',
-  'hack squat': 'https://www.youtube.com/watch?v=EdtPBSuRfOY',
+  'sumo deadlift': 'https://www.youtube.com/watch?v=JF3iwfK5WI0',
+  'hack squat': 'https://www.youtube.com/watch?v=g9i05umL5vc',
 
   // Core & Cardio & Plyo & Mobility
   'plank': 'https://www.youtube.com/watch?v=ASdvN_XEl_c',
-  'side plank': 'https://www.youtube.com/watch?v=N_q-jGqd368',
-  'cable woodchop': 'https://www.youtube.com/watch?v=pApyJzB4_4w',
+  'side plank': 'https://www.youtube.com/watch?v=sKMD_pbNm7w',
+  'cable woodchop': 'https://www.youtube.com/watch?v=90Qh5XG6mqs',
   'dead bug': 'https://www.youtube.com/watch?v=4XLEnwUr1d8',
   'hanging leg raise': 'https://www.youtube.com/watch?v=Pr1ieGZ5atk',
   'russian twist': 'https://www.youtube.com/watch?v=wkD8rjkodUI',
-  'ab wheel rollout': 'https://www.youtube.com/watch?v=0M8COjQ1HLY',
+  'ab wheel rollout': 'https://www.youtube.com/watch?v=MinlHnG7j4k',
   'bird dog': 'https://www.youtube.com/watch?v=wiFNA3sqjCA',
-  'treadmill run': 'https://www.youtube.com/watch?v=p-PXJmGGV3s',
-  'rowing machine': 'https://www.youtube.com/watch?v=H0r9jLlKoC4',
-  'assault bike': 'https://www.youtube.com/watch?v=xV3fU2u0Nfs',
+  'treadmill run': 'https://www.youtube.com/watch?v=K6I24WgiiPw',
+  'rowing machine': 'https://www.youtube.com/watch?v=7EQJFjM4Vs8',
+  'assault bike': 'https://www.youtube.com/watch?v=rp6DB13iWqw',
   'jump rope': 'https://www.youtube.com/watch?v=u3zgHI8QnqE',
   'box jump': 'https://www.youtube.com/watch?v=52r_Ul5k03g',
   'burpee': 'https://www.youtube.com/watch?v=JZQA08SlJnM',
-  'broad jump': 'https://www.youtube.com/watch?v=0l-2mBsmP74',
+  'broad jump': 'https://www.youtube.com/watch?v=6L6CJXF5CNs',
   'kettlebell swing': 'https://www.youtube.com/watch?v=sSESeQAir2M',
-  'medicine ball slam': 'https://www.youtube.com/watch?v=g4m6EeqT42U',
+  'medicine ball slam': 'https://www.youtube.com/watch?v=QxYhFwMd1Ks',
   'mountain climber': 'https://www.youtube.com/watch?v=nmwgirgXLYM',
-  'worlds greatest stretch': 'https://www.youtube.com/watch?v=-Vj6Jp6Y74g',
-  'catcow': 'https://www.youtube.com/watch?v=w_UKcI1F2Sc',
-  'cat cow': 'https://www.youtube.com/watch?v=w_UKcI1F2Sc',
-  'childs pose': 'https://www.youtube.com/watch?v=2MJGg-fUKh0',
-  'figure4 stretch piriformis': 'https://www.youtube.com/watch?v=tJnK1Y1Wz28',
-  '9090 hip stretch': 'https://www.youtube.com/watch?v=P_Yw8B73j0g',
-  'thoracic spine rotation': 'https://www.youtube.com/watch?v=Gj4bVv1uXW8',
-  'wall ball': 'https://www.youtube.com/watch?v=eqd_7h4A28A',
-  'sled push': 'https://www.youtube.com/watch?v=2P_KkS98E2E',
-  'sled pull': 'https://www.youtube.com/watch?v=gT_qE1R8D6w',
+  'worlds greatest stretch': 'https://www.youtube.com/watch?v=kSPS_HIQv8E',
+  'catcow': 'https://www.youtube.com/watch?v=UixnUD6rZWE',
+  'cat cow': 'https://www.youtube.com/watch?v=UixnUD6rZWE',
+  'childs pose': 'https://www.youtube.com/watch?v=YAmAET3Uomk',
+  'figure4 stretch piriformis': 'https://www.youtube.com/watch?v=ckHZyA99Das',
+  '9090 hip stretch': 'https://www.youtube.com/watch?v=PuxmfP2Rr74',
+  'thoracic spine rotation': 'https://www.youtube.com/watch?v=l3Ze_9iXL-M',
+  'wall ball': 'https://www.youtube.com/watch?v=W7spj4bb_IA',
+  'sled push': 'https://www.youtube.com/watch?v=i67JwbtUizY',
+  'sled pull': 'https://www.youtube.com/watch?v=gdtO9qeaiCE',
   'farmers carry': 'https://www.youtube.com/watch?v=Fkzk_RqlYig',
   'farmer carry': 'https://www.youtube.com/watch?v=Fkzk_RqlYig',
-  'battle ropes': 'https://www.youtube.com/watch?v=Mn_gc5dFJhM',
-  'sandbag shoulder': 'https://www.youtube.com/watch?v=cW_q6R6V-E8',
-  'prowler sprint': 'https://www.youtube.com/watch?v=83Xy1L5oKEE',
+  'battle ropes': 'https://www.youtube.com/watch?v=5TvLW4SSlLA',
+  'sandbag shoulder': 'https://www.youtube.com/watch?v=JVTG45FA_D8',
+  'prowler sprint': 'https://www.youtube.com/watch?v=auNHA-EakIo',
   'jump squat': 'https://www.youtube.com/watch?v=CVaEhXotL7M',
 };
 
@@ -1771,9 +1771,13 @@ function normalizeName(str: string): string {
   return str.toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
-/** Curated tutorial URL for an exercise, preferring a DB-provided URL. */
+/**
+ * Curated tutorial URL for an exercise. Our curated list (verified to be live &
+ * embeddable) wins for any exercise we recognise by name, because DB-seeded URLs
+ * can be stale/dead. Unknown (DB-only) exercises fall back to their DB URL, then
+ * a fuzzy name match.
+ */
 export function getTutorialUrl(name: string, dbUrl?: string | null): string | undefined {
-  if (dbUrl) return dbUrl;
   const staticMatch = TUTORIAL_URL_BY_NAME.get(name);
   if (staticMatch) return staticMatch;
 
@@ -1783,6 +1787,7 @@ export function getTutorialUrl(name: string, dbUrl?: string | null): string | un
       return url;
     }
   }
+  if (dbUrl) return dbUrl;
   return undefined;
 }
 
@@ -1810,6 +1815,53 @@ export const CATEGORY_FALLBACK_IMAGES: Record<string, string> = {
   olympic: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80',
   stretching: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80',
 };
+
+/**
+ * A "hold" is any isometric / static-stretch movement that's measured in time,
+ * not reps — planks, wall sits, dead hangs, and mobility stretches. These get a
+ * reverse (countdown) timer instead of a reps input in the player.
+ */
+export function isHoldExercise(ex: {
+  name?: string | null;
+  category?: string | null;
+  repsScheme?: string | null;
+}): boolean {
+  const category = (ex.category || '').toLowerCase();
+  // Cardio keeps its own time/distance logger — never treat it as a hold.
+  if (category === 'cardio') return false;
+
+  const name = (ex.name || '').toLowerCase();
+  if (/\b(plank|wall ?sit|dead ?hang|hollow|l-?sit|iso(metric)? ?hold|hold|hang|superman)\b/.test(name)) {
+    return true;
+  }
+  // Stretches / mobility work are held for time.
+  if (category === 'mobility' || category === 'stretching') return true;
+
+  // Explicit time-based prescriptions ("30s", "hold 45s", "1 min", "0:30").
+  const rs = (ex.repsScheme || '').toLowerCase();
+  if (category !== 'resistance' && /(hold|\d+\s*(s\b|sec|second)|\d+\s*min|\d+:\d{2})/.test(rs)) {
+    return true;
+  }
+  return false;
+}
+
+/** Parse a target hold duration (seconds) from a reps/time prescription. */
+export function parseHoldSeconds(repsScheme?: string | null): number {
+  const s = (repsScheme || '').toLowerCase();
+  let sec: number | null = null;
+  const range = s.match(/(\d+)\s*[-–]\s*(\d+)\s*s/); // "30-60s" → use the upper bound
+  const mmss = s.match(/(\d+):(\d{2})/); // "1:00"
+  const min = s.match(/(\d+)\s*min/); // "2 min"
+  const secM = s.match(/(\d+)\s*s(ec|econd)?/); // "45s" / "45 sec"
+  const bare = s.match(/(\d+)/);
+  if (range) sec = parseInt(range[2], 10);
+  else if (mmss) sec = parseInt(mmss[1], 10) * 60 + parseInt(mmss[2], 10);
+  else if (min) sec = parseInt(min[1], 10) * 60;
+  else if (secM) sec = parseInt(secM[1], 10);
+  else if (bare) sec = parseInt(bare[1], 10);
+  if (!sec || sec < 5) sec = 30; // sensible default for an unspecified hold
+  return Math.min(sec, 600);
+}
 
 export function getCategoryFallbackImage(category?: string): string {
   if (category && CATEGORY_FALLBACK_IMAGES[category]) {
