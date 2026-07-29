@@ -5,12 +5,54 @@ export const runtime = 'edge';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { Plus, Trash2, Search, ChevronLeft, Loader2, Dumbbell, Play } from 'lucide-react';
+import { Plus, Trash2, Search, ChevronLeft, Loader2, Dumbbell, Play, Sparkles, RefreshCw } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { getTutorialUrl } from '@/lib/exerciseData';
 import { Card } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { usePlayerStore } from '@/stores/playerStore';
+
+// ── Auto-generator: focus areas map to the muscles / categories we draw from ──
+type Focus = 'full' | 'upper' | 'lower' | 'core' | 'cardio';
+const FOCUS_OPTIONS: { id: Focus; label: string }[] = [
+  { id: 'full', label: 'Full Body' },
+  { id: 'upper', label: 'Upper Body' },
+  { id: 'lower', label: 'Lower Body' },
+  { id: 'core', label: 'Core' },
+  { id: 'cardio', label: 'Cardio & Conditioning' },
+];
+const UPPER = ['chest', 'back', 'shoulders', 'biceps', 'triceps', 'lats', 'traps', 'delts', 'front delts', 'rear delts', 'side delts', 'upper back', 'upper chest', 'lower chest'];
+const LOWER = ['quads', 'glutes', 'hamstrings', 'calves', 'legs', 'piriformis', 'hips'];
+const CORE = ['core', 'obliques', 'abs'];
+
+function matchesFocus(ex: any, focus: Focus): boolean {
+  const muscles: string[] = (ex.primaryMuscles || []).map((m: string) => m.toLowerCase());
+  const cat = (ex.category || '').toLowerCase();
+  const has = (list: string[]) => muscles.some((m) => list.some((l) => m.includes(l)));
+  switch (focus) {
+    case 'full':
+      return cat === 'resistance' || cat === 'bodyweight';
+    case 'upper':
+      return has(UPPER);
+    case 'lower':
+      return has(LOWER);
+    case 'core':
+      return has(CORE);
+    case 'cardio':
+      return cat === 'cardio' || cat === 'plyo';
+    default:
+      return true;
+  }
+}
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 interface SelectedExercise {
   exerciseId: string;
@@ -41,6 +83,11 @@ export default function CustomWorkoutPage() {
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState('');
 
+  // Auto-generator state
+  const [focus, setFocus] = useState<Focus>('full');
+  const [generating, setGenerating] = useState(false);
+  const [pool, setPool] = useState<any[]>([]);
+
   const { data: exerciseData, isLoading: exLoading } = useQuery({
     queryKey: ['workout-picker-exercises', querySearch, queryFilterCat],
     queryFn: () =>
@@ -70,24 +117,72 @@ export default function CustomWorkoutPage() {
     setPickerOpen(true);
   }
 
+  function toSelected(ex: any): SelectedExercise {
+    return {
+      exerciseId: ex.id,
+      name: ex.name,
+      category: ex.category,
+      primaryMuscles: ex.primaryMuscles || [],
+      tutorialUrl: getTutorialUrl(ex.name, ex.tutorialUrl) || null,
+      instructions: ex.instructions || [],
+      cues: ex.cues || [],
+      sets: 3,
+      repsScheme: ex.category === 'cardio' || ex.category === 'time' ? '10 min' : '8–12',
+      restSec: ex.category === 'cardio' ? 30 : 60,
+    };
+  }
+
   function addExercise(ex: any) {
     if (exercises.some((e) => e.exerciseId === ex.id)) return;
-    setExercises((prev) => [
-      ...prev,
-      {
-        exerciseId: ex.id,
-        name: ex.name,
-        category: ex.category,
-        primaryMuscles: ex.primaryMuscles || [],
-        tutorialUrl: getTutorialUrl(ex.name, ex.tutorialUrl) || null,
-        instructions: ex.instructions || [],
-        cues: ex.cues || [],
-        sets: 3,
-        repsScheme: ex.category === 'cardio' || ex.category === 'time' ? '10 min' : '8–12',
-        restSec: ex.category === 'cardio' ? 30 : 60,
-      },
-    ]);
+    setExercises((prev) => [...prev, toSelected(ex)]);
     setPickerOpen(false);
+  }
+
+  // Fetch (and cache) a broad exercise pool for the generator.
+  async function ensurePool(): Promise<any[]> {
+    if (pool.length) return pool;
+    const res = await api.getExercises({ limit: '100' });
+    const list = res?.exercises || [];
+    setPool(list);
+    return list;
+  }
+
+  // Build a random, focus-appropriate workout from scratch.
+  async function generateWorkout() {
+    setError('');
+    setGenerating(true);
+    try {
+      const list = await ensurePool();
+      let candidates = list.filter((ex: any) => matchesFocus(ex, focus));
+      // Fall back to the whole pool if a focus is too narrow for the library.
+      if (candidates.length < 4) candidates = list;
+      const picked = shuffle(candidates).slice(0, 6).map(toSelected);
+      if (picked.length === 0) {
+        setError('Could not generate a workout — try adding exercises manually.');
+        return;
+      }
+      setWorkoutTitle(`${FOCUS_OPTIONS.find((f) => f.id === focus)?.label || 'Custom'} Workout`);
+      setExercises(picked);
+    } catch (e: any) {
+      setError(e.message || 'Failed to generate workout');
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  // Reject a single exercise and swap in a fresh random one the user hasn't got.
+  async function swapExercise(idx: number) {
+    try {
+      const list = await ensurePool();
+      const currentIds = new Set(exercises.map((e) => e.exerciseId));
+      let candidates = list.filter((ex: any) => matchesFocus(ex, focus) && !currentIds.has(ex.id));
+      if (candidates.length === 0) candidates = list.filter((ex: any) => !currentIds.has(ex.id));
+      if (candidates.length === 0) return; // nothing new to offer
+      const replacement = toSelected(shuffle(candidates)[0]);
+      setExercises((prev) => prev.map((e, i) => (i === idx ? replacement : e)));
+    } catch {
+      /* keep the current exercise on failure */
+    }
   }
 
   function removeExercise(idx: number) {
@@ -125,9 +220,47 @@ export default function CustomWorkoutPage() {
             onChange={(e) => setWorkoutTitle(e.target.value)}
             className="font-display text-2xl font-bold bg-transparent focus:outline-none w-full border-b border-transparent focus:border-brand-orange pb-0.5 transition-colors"
           />
-          <p className="text-text-secondary text-sm mt-0.5">Pick exercises and start now — no plan needed</p>
+          <p className="text-text-secondary text-sm mt-0.5">Generate one instantly, or hand-pick your own</p>
         </div>
       </div>
+
+      {/* ── Auto-generate ── */}
+      <Card className="p-5 space-y-4">
+        <div className="flex items-center gap-2">
+          <div className="w-9 h-9 rounded-xl gradient-bg flex items-center justify-center shrink-0">
+            <Sparkles className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h2 className="font-semibold">Generate a workout</h2>
+            <p className="text-xs text-text-secondary">Pick a focus and we'll build one — swap anything you don't like.</p>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {FOCUS_OPTIONS.map((f) => (
+            <button
+              key={f.id}
+              onClick={() => setFocus(f.id)}
+              className={`px-3 py-1.5 rounded-pill text-xs border transition-all ${
+                focus === f.id
+                  ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
+                  : 'border-hairline text-text-secondary hover:border-hairline-strong'
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+        <Button onClick={generateWorkout} disabled={generating} className="w-full">
+          {generating ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <>
+              <Sparkles className="w-4 h-4 mr-2" />
+              {exercises.length > 0 ? 'Regenerate workout' : 'Generate workout'}
+            </>
+          )}
+        </Button>
+      </Card>
 
       {exercises.length > 0 && (
         <div className="space-y-3">
@@ -140,9 +273,18 @@ export default function CustomWorkoutPage() {
                     {ex.primaryMuscles?.slice(0, 2).join(', ')} · {ex.category}
                   </p>
                 </div>
-                <button onClick={() => removeExercise(idx)} className="text-text-secondary hover:text-danger transition-colors shrink-0 p-1">
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                <div className="flex items-center gap-0.5 shrink-0">
+                  <button
+                    onClick={() => swapExercise(idx)}
+                    title="Don't like this one? Swap it"
+                    className="text-text-secondary hover:text-brand-orange transition-colors p-1"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => removeExercise(idx)} title="Remove" className="text-text-secondary hover:text-danger transition-colors p-1">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
               <div className="grid grid-cols-3 gap-2">
                 <div>
