@@ -59,3 +59,26 @@ export async function verifyToken<T>(token: string, secret: string): Promise<T> 
   const { payload } = await jwtVerify(token, secretKey(secret));
   return payload as unknown as T;
 }
+
+// ── Password-reset tokens ────────────────────────────────────────────
+// Stateless reset flow: the reset code is embedded in a short-lived signed
+// token, so no extra DB table/columns are needed (works on Workers + Neon
+// out of the box). The token is the proof of "you requested this reset".
+export async function signResetToken(
+  payload: { userId: string; email: string; code: string },
+  secret: string,
+): Promise<string> {
+  return new SignJWT({ ...payload, purpose: 'pwreset' })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('15m')
+    .setIssuedAt()
+    .sign(secretKey(secret));
+}
+
+export async function verifyResetToken(
+  token: string,
+  secret: string,
+): Promise<{ userId: string; email: string; code: string; purpose: string }> {
+  const { payload } = await jwtVerify(token, secretKey(secret));
+  return payload as unknown as { userId: string; email: string; code: string; purpose: string };
+}

@@ -51,6 +51,18 @@ export const api = {
       body: JSON.stringify(data),
     }),
 
+  forgotPassword: (data: { email: string }) =>
+    apiFetch<{ sent: boolean; resetToken?: string; code?: string }>('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  resetPassword: (data: { resetToken: string; code: string; newPassword: string }) =>
+    apiFetch<{ success: boolean }>('/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
   getProfile: () => apiFetch<any>('/auth/me'),
 
   updateProfile: (data: any) =>

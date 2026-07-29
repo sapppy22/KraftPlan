@@ -7,18 +7,24 @@ import { KeyRound, ArrowLeft, Loader2, CheckCircle2, Eye, EyeOff, ShieldCheck } 
 import Button from '@/components/ui/Button';
 import { Logo } from '@/components/ui/Logo';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { api } from '@/lib/api/client';
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [step, setStep] = useState<'email' | 'verify' | 'reset' | 'success'>('email');
-  
+
   // Verification code / new password state
   const [code, setCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  
+
+  // Reset token bound to this request (proof the reset was initiated). The
+  // demo code is surfaced in-app because email delivery isn't enabled.
+  const [resetToken, setResetToken] = useState('');
+  const [demoCode, setDemoCode] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
@@ -33,18 +39,27 @@ export default function ForgotPasswordPage() {
     setLoading(true);
     setError('');
 
-    // Simulate API reset request
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const res = await api.forgotPassword({ email });
+      setResetToken(res.resetToken || '');
+      setDemoCode(res.code || '');
       setStep('verify');
-      setMessage(`We've sent a 6-digit reset code to ${email}`);
-    }, 1000);
+      setMessage(`If an account exists for ${email}, a 6-digit reset code has been generated.`);
+    } catch (err: any) {
+      setError(err?.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleVerifyCode = (e: React.FormEvent) => {
     e.preventDefault();
     if (code.trim().length < 4) {
-      setError('Please enter the verification code sent to your email.');
+      setError('Please enter the verification code.');
+      return;
+    }
+    if (!resetToken) {
+      setError('We couldn’t find a pending reset for that email. Please start again.');
       return;
     }
     setError('');
@@ -65,10 +80,16 @@ export default function ForgotPasswordPage() {
     setLoading(true);
     setError('');
 
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await api.resetPassword({ resetToken, code: code.trim(), newPassword });
       setStep('success');
-    }, 1200);
+    } catch (err: any) {
+      // Wrong/expired code is reported by the server — send the user back to it.
+      setError(err?.message || 'Could not reset password. Please try again.');
+      setStep('verify');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -138,9 +159,18 @@ export default function ForgotPasswordPage() {
                 <div className="w-12 h-12 rounded-2xl bg-brand-green/10 text-brand-green flex items-center justify-center mb-4">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
-                <h1 className="font-display text-2xl font-bold">Check your email</h1>
+                <h1 className="font-display text-2xl font-bold">Enter your reset code</h1>
                 <p className="text-text-secondary text-sm mt-1">{message}</p>
               </div>
+
+              {demoCode && (
+                <div className="p-3 rounded-xl bg-brand-green/10 border border-brand-green/20 text-sm">
+                  <p className="text-text-secondary text-xs">
+                    Email delivery isn’t enabled on this demo, so your code is shown here:
+                  </p>
+                  <p className="font-mono text-lg tracking-widest text-brand-green mt-1">{demoCode}</p>
+                </div>
+              )}
 
               <form onSubmit={handleVerifyCode} className="space-y-4">
                 <div>

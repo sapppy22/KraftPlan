@@ -1,8 +1,15 @@
 import { Hono } from 'hono';
 import { eq } from 'drizzle-orm';
+import { z } from 'zod';
 import { registerSchema, loginSchema, profileUpdateSchema } from '@kraftplan/shared';
 import { schema } from '../db';
-import { hashPassword, verifyPassword, signAccessToken } from '../crypto';
+import {
+  hashPassword,
+  verifyPassword,
+  signAccessToken,
+  signResetToken,
+  verifyResetToken,
+} from '../crypto';
 import { type AppEnv, authUserId } from '../context';
 
 function publicUser(u: typeof schema.users.$inferSelect) {
@@ -66,6 +73,64 @@ auth.post('/login', async (c) => {
 
   const accessToken = await signAccessToken({ userId: user.id, role: user.role || 'user' }, c.env.JWT_SECRET);
   return c.json({ accessToken, user: publicUser(user) });
+});
+
+// ── Password reset ───────────────────────────────────────────────────
+// No email provider is configured on the free tier, so we can't send the
+// code out of band. Instead the flow is stateless + self-contained: we sign
+// a short-lived token that carries a 6-digit code, and (in the absence of
+// email) return the code so the UI can display it. `reset-password` then
+// verifies the token+code and updates the hash. Swapping in a real mailer
+// later just means dropping the `code` from this response and emailing it.
+const forgotPasswordSchema = z.object({ email: z.string().email() });
+
+auth.post('/forgot-password', async (c) => {
+  const parsed = forgotPasswordSchema.safeParse(await c.req.json().catch(() => ({})));
+  if (!parsed.success) return c.json({ error: 'Please enter a valid email address' }, 400);
+  const { email } = parsed.data;
+  const db = c.get('db');
+
+  const [user] = await db.select().from(schema.users).where(eq(schema.users.email, email)).limit(1);
+  // Always answer 200 so we don't leak which emails are registered.
+  if (!user || !user.passwordHash) return c.json({ sent: true });
+
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  const resetToken = await signResetToken({ userId: user.id, email: user.email, code }, c.env.JWT_SECRET);
+  // `code` is echoed back only because there is no mail transport (demo/free tier).
+  return c.json({ sent: true, resetToken, code, delivery: 'in-app' });
+});
+
+const resetPasswordSchema = z.object({
+  resetToken: z.string().min(1),
+  code: z.string().min(4).max(6),
+  newPassword: z.string().min(8).max(128),
+});
+
+auth.post('/reset-password', async (c) => {
+  const parsed = resetPasswordSchema.safeParse(await c.req.json().catch(() => ({})));
+  if (!parsed.success) return c.json({ error: 'Validation failed', details: parsed.error.flatten() }, 400);
+  const { resetToken, code, newPassword } = parsed.data;
+
+  let payload;
+  try {
+    payload = await verifyResetToken(resetToken, c.env.JWT_SECRET);
+  } catch {
+    return c.json({ error: 'This reset request has expired. Please start again.' }, 400);
+  }
+  if (payload.purpose !== 'pwreset' || payload.code !== code) {
+    return c.json({ error: 'Incorrect or expired reset code' }, 400);
+  }
+
+  const db = c.get('db');
+  const passwordHash = await hashPassword(newPassword);
+  const [user] = await db
+    .update(schema.users)
+    .set({ passwordHash })
+    .where(eq(schema.users.id, payload.userId))
+    .returning();
+  if (!user) return c.json({ error: 'Account not found' }, 404);
+
+  return c.json({ success: true });
 });
 
 auth.get('/me', async (c) => {
