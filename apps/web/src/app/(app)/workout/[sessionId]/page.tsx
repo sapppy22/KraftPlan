@@ -13,12 +13,15 @@ import {
   ChevronUp,
   Trophy,
   Timer,
+  Dumbbell,
+  Youtube,
 } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { usePlayerStore } from '@/stores/playerStore';
 import { Card } from '@/components/ui/Card';
 import { RestTimer } from '@/components/player/RestTimer';
 import { cn } from '@/lib/utils';
+import { getTutorialUrl, extractYouTubeId } from '@/lib/exerciseData';
 
 interface Props {
   params: { sessionId: string };
@@ -32,28 +35,19 @@ function formatElapsed(sec: number) {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
-/** Extract YouTube video ID from common URL patterns */
-function extractYouTubeId(url: string): string | null {
-  const patterns = [
-    /youtu\.be\/([^?&]+)/,
-    /youtube\.com\/watch\?v=([^&]+)/,
-    /youtube\.com\/embed\/([^?&]+)/,
-    /youtube\.com\/shorts\/([^?&]+)/,
-  ];
-  for (const p of patterns) {
-    const m = url.match(p);
-    if (m) return m[1];
+/**
+ * Build a YouTube embed src for an exercise. Resolves a curated tutorial from
+ * the exercise name when the manifest carries no URL (custom workouts often
+ * do), and returns null when nothing is available so we can render a graceful
+ * fallback instead of YouTube's broken `listType=search` player.
+ */
+function buildEmbedSrc(exerciseName: string, tutorialUrl?: string | null): string | null {
+  const url = getTutorialUrl(exerciseName, tutorialUrl);
+  if (url && url.includes('youtube')) {
+    const vid = extractYouTubeId(url);
+    if (vid) return `https://www.youtube.com/embed/${vid}?rel=0`;
   }
   return null;
-}
-
-/** Build an embed src for a given exercise name / tutorial URL */
-function buildEmbedSrc(exerciseName: string, tutorialUrl?: string | null): string {
-  if (tutorialUrl && tutorialUrl.includes('youtube')) {
-    const vid = extractYouTubeId(tutorialUrl);
-    if (vid) return `https://www.youtube.com/embed/${vid}?autoplay=0&rel=0`;
-  }
-  return `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(exerciseName + ' tutorial')}`;
 }
 
 /** Find the first set that hasn't been logged yet, so we resume where the user left off. */
@@ -404,18 +398,45 @@ export default function WorkoutPlayerPage({ params }: Props) {
         {/* ── Current exercise ───────────────────────────────────────────────── */}
         {currentExercise ? (
           <Card className="p-0 overflow-hidden">
-            {/* YouTube embed */}
-            <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
-              <iframe
-                key={currentExercise.exerciseId} // remount on exercise change
-                src={buildEmbedSrc(currentExercise.name, currentExercise.tutorialUrl)}
-                className="absolute inset-0 w-full h-full border-0"
-                allow="autoplay; encrypted-media"
-                allowFullScreen
-                title={`${currentExercise.name} tutorial`}
-                loading="lazy"
-              />
-            </div>
+            {/* Tutorial video (or graceful fallback when none is available) */}
+            {(() => {
+              const embedSrc = buildEmbedSrc(currentExercise.name, currentExercise.tutorialUrl);
+              if (!embedSrc) {
+                const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(
+                  currentExercise.name + ' exercise tutorial',
+                )}`;
+                return (
+                  <div className="relative w-full bg-bg-surface" style={{ paddingTop: '56.25%' }}>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-text-secondary px-4 text-center">
+                      <Dumbbell className="w-10 h-10 mb-3 opacity-50" />
+                      <p className="text-sm">No tutorial video for this exercise</p>
+                      <a
+                        href={searchUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-2 inline-flex items-center gap-1.5 text-brand-orange underline text-sm"
+                      >
+                        <Youtube className="w-4 h-4" />
+                        Search on YouTube
+                      </a>
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+                  <iframe
+                    key={currentExercise.exerciseId} // remount on exercise change
+                    src={embedSrc}
+                    className="absolute inset-0 w-full h-full border-0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    title={`${currentExercise.name} tutorial`}
+                    loading="lazy"
+                  />
+                </div>
+              );
+            })()}
 
             <div className="p-5 space-y-5">
               {/* Name + muscles + set counter */}
