@@ -24,7 +24,7 @@ import { Card } from '@/components/ui/Card';
 import { RestTimer } from '@/components/player/RestTimer';
 import { HoldTimer } from '@/components/player/HoldTimer';
 import { cn } from '@/lib/utils';
-import { getTutorialUrl, extractYouTubeId, isHoldExercise, parseHoldSeconds } from '@/lib/exerciseData';
+import { getTutorialUrl, extractYouTubeId, isHoldExercise, parseHoldSeconds, parseDurationSeconds } from '@/lib/exerciseData';
 
 interface Props {
   params: { sessionId: string };
@@ -172,7 +172,11 @@ export default function WorkoutPlayerPage({ params }: Props) {
   const currentSet = store.currentSetIndex;
   const isCardio = currentExercise?.category === 'cardio' || currentExercise?.category === 'time';
   const isHold = !!currentExercise && isHoldExercise(currentExercise);
-  const holdSec = isHold ? parseHoldSeconds(currentExercise?.repsScheme) : 0;
+  // A minute/second target (e.g. "10 min", "0:30") drives a reverse countdown,
+  // as do isometric holds. Everything else uses the reps/weight (or distance) logger.
+  const targetDurationSec = currentExercise ? parseDurationSeconds(currentExercise.repsScheme) : null;
+  const useCountdown = isHold || targetDurationSec != null;
+  const countdownSec = isHold ? parseHoldSeconds(currentExercise?.repsScheme) : targetDurationSec ?? 0;
   const embedSrc = currentExercise ? buildEmbedSrc(currentExercise.name, currentExercise.tutorialUrl) : null;
   const resolvedTutorialUrl = currentExercise ? getTutorialUrl(currentExercise.name, currentExercise.tutorialUrl) : undefined;
   const ytSearchUrl = currentExercise
@@ -507,9 +511,9 @@ export default function WorkoutPlayerPage({ params }: Props) {
               {/* Reps / rest targets */}
               <div className="flex flex-wrap gap-2 text-sm">
                 <span className="px-3 py-1 rounded-pill bg-bg-elevated text-text-secondary">
-                  {isHold ? 'Hold' : 'Target'}:{' '}
+                  {useCountdown ? (isHold ? 'Hold' : 'Duration') : 'Target'}:{' '}
                   <span className="text-text-primary font-medium">
-                    {isHold ? formatElapsed(holdSec) : currentExercise.repsScheme}
+                    {useCountdown ? formatElapsed(countdownSec) : currentExercise.repsScheme}
                   </span>
                 </span>
                 <span className="px-3 py-1 rounded-pill bg-bg-elevated text-text-secondary">
@@ -562,16 +566,19 @@ export default function WorkoutPlayerPage({ params }: Props) {
                     className="w-full py-4 gradient-bg rounded-pill text-white font-semibold flex items-center justify-center gap-2"
                   >
                     <Play className="w-5 h-5 fill-white" />
-                    {isHold ? `Start hold · ${formatElapsed(holdSec)}` : 'Start exercise'}
+                    {useCountdown
+                      ? `${isHold ? 'Start hold' : 'Start'} · ${formatElapsed(countdownSec)}`
+                      : 'Start exercise'}
                   </button>
                 </>
-              ) : isHold ? (
-                /* ── Active hold: reverse countdown, no reps input ── */
+              ) : useCountdown ? (
+                /* ── Active timed exercise: reverse countdown, no reps input ── */
                 <>
                   <HoldTimer
                     key={`${currentExercise.exerciseId}-${currentSet}`}
-                    durationSec={holdSec}
+                    durationSec={countdownSec}
                     onComplete={logHold}
+                    label={isHold ? 'hold' : 'remaining'}
                   />
                   <button
                     onClick={() => handleLogSet('skipped')}

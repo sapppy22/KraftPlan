@@ -1863,6 +1863,33 @@ export function parseHoldSeconds(repsScheme?: string | null): number {
   return Math.min(sec, 600);
 }
 
+/**
+ * Parse an explicit *time* target (in seconds) from a prescription like
+ * "10 min", "5-10 min", "0:30" or "45 sec". Returns null when the target is
+ * NOT time-based (reps, rounds, distance in metres, etc.) — bare "m" is treated
+ * as metres, never minutes. Used to switch minute-target exercises to a
+ * reverse countdown instead of weight/rep inputs.
+ */
+export function parseDurationSeconds(repsScheme?: string | null): number | null {
+  const s = (repsScheme || '').toLowerCase().trim();
+  if (!s) return null;
+  let m: RegExpMatchArray | null;
+  let sec: number | null = null;
+  if ((m = s.match(/(\d+):(\d{2})/))) {
+    sec = parseInt(m[1], 10) * 60 + parseInt(m[2], 10); // mm:ss
+  } else if ((m = s.match(/(\d+)\s*[-–]\s*(\d+)\s*min/))) {
+    sec = parseInt(m[2], 10) * 60; // "5-10 min" → upper bound
+  } else if ((m = s.match(/(\d+)\s*min/))) {
+    sec = parseInt(m[1], 10) * 60; // "10 min"
+  } else if ((m = s.match(/(\d+)\s*[-–]\s*(\d+)\s*(?:s|sec|second)s?\b/))) {
+    sec = parseInt(m[2], 10); // "30-60 sec"
+  } else if ((m = s.match(/(\d+)\s*(?:s|sec|second)s?\b/))) {
+    sec = parseInt(m[1], 10); // "45s" / "45 sec"
+  }
+  if (sec == null || sec < 3) return null;
+  return Math.min(sec, 3600);
+}
+
 export function getCategoryFallbackImage(category?: string): string {
   if (category && CATEGORY_FALLBACK_IMAGES[category]) {
     return CATEGORY_FALLBACK_IMAGES[category];

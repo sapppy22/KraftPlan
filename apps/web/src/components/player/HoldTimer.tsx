@@ -4,10 +4,12 @@ import { useState, useEffect, useRef } from 'react';
 import { Pause, Play, RotateCcw, Check } from 'lucide-react';
 
 interface HoldTimerProps {
-  /** Target hold duration in seconds. */
+  /** Target duration in seconds. */
   durationSec: number;
-  /** Called when the hold ends — either the countdown hit zero or the user finished early. */
+  /** Called when the timer ends — either the countdown hit zero or the user finished early. */
   onComplete: (heldSec: number) => void;
+  /** Caption under the clock (e.g. "hold" for planks, "remaining" for timed cardio). */
+  label?: string;
 }
 
 function fmt(sec: number) {
@@ -21,7 +23,7 @@ function fmt(sec: number) {
  * immediately, counts down to zero, then logs the hold. The user can pause,
  * reset, or finish early (which logs the time actually held).
  */
-export function HoldTimer({ durationSec, onComplete }: HoldTimerProps) {
+export function HoldTimer({ durationSec, onComplete, label = 'hold' }: HoldTimerProps) {
   const [remaining, setRemaining] = useState(durationSec);
   const [running, setRunning] = useState(true);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -80,7 +82,7 @@ export function HoldTimer({ durationSec, onComplete }: HoldTimerProps) {
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="font-display text-4xl font-bold tabular-nums">{fmt(remaining)}</span>
-          <span className="text-xs text-text-secondary mt-0.5">hold</span>
+          <span className="text-xs text-text-secondary mt-0.5">{label}</span>
         </div>
       </div>
 
