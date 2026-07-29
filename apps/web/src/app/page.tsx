@@ -74,9 +74,12 @@ export default function RootPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-bg-base text-text-primary relative overflow-x-hidden transition-colors duration-300">
-      {/* Dynamic Background Glows */}
-      <div className="absolute top-[-15%] left-[-10%] w-[60%] h-[50%] rounded-full bg-brand-green/15 blur-[140px] pointer-events-none" />
-      <div className="absolute top-[30%] right-[-10%] w-[50%] h-[45%] rounded-full bg-brand-soft/10 blur-[140px] pointer-events-none" />
+      {/* Dynamic, drifting background glows */}
+      <div className="absolute top-[-15%] left-[-10%] w-[60%] h-[50%] rounded-full bg-brand-green/15 blur-[140px] pointer-events-none animate-float" />
+      <div className="absolute top-[25%] right-[-12%] w-[50%] h-[45%] rounded-full bg-brand-soft/10 blur-[140px] pointer-events-none animate-float-slow" />
+      <div className="absolute top-[60%] left-[20%] w-[40%] h-[40%] rounded-full bg-brand-mint/10 blur-[150px] pointer-events-none animate-float" style={{ animationDelay: '4s' }} />
+      {/* Fine dot-grid texture over the hero */}
+      <div className="absolute inset-x-0 top-0 h-[700px] bg-dot-grid mask-radial-fade opacity-60 pointer-events-none" />
 
       {/* ── Navigation Header ── */}
       <header className="sticky top-0 z-50 bg-bg-base/80 backdrop-blur-xl border-b border-hairline transition-colors duration-300">
@@ -119,17 +122,17 @@ export default function RootPage() {
             <span className="text-xs sm:text-sm font-semibold text-brand-green">KraftPlan 2.0 is now live</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-display font-extrabold tracking-tight max-w-5xl mx-auto leading-[1.1] text-balance">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-display font-extrabold tracking-tight max-w-5xl mx-auto leading-[1.1] text-balance animate-fade-in" style={{ animationDelay: '80ms' }}>
             Engineered for <br className="hidden sm:block" />
             <span className="gradient-text">Peak Performance.</span>
           </h1>
 
-          <p className="mt-6 text-lg sm:text-xl md:text-2xl text-text-secondary max-w-3xl mx-auto font-light leading-relaxed text-balance">
+          <p className="mt-6 text-lg sm:text-xl md:text-2xl text-text-secondary max-w-3xl mx-auto font-light leading-relaxed text-balance animate-fade-in" style={{ animationDelay: '160ms' }}>
             The ultimate minimalist platform to discover, customize, and execute structured workout plans with zero clutter. Built for athletes who demand real results.
           </p>
 
           {/* Action CTAs */}
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto animate-fade-in" style={{ animationDelay: '240ms' }}>
             <Link href="/register" className="w-full sm:w-auto">
               <Button size="lg" className="w-full sm:w-auto group">
                 Get Started Free
@@ -147,7 +150,7 @@ export default function RootPage() {
           </div>
 
           {/* ── Interactive Hero UI Showcase Card ── */}
-          <div className="mt-16 sm:mt-20 max-w-4xl mx-auto relative">
+          <div className="mt-16 sm:mt-20 max-w-4xl mx-auto relative animate-fade-in" style={{ animationDelay: '320ms' }}>
             <div className="absolute -inset-1 rounded-3xl gradient-bg opacity-15 blur-xl pointer-events-none" />
             
             <div className="relative rounded-3xl bg-bg-surface border border-hairline shadow-lg p-4 sm:p-8 text-left space-y-6 overflow-hidden">
@@ -231,8 +234,8 @@ export default function RootPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card interactive className="p-6 space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-brand-green/10 text-brand-green flex items-center justify-center">
+            <Card className="p-6 space-y-3 ring-hover group">
+              <div className="w-12 h-12 rounded-2xl transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-3 bg-brand-green/10 text-brand-green flex items-center justify-center">
                 <Activity className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold">Smart Set Logging</h3>
@@ -241,8 +244,8 @@ export default function RootPage() {
               </p>
             </Card>
 
-            <Card interactive className="p-6 space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-brand-soft/10 text-brand-soft flex items-center justify-center">
+            <Card className="p-6 space-y-3 ring-hover group">
+              <div className="w-12 h-12 rounded-2xl transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-3 bg-brand-soft/10 text-brand-soft flex items-center justify-center">
                 <Zap className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold">Adaptive Training Blocks</h3>
@@ -251,8 +254,8 @@ export default function RootPage() {
               </p>
             </Card>
 
-            <Card interactive className="p-6 space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-brand-deep/10 text-brand-green flex items-center justify-center">
+            <Card className="p-6 space-y-3 ring-hover group">
+              <div className="w-12 h-12 rounded-2xl transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-3 bg-brand-deep/10 text-brand-green flex items-center justify-center">
                 <TrendingUp className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold">1RM & PR Analytics</h3>
@@ -261,8 +264,8 @@ export default function RootPage() {
               </p>
             </Card>
 
-            <Card interactive className="p-6 space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-brand-soft/10 text-brand-soft flex items-center justify-center">
+            <Card className="p-6 space-y-3 ring-hover group">
+              <div className="w-12 h-12 rounded-2xl transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-3 bg-brand-soft/10 text-brand-soft flex items-center justify-center">
                 <Dumbbell className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold">300+ Exercise Video Library</h3>
@@ -271,8 +274,8 @@ export default function RootPage() {
               </p>
             </Card>
 
-            <Card interactive className="p-6 space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-brand-green/10 text-brand-green flex items-center justify-center">
+            <Card className="p-6 space-y-3 ring-hover group">
+              <div className="w-12 h-12 rounded-2xl transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-3 bg-brand-green/10 text-brand-green flex items-center justify-center">
                 <Clock className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold">Rest Timer & Tempo Control</h3>
@@ -281,8 +284,8 @@ export default function RootPage() {
               </p>
             </Card>
 
-            <Card interactive className="p-6 space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-brand-soft/10 text-brand-soft flex items-center justify-center">
+            <Card className="p-6 space-y-3 ring-hover group">
+              <div className="w-12 h-12 rounded-2xl transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-3 bg-brand-soft/10 text-brand-soft flex items-center justify-center">
                 <Shield className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold">Edge Speed & Offline Ready</h3>
@@ -367,48 +370,63 @@ export default function RootPage() {
         </section>
 
         {/* ── Live Stats Ticker ── */}
-        <section className="py-16 bg-surface-1 border-y border-hairline">
-          <div className="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <p className="font-display text-4xl sm:text-5xl font-extrabold gradient-text">50,000+</p>
-              <p className="text-text-secondary text-sm font-medium mt-1">Workouts Executed</p>
-            </div>
-            <div>
-              <p className="font-display text-4xl sm:text-5xl font-extrabold gradient-text">300+</p>
-              <p className="text-text-secondary text-sm font-medium mt-1">Video Tutorials</p>
-            </div>
-            <div>
-              <p className="font-display text-4xl sm:text-5xl font-extrabold gradient-text">99.9%</p>
-              <p className="text-text-secondary text-sm font-medium mt-1">Edge Uptime</p>
-            </div>
-            <div>
-              <p className="font-display text-4xl sm:text-5xl font-extrabold gradient-text">4.9 / 5</p>
-              <p className="text-text-secondary text-sm font-medium mt-1 flex items-center justify-center gap-1">
-                <Star className="w-4 h-4 text-amber-400 fill-amber-400 inline" /> Athlete Rating
-              </p>
-            </div>
+        <section className="py-16 bg-surface-1 border-y border-hairline relative overflow-hidden">
+          <div className="absolute inset-0 bg-dot-grid opacity-40 pointer-events-none" />
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
+            {[
+              { icon: Dumbbell, value: '50,000+', label: 'Workouts Executed' },
+              { icon: Play, value: '300+', label: 'Video Tutorials' },
+              { icon: Zap, value: '99.9%', label: 'Edge Uptime' },
+              { icon: Star, value: '4.9 / 5', label: 'Athlete Rating' },
+            ].map((s) => {
+              const Icon = s.icon;
+              return (
+                <div key={s.label} className="flex flex-col items-center">
+                  <div className="w-11 h-11 rounded-2xl icon-chip flex items-center justify-center mb-3">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <p className="font-display text-4xl sm:text-5xl font-extrabold gradient-text">{s.value}</p>
+                  <p className="text-text-secondary text-sm font-medium mt-1">{s.label}</p>
+                </div>
+              );
+            })}
           </div>
         </section>
 
         {/* ── Final Call to Action ── */}
-        <section className="py-24 px-4 sm:px-8 max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="font-display text-4xl sm:text-6xl font-extrabold tracking-tight">
-            Ready to Take Control of Your Training?
-          </h2>
-          <p className="text-text-secondary text-lg max-w-xl mx-auto">
-            Join thousands of lifters using KraftPlan to track progress and hit new personal records.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register">
-              <Button size="lg" className="w-full sm:w-auto">
-                Create Free Account
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button variant="secondary" size="lg" className="w-full sm:w-auto">
-                Log In
-              </Button>
-            </Link>
+        <section className="py-20 sm:py-24 px-4 sm:px-8 max-w-5xl mx-auto">
+          <div className="relative overflow-hidden rounded-3xl gradient-bg text-white text-center px-6 py-14 sm:px-12 sm:py-20 shadow-lift">
+            {/* Decorative texture + glow */}
+            <div className="absolute inset-0 bg-dot-grid opacity-[0.15] pointer-events-none" />
+            <div className="absolute -top-20 -right-16 w-72 h-72 rounded-full bg-white/15 blur-3xl pointer-events-none" />
+            <Dumbbell className="absolute -left-6 -bottom-10 w-44 h-44 text-white/10 -rotate-12 pointer-events-none" strokeWidth={1.25} />
+
+            <div className="relative space-y-7">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-xs font-semibold">
+                <Sparkles className="w-4 h-4" />
+                Free forever — no credit card
+              </div>
+              <h2 className="font-display text-4xl sm:text-6xl font-extrabold tracking-tight text-balance">
+                Ready to take control of your training?
+              </h2>
+              <p className="text-white/85 text-lg max-w-xl mx-auto">
+                Join thousands of lifters using KraftPlan to track progress and hit new personal records.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-1">
+                <Link href="/register" className="w-full sm:w-auto">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white text-brand-deep font-semibold shadow-sm hover:bg-white/90 transition-all group">
+                    Create Free Account
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </Link>
+                <button
+                  onClick={continueAsGuest}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white/10 border border-white/25 text-white font-semibold hover:bg-white/20 transition-all backdrop-blur-md"
+                >
+                  Explore as Guest
+                </button>
+              </div>
+            </div>
           </div>
         </section>
       </main>
