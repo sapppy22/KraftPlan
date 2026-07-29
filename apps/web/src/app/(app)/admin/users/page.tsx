@@ -12,7 +12,7 @@ export default function AdminUsersPage() {
 
   const { data: users, isLoading } = useQuery({
     queryKey: ['admin-users'],
-    queryFn: () => api.fetch('/admin/users').then((r) => r.json()),
+    queryFn: () => api.fetch('/admin/users'),
   });
 
   const updateRole = useMutation({

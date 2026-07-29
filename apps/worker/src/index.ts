@@ -9,6 +9,7 @@ import { plans, userPlan } from './routes/plans';
 import { workouts } from './routes/workouts';
 import { progress, dashboard } from './routes/progress';
 import { feedback } from './routes/feedback';
+import { admin } from './routes/admin';
 
 const app = new Hono<AppEnv>();
 
@@ -62,6 +63,7 @@ app.route('/workouts', workouts);
 app.route('/progress', progress);
 app.route('/dashboard', dashboard);
 app.route('/feedback', feedback);
+app.route('/admin', admin);
 
 app.onError((err, c) => {
   console.error(err);

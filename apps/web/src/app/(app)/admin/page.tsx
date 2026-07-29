@@ -23,7 +23,7 @@ function StatCard({ title, value, icon: Icon, colorClass }: any) {
 export default function AdminDashboard() {
   const { data: stats, isLoading } = useQuery({
     queryKey: ['admin-stats'],
-    queryFn: () => api.fetch('/admin/stats').then(r => r.json()),
+    queryFn: () => api.fetch('/admin/stats'),
   });
 
   if (isLoading) {

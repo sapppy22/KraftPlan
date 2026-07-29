@@ -28,7 +28,7 @@ export default function AdminFeedbackPage() {
 
   const { data: feedback, isLoading } = useQuery({
     queryKey: ['admin-feedback'],
-    queryFn: () => api.fetch('/admin/feedback').then((r) => r.json()),
+    queryFn: () => api.fetch('/admin/feedback'),
   });
 
   const updateStatus = useMutation({
