@@ -6,8 +6,16 @@ import { resolveToday } from './plans';
 import type { AppEnv } from '../context';
 
 function rangeStart(range: string): Date {
+  const days =
+    range === '7d' ? 7 :
+    range === '30d' ? 30 :
+    range === '90d' ? 90 :
+    range === '1y' ? 365 :
+    range === '2y' ? 730 :
+    range === 'all' ? 1825 :
+    90;
   const d = new Date();
-  d.setDate(d.getDate() - (range === '30d' ? 30 : range === '1y' ? 365 : 90));
+  d.setDate(d.getDate() - days);
   return d;
 }
 

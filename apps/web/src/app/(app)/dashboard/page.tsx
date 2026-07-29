@@ -8,6 +8,7 @@ import { Play, Flame, TrendingUp, Calendar, Dumbbell, Loader2 } from 'lucide-rea
 import { api } from '@/lib/api/client';
 import { Card } from '@/components/ui/Card';
 import { HyroxAmbientVideo } from '@/components/HyroxAmbientVideo';
+import { WorkoutAnalytics } from '@/components/dashboard/WorkoutAnalytics';
 import { formatDuration, formatKg, formatDate } from '@/lib/utils';
 
 export default function DashboardPage() {
@@ -119,6 +120,9 @@ export default function DashboardPage() {
           </p>
         </Card>
       </div>
+
+      {/* Visual analytics — completed workouts over time */}
+      <WorkoutAnalytics />
 
       {/* Program Progress */}
       {data?.programProgress && (
