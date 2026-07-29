@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronRight, Check } from 'lucide-react';
+import { ChevronRight, Check, Star } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { Logo } from '@/components/ui/Logo';
 import { api } from '@/lib/api/client';
@@ -41,13 +41,23 @@ export default function OnboardingPage() {
   const [weightKg, setWeightKg] = useState('');
   const [heightCm, setHeightCm] = useState('');
 
-  // Plan prefs
-  const [goal, setGoal] = useState('');
+  // Plan prefs — goals is an ordered list; index 0 is the primary goal.
+  const [goals, setGoals] = useState<string[]>([]);
   const [experience, setExperience] = useState('');
   const [equipment, setEquipment] = useState<string[]>([]);
   const [daysPerWeek, setDaysPerWeek] = useState(4);
   const [sessionLength, setSessionLength] = useState(45);
   const [loading, setLoading] = useState(false);
+
+  const primaryGoal = goals[0] || '';
+
+  function toggleGoal(cat: string) {
+    setGoals((prev) => (prev.includes(cat) ? prev.filter((g) => g !== cat) : [...prev, cat]));
+  }
+
+  function makePrimary(cat: string) {
+    setGoals((prev) => [cat, ...prev.filter((g) => g !== cat)]);
+  }
 
   function toggleEquipment(item: string) {
     setEquipment((prev) => prev.includes(item) ? prev.filter((e) => e !== item) : [...prev, item]);
@@ -61,16 +71,17 @@ export default function OnboardingPage() {
   async function completeOnboarding() {
     setLoading(true);
     try {
-      // Save body stats + goal to profile
+      // Save body stats + goals to profile (primary first).
       await api.updateProfile({
         bodyweightKg: weightKg ? parseFloat(weightKg) : undefined,
         heightCm: heightCm ? parseFloat(heightCm) : undefined,
-        goal: goal || undefined,
+        goals: goals.length ? goals : undefined,
+        goal: primaryGoal || undefined,
         experience: experience || undefined,
       }).catch(() => {});
 
-      // Assign best matching plan
-      const plans = await api.getPlans({ category: goal || undefined, difficulty: experience || undefined });
+      // Assign best matching plan for the primary goal.
+      const plans = await api.getPlans({ category: primaryGoal || undefined, difficulty: experience || undefined });
       if (plans.length > 0) {
         await api.assignPlan({ planId: plans[0].id, startDate: new Date().toISOString().split('T')[0] });
       }
@@ -150,18 +161,57 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* GOAL */}
+        {/* GOAL — pick one or more; the first is your primary focus */}
         {step === 'goal' && (
-          <div className="grid grid-cols-2 gap-3 mt-6">
-            {PLAN_CATEGORIES.map((cat) => (
-              <button key={cat} onClick={() => { setGoal(cat); next(); }}
-                className={`p-4 rounded-xl border text-left transition-all ${
-                  goal === cat ? 'border-brand-orange bg-brand-orange/10' : 'border-hairline bg-bg-surface hover:border-hairline-strong'
-                }`}>
-                <span className="text-sm font-medium">{goalLabels[cat]}</span>
-              </button>
-            ))}
-          </div>
+          <>
+            <p className="text-text-secondary mt-2">
+              Pick everything you care about. Your <span className="text-brand-orange font-medium">primary</span> goal
+              shapes your plan; the rest add variety.
+            </p>
+            <div className="grid grid-cols-2 gap-3 mt-4">
+              {PLAN_CATEGORIES.map((cat) => {
+                const selected = goals.includes(cat);
+                const isPrimary = primaryGoal === cat;
+                return (
+                  <button key={cat} onClick={() => toggleGoal(cat)}
+                    className={`relative p-4 rounded-xl border text-left transition-all ${
+                      selected ? 'border-brand-orange bg-brand-orange/10' : 'border-hairline bg-bg-surface hover:border-hairline-strong'
+                    }`}>
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="text-sm font-medium pr-1">{goalLabels[cat]}</span>
+                      {selected && (
+                        <span
+                          role="button"
+                          tabIndex={0}
+                          onClick={(e) => { e.stopPropagation(); makePrimary(cat); }}
+                          onKeyDown={(e) => { if (e.key === 'Enter') { e.stopPropagation(); makePrimary(cat); } }}
+                          title={isPrimary ? 'Primary goal' : 'Set as primary'}
+                          className="shrink-0"
+                        >
+                          <Star className={`w-4 h-4 ${isPrimary ? 'fill-brand-orange text-brand-orange' : 'text-text-secondary hover:text-brand-orange'}`} />
+                        </span>
+                      )}
+                    </div>
+                    {isPrimary && (
+                      <span className="mt-1.5 inline-block text-[10px] font-semibold uppercase tracking-wide text-brand-orange">
+                        Primary
+                      </span>
+                    )}
+                    {selected && !isPrimary && (
+                      <span className="mt-1.5 inline-block text-[10px] font-medium uppercase tracking-wide text-text-secondary">
+                        Secondary
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            <Button className="mt-8 w-full" onClick={next} disabled={goals.length === 0}>
+              {goals.length === 0 ? 'Select at least one goal' : (
+                <>Continue{goals.length > 1 ? ` · ${goals.length} goals` : ''} <ChevronRight className="w-4 h-4 ml-1" /></>
+              )}
+            </Button>
+          </>
         )}
 
         {/* EXPERIENCE */}
@@ -237,7 +287,8 @@ export default function OnboardingPage() {
               <Logo size={64} showWordmark={false} className="mx-auto mb-4" />
               <h3 className="text-xl font-bold">All set!</h3>
               <p className="text-text-secondary mt-2 text-sm">
-                We'll match you with the best {goal ? goalLabels[goal]?.toLowerCase() : ''} plan for your profile.
+                We'll match you with the best {primaryGoal ? goalLabels[primaryGoal]?.toLowerCase() : ''} plan for your profile
+                {goals.length > 1 ? `, with ${goals.length - 1} more goal${goals.length > 2 ? 's' : ''} mixed in` : ''}.
               </p>
               {weightKg && heightCm && (
                 <div className="grid grid-cols-2 gap-3 mt-4 text-left">

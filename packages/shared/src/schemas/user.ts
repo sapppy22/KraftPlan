@@ -10,6 +10,8 @@ export const registerSchema = z.object({
   bodyweightKg: z.number().positive().optional(),
   heightCm: z.number().positive().optional(),
   goal: z.enum(PLAN_CATEGORIES).optional(),
+  // Multiple goals, primary first. `goal` (single) is kept for backwards-compat.
+  goals: z.array(z.enum(PLAN_CATEGORIES)).max(PLAN_CATEGORIES.length).optional(),
 });
 export type RegisterInput = z.infer<typeof registerSchema>;
 
@@ -26,6 +28,8 @@ export const profileUpdateSchema = z.object({
   bodyweightKg: z.number().positive().optional().nullable(),
   heightCm: z.number().positive().optional().nullable(),
   goal: z.enum(PLAN_CATEGORIES).optional().nullable(),
+  // Multiple goals, primary first. When present, supersedes `goal`.
+  goals: z.array(z.enum(PLAN_CATEGORIES)).max(PLAN_CATEGORIES.length).optional().nullable(),
   avatarUrl: z.string().url().optional().nullable(),
 });
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;
@@ -40,6 +44,7 @@ export const userSchema = z.object({
   bodyweightKg: z.number().nullable(),
   heightCm: z.number().nullable(),
   goal: z.string().nullable(),
+  goals: z.array(z.string()).default([]),
   role: z.enum(USER_ROLES),
   createdAt: z.string().datetime(),
 });

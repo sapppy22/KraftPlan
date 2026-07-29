@@ -12,7 +12,20 @@ import {
 } from '../crypto';
 import { type AppEnv, authUserId } from '../context';
 
+// Goals are persisted in the single `goal` text column as a comma-separated,
+// primary-first list (e.g. "strength,hypertrophy"). This keeps multi-goal
+// support without a schema migration. `goal` (singular) always returns the
+// primary so existing single-goal consumers keep working.
+function parseGoals(raw: unknown): string[] {
+  if (typeof raw !== 'string') return [];
+  return raw
+    .split(',')
+    .map((g) => g.trim())
+    .filter(Boolean);
+}
+
 function publicUser(u: typeof schema.users.$inferSelect) {
+  const goals = parseGoals((u as any).goal);
   return {
     id: u.id,
     email: u.email,
@@ -22,7 +35,8 @@ function publicUser(u: typeof schema.users.$inferSelect) {
     experience: u.experience,
     bodyweightKg: u.bodyweightKg ? parseFloat(u.bodyweightKg as string) : null,
     heightCm: (u as any).heightCm ? parseFloat((u as any).heightCm as string) : null,
-    goal: (u as any).goal ?? null,
+    goal: goals[0] ?? null,
+    goals,
     role: u.role,
     createdAt: u.createdAt.toISOString(),
   };
@@ -33,11 +47,14 @@ export const auth = new Hono<AppEnv>();
 auth.post('/register', async (c) => {
   const parsed = registerSchema.safeParse(await c.req.json().catch(() => ({})));
   if (!parsed.success) return c.json({ error: 'Validation failed', details: parsed.error.flatten() }, 400);
-  const { email, password, name, units, experience, bodyweightKg, heightCm, goal } = parsed.data;
+  const { email, password, name, units, experience, bodyweightKg, heightCm, goal, goals } = parsed.data;
   const db = c.get('db');
 
   const existing = await db.select().from(schema.users).where(eq(schema.users.email, email)).limit(1);
   if (existing.length > 0) return c.json({ error: 'Email already registered' }, 409);
+
+  // Multiple goals collapse into the comma-separated `goal` column (primary first).
+  const goalValue = goals && goals.length ? goals.join(',') : goal;
 
   const passwordHash = await hashPassword(password);
   const [user] = await db
@@ -51,7 +68,7 @@ auth.post('/register', async (c) => {
       role: (email === 'admin_redacted' || email === 'admin_redacted@test.com') ? 'admin' : 'user',
       bodyweightKg: bodyweightKg?.toString() || null,
       ...(heightCm !== undefined && { heightCm: heightCm.toString() }),
-      ...(goal !== undefined && { goal }),
+      ...(goalValue !== undefined && { goal: goalValue }),
     } as any)
     .returning();
 
@@ -155,7 +172,9 @@ auth.patch('/me', async (c) => {
   if (d.experience !== undefined) update.experience = d.experience;
   if (d.bodyweightKg !== undefined) update.bodyweightKg = d.bodyweightKg?.toString() || null;
   if (d.heightCm !== undefined) update.heightCm = d.heightCm?.toString() || null;
-  if (d.goal !== undefined) update.goal = d.goal;
+  // `goals` (array, primary first) takes precedence over the single `goal`.
+  if (d.goals !== undefined) update.goal = d.goals && d.goals.length ? d.goals.join(',') : null;
+  else if (d.goal !== undefined) update.goal = d.goal;
   if (d.avatarUrl !== undefined) update.avatarUrl = d.avatarUrl;
 
   const db = c.get('db');

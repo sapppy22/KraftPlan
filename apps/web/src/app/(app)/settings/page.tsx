@@ -3,11 +3,24 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { Loader2, Dumbbell, LogOut, Check, SunMoon } from 'lucide-react';
+import { Loader2, Dumbbell, LogOut, Check, SunMoon, Star, Target } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { Card } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { PLAN_CATEGORIES } from '@kraftplan/shared';
+
+const goalLabels: Record<string, string> = {
+  mobility: 'Mobility & Recovery',
+  strength: 'General Strength',
+  hypertrophy: 'Lean Muscle',
+  powerlifting: 'Powerlifting',
+  hyrox: 'Hyrox / Hybrid',
+  endurance: 'Endurance',
+  athletic: 'Athletic Performance',
+  conditioning: 'Cross-Training',
+  weightloss: 'Weight Loss',
+};
 
 import { useAuth } from '@/lib/AuthContext';
 
@@ -24,14 +37,30 @@ export default function SettingsPage() {
   const [name, setName] = useState('');
   const [units, setUnits] = useState('metric');
   const [experience, setExperience] = useState('');
+  // Ordered goals; index 0 is the primary goal.
+  const [goals, setGoals] = useState<string[]>([]);
 
   useEffect(() => {
     if (profile) {
       setName(profile.name || '');
       setUnits(profile.units || 'metric');
       setExperience(profile.experience || '');
+      const g: string[] = Array.isArray(profile.goals) && profile.goals.length
+        ? profile.goals
+        : profile.goal
+          ? [profile.goal]
+          : [];
+      setGoals(g);
     }
   }, [profile]);
+
+  const primaryGoal = goals[0] || '';
+  function toggleGoal(cat: string) {
+    setGoals((prev) => (prev.includes(cat) ? prev.filter((g) => g !== cat) : [...prev, cat]));
+  }
+  function makePrimary(cat: string) {
+    setGoals((prev) => [cat, ...prev.filter((g) => g !== cat)]);
+  }
 
   const updateProfile = useMutation({
     mutationFn: async (data: any) => api.updateProfile(data),
@@ -41,7 +70,7 @@ export default function SettingsPage() {
   });
 
   function handleSave() {
-    updateProfile.mutate({ name, units, ...(experience ? { experience } : {}) });
+    updateProfile.mutate({ name, units, ...(experience ? { experience } : {}), goals });
   }
 
   function handleLogout() {
@@ -117,6 +146,47 @@ export default function SettingsPage() {
             <option value="intermediate">Intermediate</option>
             <option value="advanced">Advanced</option>
           </select>
+        </div>
+
+        <div>
+          <label className="flex items-center gap-1.5 text-sm font-medium mb-1.5">
+            <Target className="w-4 h-4 text-brand-green" />
+            Training goals
+          </label>
+          <p className="text-xs text-text-secondary mb-2.5">
+            Choose one or more. Tap the star to set your <span className="text-brand-orange font-medium">primary</span> goal.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {PLAN_CATEGORIES.map((cat) => {
+              const selected = goals.includes(cat);
+              const isPrimary = primaryGoal === cat;
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => toggleGoal(cat)}
+                  className={`group inline-flex items-center gap-1.5 px-3 py-2 rounded-pill text-xs border transition-all ${
+                    selected
+                      ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
+                      : 'border-hairline bg-bg-elevated text-text-secondary hover:border-hairline-strong'
+                  }`}
+                >
+                  <span className="font-medium">{goalLabels[cat]}</span>
+                  {selected && (
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      onClick={(e) => { e.stopPropagation(); makePrimary(cat); }}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.stopPropagation(); makePrimary(cat); } }}
+                      title={isPrimary ? 'Primary goal' : 'Set as primary'}
+                    >
+                      <Star className={`w-3.5 h-3.5 ${isPrimary ? 'fill-brand-orange text-brand-orange' : 'text-text-secondary/60 hover:text-brand-orange'}`} />
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <Button onClick={handleSave} disabled={updateProfile.isPending} className="w-full">

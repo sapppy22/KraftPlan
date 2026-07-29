@@ -39,7 +39,7 @@ export async function apiFetch<T>(path: string, options: FetchOptions = {}): Pro
 
 export const api = {
   // Auth
-  register: (data: { email: string; password: string; name: string; bodyweightKg?: number; heightCm?: number; goal?: string; experience?: string }) =>
+  register: (data: { email: string; password: string; name: string; bodyweightKg?: number; heightCm?: number; goal?: string; goals?: string[]; experience?: string }) =>
     apiFetch<{ accessToken: string; user: any }>('/auth/register', {
       method: 'POST',
       body: JSON.stringify(data),
