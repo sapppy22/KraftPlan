@@ -105,6 +105,30 @@ async function generate() {
   // Next.js file-based icon (src/app/icon.svg) — keep it identical to the favicon.
   fs.writeFileSync(path.join(__dirname, '../apps/web/src/app/icon.svg'), faviconSvg);
 
+  // Classic multi-size favicon.ico so the default /favicon.ico request resolves
+  // to the brand mark (PNG-compressed ICO entries — supported by all browsers).
+  const icoSizes = [16, 32, 48];
+  const icoPngs = [];
+  for (const s of icoSizes) {
+    icoPngs.push(await sharp(master).resize(s, s, { kernel: 'lanczos3' }).png().toBuffer());
+  }
+  const icoHeader = Buffer.alloc(6);
+  icoHeader.writeUInt16LE(1, 2); // type = icon
+  icoHeader.writeUInt16LE(icoPngs.length, 4);
+  const icoDir = Buffer.alloc(16 * icoPngs.length);
+  let icoOffset = 6 + 16 * icoPngs.length;
+  icoPngs.forEach((buf, i) => {
+    const o = i * 16;
+    icoDir.writeUInt8(icoSizes[i] >= 256 ? 0 : icoSizes[i], o);
+    icoDir.writeUInt8(icoSizes[i] >= 256 ? 0 : icoSizes[i], o + 1);
+    icoDir.writeUInt16LE(1, o + 4);
+    icoDir.writeUInt16LE(32, o + 6);
+    icoDir.writeUInt32LE(buf.length, o + 8);
+    icoDir.writeUInt32LE(icoOffset, o + 12);
+    icoOffset += buf.length;
+  });
+  fs.writeFileSync(path.join(publicDir, 'favicon.ico'), Buffer.concat([icoHeader, icoDir, ...icoPngs]));
+
   // OpenGraph social banner (1200×630) — dark banner + green mark + green wordmark.
   const ogMarkSize = 200;
   const ogBanner = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
