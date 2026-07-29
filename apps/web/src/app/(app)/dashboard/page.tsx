@@ -24,7 +24,7 @@ export default function DashboardPage() {
     try {
       const res = await api.startSession({
         planDayId: data.today.dayId,
-        date: new Date().toISOString(),
+        date: new Date().toISOString().split('T')[0],
       });
       router.push(`/workout/${res.id}`);
     } catch (err) {
