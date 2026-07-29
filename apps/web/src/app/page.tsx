@@ -177,10 +177,14 @@ export default function RootPage() {
                 </div>
                 <h3 className="font-display text-2xl sm:text-3xl font-bold">Push Pull Legs — Upper Body Hypertrophy</h3>
                 <div className="flex flex-wrap items-center gap-3 pt-1">
-                  <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 text-white text-sm font-semibold backdrop-blur-md transition-all">
+                  <button
+                    type="button"
+                    onClick={continueAsGuest}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 text-white text-sm font-semibold backdrop-blur-md transition-all"
+                  >
                     <Play className="w-4 h-4 fill-current" />
                     Start Workout Session
-                  </span>
+                  </button>
                 </div>
               </div>
 
@@ -414,7 +418,7 @@ export default function RootPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-1">
                 <Link href="/register" className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white text-brand-deep font-semibold shadow-sm hover:bg-white/90 transition-all group">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white text-[#065f46] font-semibold shadow-sm hover:bg-white/90 transition-all group">
                     Create Free Account
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </button>
