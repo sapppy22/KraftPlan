@@ -10,6 +10,7 @@ import { Loader2, ChevronLeft, Dumbbell, Clock, Calendar } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import Button from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { HyroxAmbientVideo } from '@/components/HyroxAmbientVideo';
 
 export default function PlanDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -69,6 +70,7 @@ export default function PlanDetailPage() {
 
       {/* Hero */}
       <Card hero className="p-6 lg:p-8">
+        {plan.category === 'hyrox' && <HyroxAmbientVideo className="-z-10" overlayClassName="bg-black/55" />}
         <span className="inline-block px-3 py-1 rounded-pill text-xs font-medium bg-white/20 text-white capitalize mb-3">
           {plan.category}
         </span>

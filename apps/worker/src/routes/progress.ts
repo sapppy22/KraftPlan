@@ -157,7 +157,7 @@ dashboard.get('/', async (c) => {
       };
     }
     const t = await resolveToday(db, userId, new Date().toISOString().split('T')[0]);
-    today = { title: t.title, estimatedMinutes: t.estimatedMinutes, isRestDay: t.isRestDay, dayId: t.dayId };
+    today = { title: t.title, category: t.category, estimatedMinutes: t.estimatedMinutes, isRestDay: t.isRestDay, dayId: t.dayId };
   }
 
   const weekStart = new Date();

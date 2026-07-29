@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Play, Flame, TrendingUp, Calendar, Dumbbell, Loader2 } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { Card } from '@/components/ui/Card';
+import { HyroxAmbientVideo } from '@/components/HyroxAmbientVideo';
 import { formatDuration, formatKg, formatDate } from '@/lib/utils';
 
 export default function DashboardPage() {
@@ -55,6 +56,7 @@ export default function DashboardPage() {
         className={data?.today?.isRestDay || startingSession ? 'cursor-default' : 'cursor-pointer'}
       >
         <Card hero className="p-6 space-y-4">
+          {data?.today?.category === 'hyrox' && <HyroxAmbientVideo className="-z-10" overlayClassName="bg-black/50" />}
           <div className="flex items-center justify-between">
             <span className="text-white/70 text-sm font-medium uppercase tracking-wider">
               {data?.today?.isRestDay ? 'Rest Day' : "Today's Session"}

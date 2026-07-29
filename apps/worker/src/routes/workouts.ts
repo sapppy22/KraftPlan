@@ -146,6 +146,7 @@ workouts.get('/:sessionId', async (c) => {
     endedAt: session.endedAt?.toISOString() || null,
     totalVolumeKg: session.totalVolumeKg ? parseFloat(session.totalVolumeKg.toString()) : null,
     title: manifest.title,
+    category: manifest.category,
     estimatedMinutes: manifest.estimatedMinutes,
     isRestDay: manifest.isRestDay,
     blocks: manifest.blocks,

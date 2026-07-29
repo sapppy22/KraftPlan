@@ -12,10 +12,10 @@ export async function resolveToday(db: DB, userId: string, dateStr: string) {
     .from(schema.userPlanAssignments)
     .where(and(eq(schema.userPlanAssignments.userId, userId), eq(schema.userPlanAssignments.status, 'active')))
     .limit(1);
-  if (!assignment) return { dayId: null, title: 'No active plan', estimatedMinutes: 0, isRestDay: true, blocks: [] };
+  if (!assignment) return { dayId: null, title: 'No active plan', category: null, estimatedMinutes: 0, isRestDay: true, blocks: [] };
 
   const [plan] = await db.select().from(schema.plans).where(eq(schema.plans.id, assignment.planId)).limit(1);
-  if (!plan) return { dayId: null, title: 'No active plan', estimatedMinutes: 0, isRestDay: true, blocks: [] };
+  if (!plan) return { dayId: null, title: 'No active plan', category: null, estimatedMinutes: 0, isRestDay: true, blocks: [] };
 
   const startDate = new Date(assignment.startDate);
   const diffDays = Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
@@ -27,7 +27,7 @@ export async function resolveToday(db: DB, userId: string, dateStr: string) {
     .from(schema.planWeeks)
     .where(and(eq(schema.planWeeks.planId, plan.id), eq(schema.planWeeks.weekNumber, weekNumber)))
     .limit(1);
-  if (!week) return { dayId: null, title: 'Plan complete!', estimatedMinutes: 0, isRestDay: true, blocks: [] };
+  if (!week) return { dayId: null, title: 'Plan complete!', category: plan.category, estimatedMinutes: 0, isRestDay: true, blocks: [] };
 
   const dayInWeek = ((absoluteDay - 1) % 7) + 1;
   const [day] = await db
@@ -36,7 +36,7 @@ export async function resolveToday(db: DB, userId: string, dateStr: string) {
     .where(and(eq(schema.planDays.weekId, week.id), eq(schema.planDays.dayNumber, dayInWeek)))
     .limit(1);
   if (!day || day.isRestDay) {
-    return { dayId: day?.id || null, title: day?.title || 'Rest Day', estimatedMinutes: 0, isRestDay: true, blocks: [] };
+    return { dayId: day?.id || null, title: day?.title || 'Rest Day', category: plan.category, estimatedMinutes: 0, isRestDay: true, blocks: [] };
   }
 
   const { blocks: blocksWithExs, totalMinutes } = await resolveDayBlocks(db, day.id);
@@ -44,6 +44,7 @@ export async function resolveToday(db: DB, userId: string, dateStr: string) {
   return {
     dayId: day.id,
     title: day.title || `${plan.title} — Day ${day.dayNumber}`,
+    category: plan.category,
     estimatedMinutes: totalMinutes,
     isRestDay: false,
     blocks: blocksWithExs,
@@ -114,14 +115,26 @@ export async function resolveDayBlocks(db: DB, dayId: string) {
 // Used by the workout player to load ANY session (plan-based or custom) by id.
 export async function buildDayManifest(db: DB, dayId: string) {
   const [day] = await db.select().from(schema.planDays).where(eq(schema.planDays.id, dayId)).limit(1);
-  if (!day) return { dayId: null, title: 'Workout', estimatedMinutes: 0, isRestDay: true, blocks: [] };
+  if (!day) return { dayId: null, title: 'Workout', category: null, estimatedMinutes: 0, isRestDay: true, blocks: [] };
+
+  // Resolve the owning plan's category (day → week → plan) so the player knows
+  // when the session is a HYROX session, etc.
+  const [planRow] = await db
+    .select({ category: schema.plans.category })
+    .from(schema.planWeeks)
+    .innerJoin(schema.plans, eq(schema.planWeeks.planId, schema.plans.id))
+    .where(eq(schema.planWeeks.id, day.weekId))
+    .limit(1);
+  const category = planRow?.category ?? null;
+
   if (day.isRestDay) {
-    return { dayId: day.id, title: day.title || 'Rest Day', estimatedMinutes: 0, isRestDay: true, blocks: [] };
+    return { dayId: day.id, title: day.title || 'Rest Day', category, estimatedMinutes: 0, isRestDay: true, blocks: [] };
   }
   const { blocks, totalMinutes } = await resolveDayBlocks(db, day.id);
   return {
     dayId: day.id,
     title: day.title || `Day ${day.dayNumber}`,
+    category,
     estimatedMinutes: totalMinutes,
     isRestDay: false,
     blocks,
