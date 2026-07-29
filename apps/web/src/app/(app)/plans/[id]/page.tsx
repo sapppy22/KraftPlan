@@ -11,18 +11,24 @@ import { api } from '@/lib/api/client';
 import Button from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { HyroxAmbientVideo } from '@/components/HyroxAmbientVideo';
+import { useAuth } from '@/lib/AuthContext';
+import { MembersOnlyGate } from '@/components/MembersOnlyGate';
 
 export default function PlanDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
+  const { isGuest } = useAuth();
   const [starting, setStarting] = useState(false);
   const [startError, setStartError] = useState('');
 
   const { data: plan, isLoading } = useQuery({
     queryKey: ['plan', id],
     queryFn: () => api.getPlanDetail(id),
-    enabled: !!id,
+    enabled: !!id && !isGuest,
   });
+
+  // Plans require an account; guests are pointed to a custom workout instead.
+  if (isGuest) return <MembersOnlyGate />;
 
   if (isLoading) {
     return (

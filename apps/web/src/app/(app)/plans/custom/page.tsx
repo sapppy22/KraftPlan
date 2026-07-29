@@ -11,6 +11,8 @@ import { getTutorialUrl } from '@/lib/exerciseData';
 import { Card } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { PLAN_CATEGORIES, DIFFICULTY_LEVELS } from '@kraftplan/shared';
+import { useAuth } from '@/lib/AuthContext';
+import { MembersOnlyGate } from '@/components/MembersOnlyGate';
 
 interface SelectedExercise {
   exerciseId: string;
@@ -40,6 +42,7 @@ const EXERCISE_CATS = ['', 'resistance', 'cardio', 'bodyweight', 'plyo', 'mobili
 
 export default function CustomPlanBuilderPage() {
   const router = useRouter();
+  const { isGuest } = useAuth();
 
   const [planName, setPlanName] = useState('');
   const [category, setCategory] = useState('strength');
@@ -180,6 +183,10 @@ export default function CustomPlanBuilderPage() {
   }
 
   const totalExercises = days.reduce((s, d) => s + d.exercises.length, 0);
+
+  // Custom plans persist a program — a member feature. Guests get the gate
+  // (which points them to a plan-free custom workout instead).
+  if (isGuest) return <MembersOnlyGate feature="Custom plans" description="Building and saving a training split needs an account. You can still start a one-off custom workout right now." />;
 
   return (
     <div className="space-y-6 pb-28 lg:pb-8">

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Play, Flame, TrendingUp, Calendar, Dumbbell, Loader2, Trophy, ArrowRight } from 'lucide-react';
+import { Play, Flame, TrendingUp, Calendar, Dumbbell, Loader2, Trophy, ArrowRight, Zap } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { Card } from '@/components/ui/Card';
 import { HyroxAmbientVideo } from '@/components/HyroxAmbientVideo';
@@ -88,7 +88,32 @@ export default function DashboardPage() {
         </span>
       </div>
 
-      {/* Today's session — hero */}
+      {/* Guests can't follow a plan — steer them straight into a custom workout */}
+      {isGuest ? (
+        <Link href="/workout/custom" className="block animate-fade-in" style={{ animationDelay: '60ms' }}>
+          <Card hero className="p-6 sm:p-7">
+            <div className="absolute -top-16 -right-10 w-56 h-56 rounded-full bg-white/10 blur-2xl pointer-events-none" />
+            <Dumbbell className="absolute -right-5 -bottom-8 w-40 h-40 text-white/10 rotate-12 pointer-events-none" strokeWidth={1.25} />
+            <div className="relative space-y-4">
+              <span className="inline-flex items-center gap-1.5 text-white/80 text-xs font-semibold uppercase tracking-wider">
+                <span className="w-1.5 h-1.5 rounded-full bg-white animate-kp-pulse" />
+                Explore Mode
+              </span>
+              <h2 className="font-display text-2xl sm:text-3xl font-bold leading-tight max-w-xl">
+                Start a custom workout
+              </h2>
+              <p className="text-white/85 text-sm max-w-md">
+                Pick your own exercises or let us generate one — no plan or account needed.
+              </p>
+              <span className="group inline-flex items-center gap-2 px-6 py-3 bg-white text-brand-deep rounded-pill font-semibold shadow-sm">
+                <Zap className="w-5 h-5" />
+                Build a workout
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </span>
+            </div>
+          </Card>
+        </Link>
+      ) : (
       <div
         onClick={handleStartSession}
         className={`animate-fade-in ${isRest || startingSession ? 'cursor-default' : 'cursor-pointer'}`}
@@ -133,6 +158,18 @@ export default function DashboardPage() {
           </div>
         </Card>
       </div>
+      )}
+
+      {/* Guest upsell — one gentle nudge toward an account */}
+      {isGuest && (
+        <p className="text-xs text-text-secondary -mt-1">
+          You're in Explore Mode.{' '}
+          <Link href="/register" className="text-brand-green font-medium hover:underline">
+            Create a free account
+          </Link>{' '}
+          to unlock training plans, saved progress and PRs.
+        </p>
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -157,6 +194,24 @@ export default function DashboardPage() {
           );
         })}
       </div>
+
+      {/* Quick start — build an ad-hoc workout without a plan (members) */}
+      {!isGuest && (
+        <Link href="/workout/custom" className="block">
+          <Card interactive className="p-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl icon-chip flex items-center justify-center shrink-0">
+                <Zap className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="font-semibold text-sm">Start a custom workout</p>
+                <p className="text-xs text-text-secondary">Build your own session or generate one instantly</p>
+              </div>
+            </div>
+            <ArrowRight className="w-4 h-4 text-text-secondary shrink-0" />
+          </Card>
+        </Link>
+      )}
 
       {/* Visual analytics — completed workouts over time */}
       <WorkoutAnalytics />
@@ -243,10 +298,12 @@ export default function DashboardPage() {
         <Card className="p-8 text-center">
           <Dumbbell className="w-12 h-12 text-text-secondary mx-auto mb-4 opacity-50" />
           <h3 className="text-lg font-semibold">No sessions yet</h3>
-          <p className="text-text-secondary mt-1">Start by picking a plan that fits your goals</p>
-          <Link href="/plans">
+          <p className="text-text-secondary mt-1">
+            {isGuest ? 'Jump in with a custom workout — no plan needed' : 'Start by picking a plan that fits your goals'}
+          </p>
+          <Link href={isGuest ? '/workout/custom' : '/plans'}>
             <button className="mt-4 px-6 py-2.5 gradient-bg rounded-pill text-white font-semibold">
-              Browse plans
+              {isGuest ? 'Start a custom workout' : 'Browse plans'}
             </button>
           </Link>
         </Card>

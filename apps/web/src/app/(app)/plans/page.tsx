@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { Loader2, Dumbbell, Plus, Wand2, ChevronRight, Zap, Heart, Activity, Flame, Wind, StretchHorizontal } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { Card } from '@/components/ui/Card';
+import { useAuth } from '@/lib/AuthContext';
+import { MembersOnlyGate } from '@/components/MembersOnlyGate';
 
 // ── Category metadata ──────────────────────────────────────────────────────
 const GOAL_LABELS: Record<string, string> = {
@@ -72,12 +74,17 @@ const DIFFICULTY_BADGE: Record<string, string> = {
 };
 
 export default function PlansPage() {
+  const { isGuest } = useAuth();
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
   const { data: plans, isLoading } = useQuery({
     queryKey: ['plans'],
     queryFn: () => api.getPlans(),
+    enabled: !isGuest,
   });
+
+  // Guests (Explore Mode) don't get plans — but they can start a custom workout.
+  if (isGuest) return <MembersOnlyGate />;
 
   const plansInSection = (sectionCategories: string[]) =>
     (plans ?? []).filter((p: any) => sectionCategories.includes(p.category));
