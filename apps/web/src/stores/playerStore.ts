@@ -31,6 +31,8 @@ interface PlayerStore {
   status: 'idle' | 'active' | 'paused' | 'completed';
   startedAtMs: number | null; // wall-clock start, source of truth for the elapsed counter
   elapsedSec: number;
+  /** The session clock only runs once the user presses Start on an exercise. */
+  hasStarted: boolean;
   loggedSets: Record<string, LoggedSet>; // key: `${exerciseId}-${setIndex}`
   restTimerActive: boolean;
 
@@ -40,6 +42,8 @@ interface PlayerStore {
 
   // Actions
   initSession: (sessionId: string, manifest: any, opts?: InitSessionOpts) => void;
+  /** Begin (or resume) the session clock — called the first time Start is pressed. */
+  beginTimer: () => void;
   advanceSet: () => void;
   advanceExercise: () => void;
   logSet: (set: LoggedSet) => void;
@@ -60,6 +64,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   status: 'idle',
   startedAtMs: null,
   elapsedSec: 0,
+  hasStarted: false,
   loggedSets: {},
   restTimerActive: false,
   lastWeight: {},
@@ -67,6 +72,10 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 
   initSession: (sessionId, manifest, opts = {}) => {
     const startedAtMs = opts.startedAtMs ?? Date.now();
+    // A session that already has logged sets (resumed) is treated as running;
+    // a brand-new session waits for the first Start press before the clock runs.
+    const resumed = !!opts.loggedSets && Object.keys(opts.loggedSets).length > 0;
+    const hasStarted = resumed || opts.status === 'completed';
     set({
       sessionId,
       sessionManifest: manifest,
@@ -75,10 +84,18 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       currentSetIndex: opts.position?.set ?? 0,
       status: opts.status === 'completed' ? 'completed' : 'active',
       startedAtMs,
-      elapsedSec: Math.max(0, Math.floor((Date.now() - startedAtMs) / 1000)),
+      elapsedSec: hasStarted ? Math.max(0, Math.floor((Date.now() - startedAtMs) / 1000)) : 0,
+      hasStarted,
       loggedSets: opts.loggedSets ?? {},
       restTimerActive: false,
     });
+  },
+
+  beginTimer: () => {
+    const state = get();
+    if (state.hasStarted) return;
+    // Start the clock from now so elapsed reflects time actually training.
+    set({ hasStarted: true, startedAtMs: Date.now(), elapsedSec: 0 });
   },
 
   advanceSet: () => {
@@ -158,6 +175,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       status: 'idle',
       startedAtMs: null,
       elapsedSec: 0,
+      hasStarted: false,
       loggedSets: {},
       restTimerActive: false,
       // Intentionally preserve lastWeight/lastReps across sessions

@@ -15,13 +15,16 @@ import {
   Timer,
   Dumbbell,
   Youtube,
+  Play,
+  ExternalLink,
 } from 'lucide-react';
 import { api } from '@/lib/api/client';
 import { usePlayerStore } from '@/stores/playerStore';
 import { Card } from '@/components/ui/Card';
 import { RestTimer } from '@/components/player/RestTimer';
+import { HoldTimer } from '@/components/player/HoldTimer';
 import { cn } from '@/lib/utils';
-import { getTutorialUrl, extractYouTubeId } from '@/lib/exerciseData';
+import { getTutorialUrl, extractYouTubeId, isHoldExercise, parseHoldSeconds } from '@/lib/exerciseData';
 
 interface Props {
   params: { sessionId: string };
@@ -80,6 +83,9 @@ export default function WorkoutPlayerPage({ params }: Props) {
   const [showCues, setShowCues] = useState(false);
   const [showConfirmExit, setShowConfirmExit] = useState(false);
   const [finishing, setFinishing] = useState(false);
+  // Each exercise starts in a "ready" state (video + description) and only
+  // reveals its logger / countdown once the user presses Start.
+  const [phase, setPhase] = useState<'ready' | 'active'>('ready');
 
   // Per-set input state
   const [weightInput, setWeightInput] = useState('');
@@ -149,21 +155,29 @@ export default function WorkoutPlayerPage({ params }: Props) {
   }, [sessionId]);
 
   // Elapsed timer — derived from the wall-clock start time so it stays accurate
-  // across refreshes, resume, and background-tab throttling.
+  // across refreshes, resume, and background-tab throttling. Only runs after the
+  // user has pressed Start (hasStarted).
   useEffect(() => {
-    if (store.status !== 'active' || store.startedAtMs == null) return;
+    if (store.status !== 'active' || !store.hasStarted || store.startedAtMs == null) return;
     const startedAtMs = store.startedAtMs;
     const tick = () => store.setElapsed(Math.max(0, Math.floor((Date.now() - startedAtMs) / 1000)));
     tick();
     const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
-  }, [store.status, store.startedAtMs]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [store.status, store.hasStarted, store.startedAtMs]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Pre-fill inputs when exercise/set changes
   const currentBlock = store.sessionManifest?.blocks?.[store.currentBlockIndex];
   const currentExercise = currentBlock?.exercises?.[store.currentExerciseIndex];
   const currentSet = store.currentSetIndex;
   const isCardio = currentExercise?.category === 'cardio' || currentExercise?.category === 'time';
+  const isHold = !!currentExercise && isHoldExercise(currentExercise);
+  const holdSec = isHold ? parseHoldSeconds(currentExercise?.repsScheme) : 0;
+  const embedSrc = currentExercise ? buildEmbedSrc(currentExercise.name, currentExercise.tutorialUrl) : null;
+  const resolvedTutorialUrl = currentExercise ? getTutorialUrl(currentExercise.name, currentExercise.tutorialUrl) : undefined;
+  const ytSearchUrl = currentExercise
+    ? `https://www.youtube.com/results?search_query=${encodeURIComponent(currentExercise.name + ' exercise tutorial')}`
+    : '';
 
   useEffect(() => {
     if (!currentExercise) return;
@@ -173,6 +187,13 @@ export default function WorkoutPlayerPage({ params }: Props) {
     setTimeInput('');
     setDistInput('');
   }, [currentExercise?.exerciseId, currentSet]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Reset to the video-first "ready" state whenever we move to a new exercise
+  // (subsequent sets of the same exercise stay active, so the flow keeps moving).
+  useEffect(() => {
+    setPhase('ready');
+    setShowCues(false);
+  }, [currentExercise?.exerciseId]);
 
   const handleLogSet = useCallback(
     async (status: 'completed' | 'skipped') => {
@@ -218,6 +239,30 @@ export default function WorkoutPlayerPage({ params }: Props) {
       }
     },
     [currentExercise, currentSet, weightInput, repsInput, timeInput, distInput, sessionId, store],
+  );
+
+  // Start the current exercise: kick off the session clock (if not already
+  // running) and reveal the logger / hold countdown.
+  const handleStartExercise = useCallback(() => {
+    store.beginTimer();
+    setPhase('active');
+  }, [store]);
+
+  // Log a completed isometric hold, then flow into the rest timer.
+  const logHold = useCallback(
+    (heldSec: number) => {
+      if (!currentExercise) return;
+      const payload = {
+        exerciseId: currentExercise.exerciseId,
+        setIndex: currentSet,
+        timeSec: heldSec,
+        status: 'completed' as const,
+      };
+      store.logSet(payload);
+      api.logSet(sessionId, payload).catch(() => {/* silent */});
+      store.setRestTimer(true);
+    },
+    [currentExercise, currentSet, sessionId, store],
   );
 
   function handleRestComplete() {
@@ -336,7 +381,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
           </span>
           <span className="font-mono text-brand-orange text-sm flex items-center gap-1">
             <Timer className="w-4 h-4" />
-            {formatElapsed(store.elapsedSec)}
+            {store.hasStarted ? formatElapsed(store.elapsedSec) : '--:--'}
           </span>
         </div>
       </header>
@@ -399,31 +444,8 @@ export default function WorkoutPlayerPage({ params }: Props) {
         {currentExercise ? (
           <Card className="p-0 overflow-hidden">
             {/* Tutorial video (or graceful fallback when none is available) */}
-            {(() => {
-              const embedSrc = buildEmbedSrc(currentExercise.name, currentExercise.tutorialUrl);
-              if (!embedSrc) {
-                const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(
-                  currentExercise.name + ' exercise tutorial',
-                )}`;
-                return (
-                  <div className="relative w-full bg-bg-surface" style={{ paddingTop: '56.25%' }}>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-text-secondary px-4 text-center">
-                      <Dumbbell className="w-10 h-10 mb-3 opacity-50" />
-                      <p className="text-sm">No tutorial video for this exercise</p>
-                      <a
-                        href={searchUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-2 inline-flex items-center gap-1.5 text-brand-orange underline text-sm"
-                      >
-                        <Youtube className="w-4 h-4" />
-                        Search on YouTube
-                      </a>
-                    </div>
-                  </div>
-                );
-              }
-              return (
+            {embedSrc ? (
+              <>
                 <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
                   <iframe
                     key={currentExercise.exerciseId} // remount on exercise change
@@ -435,8 +457,34 @@ export default function WorkoutPlayerPage({ params }: Props) {
                     loading="lazy"
                   />
                 </div>
-              );
-            })()}
+                {/* Escape hatch if the embed is region/embedding-restricted */}
+                <a
+                  href={resolvedTutorialUrl || ytSearchUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 py-2 text-xs text-text-secondary hover:text-brand-orange border-b border-hairline transition-colors"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  Video not playing? Watch on YouTube
+                </a>
+              </>
+            ) : (
+              <div className="relative w-full bg-bg-surface" style={{ paddingTop: '56.25%' }}>
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-text-secondary px-4 text-center">
+                  <Dumbbell className="w-10 h-10 mb-3 opacity-50" />
+                  <p className="text-sm">No tutorial video for this exercise</p>
+                  <a
+                    href={ytSearchUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-flex items-center gap-1.5 text-brand-orange underline text-sm"
+                  >
+                    <Youtube className="w-4 h-4" />
+                    Search on YouTube
+                  </a>
+                </div>
+              </div>
+            )}
 
             <div className="p-5 space-y-5">
               {/* Name + muscles + set counter */}
@@ -459,7 +507,10 @@ export default function WorkoutPlayerPage({ params }: Props) {
               {/* Reps / rest targets */}
               <div className="flex flex-wrap gap-2 text-sm">
                 <span className="px-3 py-1 rounded-pill bg-bg-elevated text-text-secondary">
-                  Target: <span className="text-text-primary font-medium">{currentExercise.repsScheme}</span>
+                  {isHold ? 'Hold' : 'Target'}:{' '}
+                  <span className="text-text-primary font-medium">
+                    {isHold ? formatElapsed(holdSec) : currentExercise.repsScheme}
+                  </span>
                 </span>
                 <span className="px-3 py-1 rounded-pill bg-bg-elevated text-text-secondary">
                   Rest: <span className="text-text-primary font-medium">{currentExercise.restSec ?? 60}s</span>
@@ -471,90 +522,11 @@ export default function WorkoutPlayerPage({ params }: Props) {
                 )}
               </div>
 
-              {/* Input logger */}
-              {isCardio ? (
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs text-text-secondary mb-1">Time (seconds)</label>
-                    <input
-                      type="number"
-                      min={0}
-                      value={timeInput}
-                      onChange={(e) => setTimeInput(e.target.value)}
-                      placeholder="e.g. 300"
-                      className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-text-secondary mb-1">Distance (m)</label>
-                    <input
-                      type="number"
-                      min={0}
-                      value={distInput}
-                      onChange={(e) => setDistInput(e.target.value)}
-                      placeholder="e.g. 1000"
-                      className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs text-text-secondary mb-1">Weight (kg)</label>
-                    <input
-                      type="number"
-                      min={0}
-                      step={0.5}
-                      value={weightInput}
-                      onChange={(e) => setWeightInput(e.target.value)}
-                      placeholder="0"
-                      className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-text-secondary mb-1">Reps</label>
-                    <input
-                      type="number"
-                      min={0}
-                      value={repsInput}
-                      onChange={(e) => setRepsInput(e.target.value)}
-                      placeholder="0"
-                      className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Done / Skip buttons */}
-              <div className="flex gap-3">
-                <button
-                  onClick={() => handleLogSet('completed')}
-                  className="flex-1 py-3.5 gradient-bg rounded-pill text-white font-semibold flex items-center justify-center gap-2 text-sm"
-                >
-                  <Check className="w-5 h-5" />
-                  Done
-                </button>
-                <button
-                  onClick={() => handleLogSet('skipped')}
-                  className="px-4 py-3.5 bg-bg-surface border border-hairline rounded-pill text-text-secondary hover:text-text-primary font-medium"
-                  aria-label="Skip set"
-                >
-                  <SkipForward className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Instructions / Cues collapsible */}
-              {(currentExercise.instructions?.length > 0 || currentExercise.cues?.length > 0) && (
-                <div>
-                  <button
-                    onClick={() => setShowCues(!showCues)}
-                    className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary w-full"
-                  >
-                    {showCues ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    Instructions &amp; cues
-                  </button>
-                  {showCues && (
-                    <div className="mt-3 space-y-4 text-sm">
+              {/* ── Ready state: video + description, waiting for Start ── */}
+              {phase === 'ready' ? (
+                <>
+                  {(currentExercise.instructions?.length > 0 || currentExercise.cues?.length > 0) && (
+                    <div className="space-y-4 text-sm">
                       {currentExercise.cues?.length > 0 && (
                         <div>
                           <p className="text-text-secondary font-medium mb-1.5">Coaching cues</p>
@@ -585,7 +557,147 @@ export default function WorkoutPlayerPage({ params }: Props) {
                       )}
                     </div>
                   )}
-                </div>
+                  <button
+                    onClick={handleStartExercise}
+                    className="w-full py-4 gradient-bg rounded-pill text-white font-semibold flex items-center justify-center gap-2"
+                  >
+                    <Play className="w-5 h-5 fill-white" />
+                    {isHold ? `Start hold · ${formatElapsed(holdSec)}` : 'Start exercise'}
+                  </button>
+                </>
+              ) : isHold ? (
+                /* ── Active hold: reverse countdown, no reps input ── */
+                <>
+                  <HoldTimer
+                    key={`${currentExercise.exerciseId}-${currentSet}`}
+                    durationSec={holdSec}
+                    onComplete={logHold}
+                  />
+                  <button
+                    onClick={() => handleLogSet('skipped')}
+                    className="w-full text-sm text-text-secondary hover:text-text-primary"
+                  >
+                    Skip this set
+                  </button>
+                </>
+              ) : (
+                /* ── Active rep/cardio logger ── */
+                <>
+                  {isCardio ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-text-secondary mb-1">Time (seconds)</label>
+                        <input
+                          type="number"
+                          min={0}
+                          value={timeInput}
+                          onChange={(e) => setTimeInput(e.target.value)}
+                          placeholder="e.g. 300"
+                          className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-text-secondary mb-1">Distance (m)</label>
+                        <input
+                          type="number"
+                          min={0}
+                          value={distInput}
+                          onChange={(e) => setDistInput(e.target.value)}
+                          placeholder="e.g. 1000"
+                          className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-text-secondary mb-1">Weight (kg)</label>
+                        <input
+                          type="number"
+                          min={0}
+                          step={0.5}
+                          value={weightInput}
+                          onChange={(e) => setWeightInput(e.target.value)}
+                          placeholder="0"
+                          className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-text-secondary mb-1">Reps</label>
+                        <input
+                          type="number"
+                          min={0}
+                          value={repsInput}
+                          onChange={(e) => setRepsInput(e.target.value)}
+                          placeholder="0"
+                          className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => handleLogSet('completed')}
+                      className="flex-1 py-3.5 gradient-bg rounded-pill text-white font-semibold flex items-center justify-center gap-2 text-sm"
+                    >
+                      <Check className="w-5 h-5" />
+                      Done
+                    </button>
+                    <button
+                      onClick={() => handleLogSet('skipped')}
+                      className="px-4 py-3.5 bg-bg-surface border border-hairline rounded-pill text-text-secondary hover:text-text-primary font-medium"
+                      aria-label="Skip set"
+                    >
+                      <SkipForward className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {/* Instructions / Cues collapsible */}
+                  {(currentExercise.instructions?.length > 0 || currentExercise.cues?.length > 0) && (
+                    <div>
+                      <button
+                        onClick={() => setShowCues(!showCues)}
+                        className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary w-full"
+                      >
+                        {showCues ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                        Instructions &amp; cues
+                      </button>
+                      {showCues && (
+                        <div className="mt-3 space-y-4 text-sm">
+                          {currentExercise.cues?.length > 0 && (
+                            <div>
+                              <p className="text-text-secondary font-medium mb-1.5">Coaching cues</p>
+                              <ul className="space-y-1.5">
+                                {currentExercise.cues.map((cue: string, i: number) => (
+                                  <li key={i} className="flex items-start gap-2 text-text-secondary">
+                                    <span className="text-brand-amber shrink-0 mt-0.5">·</span>
+                                    {cue}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {currentExercise.instructions?.length > 0 && (
+                            <div>
+                              <p className="text-text-secondary font-medium mb-1.5">Instructions</p>
+                              <ol className="space-y-2 list-none">
+                                {currentExercise.instructions.map((inst: string, i: number) => (
+                                  <li key={i} className="flex gap-2.5 text-text-secondary">
+                                    <span className="w-5 h-5 rounded-full gradient-bg flex items-center justify-center text-white text-[10px] font-bold shrink-0 mt-0.5">
+                                      {i + 1}
+                                    </span>
+                                    {inst}
+                                  </li>
+                                ))}
+                              </ol>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </Card>
