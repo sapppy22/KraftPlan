@@ -7,11 +7,13 @@ interface CardProps {
   className?: string;
   interactive?: boolean;
   hero?: boolean;
+  style?: React.CSSProperties;
 }
 
-export function Card({ children, className, interactive, hero }: CardProps) {
+export function Card({ children, className, interactive, hero, style }: CardProps) {
   return (
     <div
+      style={style}
       className={cn(
         hero
           ? 'gradient-bg border border-white/20 text-white shadow-lift rounded-2xl p-5 relative overflow-hidden'

@@ -101,6 +101,49 @@
   }
 }
 
+@layer components {
+  /* Soft, tinted icon badge used on stat cards & feature tiles */
+  .icon-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--brand-green) 12%, transparent);
+    color: var(--brand-green);
+  }
+
+  /* Frosted stat tile with a hairline top-accent that lights up on hover */
+  .stat-tile {
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-tile::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gradient-brand);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease-out;
+  }
+  .stat-tile:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Gradient hairline ring that appears on hover (feature cards) */
+  .ring-hover {
+    transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out, transform 0.2s ease-out;
+  }
+  .ring-hover:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--brand-green) 45%, transparent);
+    box-shadow: 0 12px 32px var(--brand-glow);
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -115,14 +158,63 @@
   .kp-enter {
     animation: kp-enter 0.42s ease-out both;
   }
+
+  /* Fade + rise in, used for page-load reveals (stagger via inline delay) */
+  .animate-fade-in {
+    animation: kp-fade-in 0.6s ease-out both;
+  }
+
+  /* Slow, ambient drift for decorative background orbs */
+  .animate-float {
+    animation: kp-float 16s ease-in-out infinite;
+  }
+  .animate-float-slow {
+    animation: kp-float 24s ease-in-out infinite reverse;
+  }
+
+  /* Subtle dot-grid texture (uses the theme hairline so it adapts light/dark) */
+  .bg-dot-grid {
+    background-image: radial-gradient(var(--hairline-strong) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  /* Fade a decorative layer out toward the edges */
+  .mask-radial-fade {
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 20%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 20%, transparent 75%);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .kp-enter,
     .animate-kp-enter,
-    .animate-kp-pulse {
+    .animate-kp-pulse,
+    .animate-fade-in,
+    .animate-float,
+    .animate-float-slow {
       animation: none !important;
     }
     * {
       scroll-behavior: auto !important;
     }
+  }
+}
+
+@keyframes kp-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes kp-float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(24px, -32px) scale(1.1);
   }
 }
