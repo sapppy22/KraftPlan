@@ -80,6 +80,7 @@ workouts.post('/custom', async (c) => {
           name: ex.name,
           primaryMuscles: ex.primaryMuscles || [],
           category: ex.category || 'resistance',
+          equipment: ex.equipment || [],
           sets: ex.sets || 3,
           repsScheme: ex.repsScheme || '8-12',
           loadScheme: 'rpe',

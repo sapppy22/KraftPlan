@@ -25,7 +25,14 @@ import { RestTimer } from '@/components/player/RestTimer';
 import { HoldTimer } from '@/components/player/HoldTimer';
 import { DurationPicker } from '@/components/player/DurationPicker';
 import { cn } from '@/lib/utils';
-import { getTutorialUrl, extractYouTubeId, isHoldExercise, isEnduranceExercise, resolveTimeTargetSec } from '@/lib/exerciseData';
+import {
+  getTutorialUrl,
+  extractYouTubeId,
+  isHoldExercise,
+  isEnduranceExercise,
+  isWeightedExercise,
+  resolveTimeTargetSec,
+} from '@/lib/exerciseData';
 
 interface Props {
   params: { sessionId: string };
@@ -52,6 +59,34 @@ function buildEmbedSrc(exerciseName: string, tutorialUrl?: string | null): strin
     if (vid) return `https://www.youtube.com/embed/${vid}?rel=0`;
   }
   return null;
+}
+
+/** Weight input shared by the rep logger and timed (loaded) exercises. */
+function WeightField({
+  value,
+  onChange,
+  hint,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  hint?: string;
+}) {
+  return (
+    <div>
+      <label className="block text-xs text-text-secondary mb-1">Weight (kg)</label>
+      <input
+        type="number"
+        min={0}
+        step={0.5}
+        inputMode="decimal"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="0"
+        className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
+      />
+      {hint && <p className="text-[11px] text-text-secondary mt-1 text-center">{hint}</p>}
+    </div>
+  );
 }
 
 /** Find the first set that hasn't been logged yet, so we resume where the user left off. */
@@ -174,6 +209,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
   const currentSet = store.currentSetIndex;
   const isHold = !!currentExercise && isHoldExercise(currentExercise);
   const isEndurance = !!currentExercise && isEnduranceExercise(currentExercise);
+  const isWeighted = !!currentExercise && isWeightedExercise(currentExercise);
   // Endurance work, isometric holds and any explicit time prescription run on a
   // reverse countdown — never a rep box. Everything else uses the reps/weight
   // logger. The prescription only seeds the clock; the athlete sets the final
@@ -257,10 +293,14 @@ export default function WorkoutPlayerPage({ params }: Props) {
   const logHold = useCallback(
     (heldSec: number) => {
       if (!currentExercise) return;
+      const weightKg = parseFloat(weightInput) || undefined;
+      if (weightKg !== undefined) store.setLastWeight(currentExercise.exerciseId, weightKg);
+
       const payload = {
         exerciseId: currentExercise.exerciseId,
         setIndex: currentSet,
         timeSec: heldSec,
+        weightKg,
         distanceM: parseFloat(distInput) || undefined,
         status: 'completed' as const,
       };
@@ -268,7 +308,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
       api.logSet(sessionId, payload).catch(() => {/* silent */});
       store.setRestTimer(true);
     },
-    [currentExercise, currentSet, distInput, sessionId, store],
+    [currentExercise, currentSet, distInput, weightInput, sessionId, store],
   );
 
   function handleRestComplete() {
@@ -563,6 +603,17 @@ export default function WorkoutPlayerPage({ params }: Props) {
                       )}
                     </div>
                   )}
+                  {useCountdown && isWeighted && (
+                    <WeightField
+                      value={weightInput}
+                      onChange={setWeightInput}
+                      hint={
+                        currentExercise.targetLoad
+                          ? `Prescribed: ${currentExercise.targetLoad}`
+                          : 'Logged with the set, so it counts toward your volume'
+                      }
+                    />
+                  )}
                   {useCountdown && (
                     <div className="p-4 rounded-2xl bg-bg-elevated border border-hairline">
                       <DurationPicker
@@ -591,6 +642,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
                     onComplete={logHold}
                     label={isHold ? 'hold' : 'remaining'}
                   />
+                  {isWeighted && <WeightField value={weightInput} onChange={setWeightInput} />}
                   {isEndurance && (
                     <div>
                       <label className="block text-xs text-text-secondary mb-1">
@@ -618,29 +670,18 @@ export default function WorkoutPlayerPage({ params }: Props) {
                 /* ── Active rep logger ── */
                 <>
                   <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs text-text-secondary mb-1">Weight (kg)</label>
-                        <input
-                          type="number"
-                          min={0}
-                          step={0.5}
-                          value={weightInput}
-                          onChange={(e) => setWeightInput(e.target.value)}
-                          placeholder="0"
-                          className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs text-text-secondary mb-1">Reps</label>
-                        <input
-                          type="number"
-                          min={0}
-                          value={repsInput}
-                          onChange={(e) => setRepsInput(e.target.value)}
-                          placeholder="0"
-                          className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
-                        />
-                      </div>
+                    <WeightField value={weightInput} onChange={setWeightInput} />
+                    <div>
+                      <label className="block text-xs text-text-secondary mb-1">Reps</label>
+                      <input
+                        type="number"
+                        min={0}
+                        value={repsInput}
+                        onChange={(e) => setRepsInput(e.target.value)}
+                        placeholder="0"
+                        className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex gap-3">

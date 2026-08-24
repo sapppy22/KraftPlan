@@ -1993,3 +1993,33 @@ export const DURATION_CHOICES = [15, 30, 45, 60, 90, 120, 180, 300, 600, 900, 12
 export function formatDurationScheme(sec: number): string {
   return sec % 60 === 0 ? `${sec / 60} min` : `${sec}s`;
 }
+
+/** Equipment that puts external load in your hands (or on a sled). */
+const LOADED_EQUIPMENT = [
+  'barbell', 'dumbbells', 'kettlebell', 'cable-machine', 'medicine-ball', 'sled', 'machine', 'weight',
+];
+
+/**
+ * True when the exercise is done against external load, so the player must
+ * offer a weight field — including timed work like carries and sled pushes,
+ * where the load is the whole point but there are no reps to log it against.
+ */
+export function isWeightedExercise(ex: {
+  name?: string | null;
+  category?: string | null;
+  equipment?: string[] | null;
+  loadScheme?: string | null;
+  targetLoad?: string | null;
+}): boolean {
+  const equipment = (ex.equipment ?? []).map((e) => (e || '').toLowerCase());
+  if (equipment.some((e) => LOADED_EQUIPMENT.some((l) => e.includes(l)))) return true;
+
+  const loadScheme = (ex.loadScheme || '').toLowerCase();
+  if (loadScheme === 'percentage' || loadScheme === 'fixed') return true;
+
+  // Carries, loaded pushes and weighted holds by name, for rows that predate
+  // the equipment column being carried through the manifest.
+  return /\b(carry|carries|sled|prowler|farmer|goblet|weighted|barbell|dumbbell|kettlebell|sandbag|trap ?bar)\b/.test(
+    (ex.name || '').toLowerCase(),
+  );
+}

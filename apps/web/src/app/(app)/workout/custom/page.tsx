@@ -66,6 +66,7 @@ interface SelectedExercise {
   name: string;
   category: string;
   primaryMuscles: string[];
+  equipment: string[];
   tutorialUrl: string | null;
   instructions: string[];
   cues: string[];
@@ -130,6 +131,7 @@ export default function CustomWorkoutPage() {
       name: ex.name,
       category: ex.category,
       primaryMuscles: ex.primaryMuscles || [],
+      equipment: ex.equipment || [],
       tutorialUrl: getTutorialUrl(ex.name, ex.tutorialUrl) || null,
       instructions: ex.instructions || [],
       cues: ex.cues || [],
