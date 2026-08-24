@@ -12,9 +12,12 @@ import { Card } from '@/components/ui/Card';
 export function MembersOnlyGate({
   feature = 'Training plans',
   description = 'Create a free account to browse structured programs, follow a plan, and track your long-term progress.',
+  plural = true,
 }: {
   feature?: string;
   description?: string;
+  /** Whether `feature` reads as plural, so the heading agrees. */
+  plural?: boolean;
 }) {
   return (
     <div className="max-w-lg mx-auto py-6">
@@ -23,7 +26,9 @@ export function MembersOnlyGate({
           <Lock className="w-7 h-7" />
         </div>
         <div>
-          <h2 className="font-display text-2xl font-bold">{feature} are a member feature</h2>
+          <h2 className="font-display text-2xl font-bold">
+            {feature} {plural ? 'are' : 'is'} a member feature
+          </h2>
           <p className="text-text-secondary mt-2 text-sm leading-relaxed">{description}</p>
         </div>
 

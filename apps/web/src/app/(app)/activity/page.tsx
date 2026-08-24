@@ -13,6 +13,8 @@ import { CARDIO_ACTIVITIES } from '@kraftplan/shared';
 import { api } from '@/lib/api/client';
 import { Card } from '@/components/ui/Card';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/lib/AuthContext';
+import { MembersOnlyGate } from '@/components/MembersOnlyGate';
 
 const IN_COLOR = '#0D9488';  // teal — calories in
 const OUT_COLOR = '#059669'; // emerald — calories out
@@ -65,6 +67,7 @@ function BalanceBars({ caloriesIn, caloriesOut }: { caloriesIn: number; calories
 }
 
 export default function ActivityPage() {
+  const { isGuest } = useAuth();
   const queryClient = useQueryClient();
   const [tab, setTab] = useState<'steps' | 'cardio'>('steps');
   const [steps, setSteps] = useState('');
@@ -73,10 +76,12 @@ export default function ActivityPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['activity', 'day'],
     queryFn: () => api.getActivityDay(),
+    enabled: !isGuest,
   });
   const { data: trend } = useQuery({
     queryKey: ['activity', 'trend'],
     queryFn: () => api.getActivityTrend(7),
+    enabled: !isGuest,
   });
 
   const refresh = () => {
@@ -92,6 +97,17 @@ export default function ActivityPage() {
     mutationFn: (id: string) => api.deleteActivity(id),
     onSuccess: refresh,
   });
+
+  // Same as nutrition: the energy balance is built from personal metrics.
+  if (isGuest) {
+    return (
+      <MembersOnlyGate
+        feature="Activity tracking"
+        plural={false}
+        description="Calories in versus out is built from your own body metrics and logs, so it needs a free account. Workouts you can still do right now."
+      />
+    );
+  }
 
   if (isLoading) {
     return (

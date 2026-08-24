@@ -41,6 +41,17 @@ export async function ensureDemoUser(db: DB): Promise<void> {
 }
 
 /**
+ * For personal data (body metrics, food and activity logs): a real signed-in
+ * user only. Guests all share one demo row, so letting them through here would
+ * show one visitor's height and weight to the next one.
+ */
+export async function requireMemberId(c: Context<AppEnv>): Promise<string | Response> {
+  const uid = await authUserId(c);
+  if (uid) return uid;
+  return c.json({ error: 'Create a free account to track nutrition and activity' }, 401);
+}
+
+/**
  * For write endpoints: real userId for a signed-in user, the shared demo user
  * for an explicit guest ("Explore Mode"), or a ready-to-return 401 otherwise.
  */

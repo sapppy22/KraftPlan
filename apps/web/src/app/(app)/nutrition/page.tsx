@@ -21,6 +21,8 @@ import { BodyMetricsForm } from '@/components/nutrition/BodyMetricsForm';
 import { RecipeCard } from '@/components/nutrition/RecipeCard';
 import { suggestRecipes, type Recipe } from '@/lib/recipes';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/lib/AuthContext';
+import { MembersOnlyGate } from '@/components/MembersOnlyGate';
 
 const GOAL_COPY: Record<DietGoal, { label: string; blurb: string }> = {
   cut: { label: 'Cut', blurb: 'Lose fat' },
@@ -81,6 +83,7 @@ function MacroBar({ label, value, target, tint }: { label: string; value: number
 }
 
 export default function NutritionPage() {
+  const { isGuest } = useAuth();
   const queryClient = useQueryClient();
   const [editingMetrics, setEditingMetrics] = useState(false);
   const [mealFilter, setMealFilter] = useState<MealType | 'all'>('all');
@@ -91,6 +94,7 @@ export default function NutritionPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['nutrition', 'day'],
     queryFn: () => api.getNutritionDay(),
+    enabled: !isGuest,
   });
 
   const refresh = () => {
@@ -172,6 +176,18 @@ export default function NutritionPage() {
           setShowManual(false);
         },
       },
+    );
+  }
+
+  // Guests all share one demo account, so body metrics and food logs — which
+  // are personal — need a real one.
+  if (isGuest) {
+    return (
+      <MembersOnlyGate
+        feature="Nutrition"
+        plural={false}
+        description="Your BMI, calorie targets and food log are tied to your own body metrics, so they need a free account. Workouts you can still do right now."
+      />
     );
   }
 

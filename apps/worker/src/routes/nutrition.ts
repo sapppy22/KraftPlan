@@ -23,7 +23,7 @@ import {
 } from '@kraftplan/shared';
 import { schema } from '../db';
 import type { DB } from '../db';
-import { requireUserId, type AppEnv } from '../context';
+import { requireMemberId, type AppEnv } from '../context';
 
 // ── Day boundaries ────────────────────────────────────────────────────────
 // Food and activity rows are keyed by the user's local calendar day, but
@@ -263,7 +263,7 @@ export const nutrition = new Hono<AppEnv>();
 
 // GET /nutrition/day?date=&tzOffset= — metrics, food log, activity, balance.
 nutrition.get('/day', async (c) => {
-  const userId = await requireUserId(c);
+  const userId = await requireMemberId(c);
   if (userId instanceof Response) return userId;
   const { date, tzOffset } = readDayParams(c);
   return c.json(await buildDay(c.get('db'), userId, date, tzOffset));
@@ -271,14 +271,14 @@ nutrition.get('/day', async (c) => {
 
 // GET /nutrition/profile — body metrics + targets only (no day data).
 nutrition.get('/profile', async (c) => {
-  const userId = await requireUserId(c);
+  const userId = await requireMemberId(c);
   if (userId instanceof Response) return userId;
   return c.json(computeMetrics(await loadUser(c.get('db'), userId)));
 });
 
 // PATCH /nutrition/profile — the inputs BMI/BMR/TDEE need.
 nutrition.patch('/profile', async (c) => {
-  const userId = await requireUserId(c);
+  const userId = await requireMemberId(c);
   if (userId instanceof Response) return userId;
   const parsed = nutritionProfileSchema.safeParse(await c.req.json().catch(() => ({})));
   if (!parsed.success) return c.json({ error: 'Validation failed', details: parsed.error.flatten() }, 400);
@@ -302,7 +302,7 @@ nutrition.patch('/profile', async (c) => {
 
 // POST /nutrition/log — record something eaten.
 nutrition.post('/log', async (c) => {
-  const userId = await requireUserId(c);
+  const userId = await requireMemberId(c);
   if (userId instanceof Response) return userId;
   const parsed = foodLogSchema.safeParse(await c.req.json().catch(() => ({})));
   if (!parsed.success) return c.json({ error: 'Validation failed', details: parsed.error.flatten() }, 400);
@@ -332,7 +332,7 @@ nutrition.post('/log', async (c) => {
 
 // DELETE /nutrition/log/:id
 nutrition.delete('/log/:id', async (c) => {
-  const userId = await requireUserId(c);
+  const userId = await requireMemberId(c);
   if (userId instanceof Response) return userId;
   const deleted = await c
     .get('db')
@@ -350,7 +350,7 @@ export const activity = new Hono<AppEnv>();
 
 // GET /activity?date=&tzOffset= — same payload as /nutrition/day.
 activity.get('/', async (c) => {
-  const userId = await requireUserId(c);
+  const userId = await requireMemberId(c);
   if (userId instanceof Response) return userId;
   const { date, tzOffset } = readDayParams(c);
   return c.json(await buildDay(c.get('db'), userId, date, tzOffset));
@@ -358,7 +358,7 @@ activity.get('/', async (c) => {
 
 // GET /activity/trend?days=7&tzOffset= — daily in/out for the balance chart.
 activity.get('/trend', async (c) => {
-  const userId = await requireUserId(c);
+  const userId = await requireMemberId(c);
   if (userId instanceof Response) return userId;
   const tzRaw = parseInt(c.req.query('tzOffset') ?? '', 10);
   const tzOffset = Number.isFinite(tzRaw) ? tzRaw : 0;
@@ -400,7 +400,7 @@ activity.get('/trend', async (c) => {
 
 // POST /activity — log steps or cardio the player can't capture itself.
 activity.post('/', async (c) => {
-  const userId = await requireUserId(c);
+  const userId = await requireMemberId(c);
   if (userId instanceof Response) return userId;
   const parsed = activityLogSchema.safeParse(await c.req.json().catch(() => ({})));
   if (!parsed.success) return c.json({ error: 'Validation failed', details: parsed.error.flatten() }, 400);
@@ -456,7 +456,7 @@ activity.post('/', async (c) => {
 
 // DELETE /activity/:id
 activity.delete('/:id', async (c) => {
-  const userId = await requireUserId(c);
+  const userId = await requireMemberId(c);
   if (userId instanceof Response) return userId;
   const deleted = await c
     .get('db')
