@@ -256,12 +256,17 @@ workouts.post('/:sessionId/complete', async (c) => {
 
   const now = new Date();
   const estimatedKcal = await estimateSessionKcal(db, userId, session, parsed.data.totalElapsedSec, now);
+  const durationSec =
+    parsed.data.totalElapsedSec > 0
+      ? parsed.data.totalElapsedSec
+      : Math.max(0, Math.round((now.getTime() - session.startedAt.getTime()) / 1000));
   await db
     .update(schema.workoutSessions)
     .set({
       status: 'completed',
       endedAt: now,
       totalVolumeKg: totalVolumeKg.toString(),
+      durationSec,
       estimatedKcal,
       notes: parsed.data.notes || null,
     })

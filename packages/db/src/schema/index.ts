@@ -178,6 +178,9 @@ export const workoutSessions = pgTable(
     startedAt: timestamp('started_at', { withTimezone: true }).notNull(),
     endedAt: timestamp('ended_at', { withTimezone: true }),
     totalVolumeKg: numeric('total_volume_kg'),
+    // In-app clock at completion — wall-clock overstates a session that was
+    // paused or resumed hours later.
+    durationSec: integer('duration_sec'),
     // MET-based burn estimate, frozen at completion (bodyweight can change later).
     estimatedKcal: integer('estimated_kcal'),
     notes: text('notes'),

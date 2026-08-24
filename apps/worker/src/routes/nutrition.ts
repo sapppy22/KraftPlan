@@ -160,6 +160,7 @@ async function loadWorkoutBurn(db: DB, userId: string, date: string, tzOffset: n
       status: schema.workoutSessions.status,
       startedAt: schema.workoutSessions.startedAt,
       endedAt: schema.workoutSessions.endedAt,
+      durationSec: schema.workoutSessions.durationSec,
       estimatedKcal: schema.workoutSessions.estimatedKcal,
       totalVolumeKg: schema.workoutSessions.totalVolumeKg,
       title: schema.planDays.title,
@@ -181,8 +182,13 @@ async function loadWorkoutBurn(db: DB, userId: string, date: string, tzOffset: n
   return rows
     .filter((r) => r.status !== 'abandoned')
     .map((r) => {
+      // Finished sessions report the in-app clock; a live one is still ticking,
+      // so fall back to wall-clock for it.
       const endMs = r.endedAt ? r.endedAt.getTime() : Date.now();
-      const durationMin = Math.min(300, Math.max(0, (endMs - r.startedAt.getTime()) / 60_000));
+      const durationMin =
+        r.durationSec != null
+          ? Math.min(300, r.durationSec / 60)
+          : Math.min(300, Math.max(0, (endMs - r.startedAt.getTime()) / 60_000));
       const kcal = r.estimatedKcal ?? metCalories(workoutMet(r.category), weightKg, durationMin);
       return {
         id: r.id,
