@@ -7,7 +7,14 @@ import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Plus, Trash2, Search, ChevronLeft, Loader2, Dumbbell, Play, Sparkles, RefreshCw } from 'lucide-react';
 import { api } from '@/lib/api/client';
-import { getTutorialUrl } from '@/lib/exerciseData';
+import {
+  defaultEnduranceSeconds,
+  formatDurationScheme,
+  getTutorialUrl,
+  isEnduranceExercise,
+  resolveTimeTargetSec,
+} from '@/lib/exerciseData';
+import { DurationSelect } from '@/components/ui/DurationSelect';
 import { Card } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { usePlayerStore } from '@/stores/playerStore';
@@ -127,7 +134,9 @@ export default function CustomWorkoutPage() {
       instructions: ex.instructions || [],
       cues: ex.cues || [],
       sets: 3,
-      repsScheme: ex.category === 'cardio' || ex.category === 'time' ? '10 min' : '8–12',
+      repsScheme: isEnduranceExercise(ex)
+        ? formatDurationScheme(defaultEnduranceSeconds(ex.name))
+        : '8–12',
       restSec: ex.category === 'cardio' ? 30 : 60,
     };
   }
@@ -294,10 +303,21 @@ export default function CustomWorkoutPage() {
                     className="w-full px-2 py-2 bg-bg-surface border border-hairline rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange" />
                 </div>
                 <div>
-                  <label className="block text-[10px] text-text-secondary mb-1">Reps / Time</label>
-                  <input type="text" value={ex.repsScheme}
-                    onChange={(e) => updateExercise(idx, 'repsScheme', e.target.value)}
-                    className="w-full px-2 py-2 bg-bg-surface border border-hairline rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange" />
+                  <label className="block text-[10px] text-text-secondary mb-1">
+                    {isEnduranceExercise(ex) ? 'Time' : 'Reps'}
+                  </label>
+                  {/* Endurance work is prescribed on the clock, never in reps. */}
+                  {isEnduranceExercise(ex) ? (
+                    <DurationSelect
+                      value={resolveTimeTargetSec(ex) ?? defaultEnduranceSeconds(ex.name)}
+                      onChange={(scheme) => updateExercise(idx, 'repsScheme', scheme)}
+                      className="w-full px-2 py-2 bg-bg-surface border border-hairline rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange"
+                    />
+                  ) : (
+                    <input type="text" value={ex.repsScheme}
+                      onChange={(e) => updateExercise(idx, 'repsScheme', e.target.value)}
+                      className="w-full px-2 py-2 bg-bg-surface border border-hairline rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange" />
+                  )}
                 </div>
                 <div>
                   <label className="block text-[10px] text-text-secondary mb-1">Rest (sec)</label>

@@ -23,8 +23,9 @@ import { usePlayerStore } from '@/stores/playerStore';
 import { Card } from '@/components/ui/Card';
 import { RestTimer } from '@/components/player/RestTimer';
 import { HoldTimer } from '@/components/player/HoldTimer';
+import { DurationPicker } from '@/components/player/DurationPicker';
 import { cn } from '@/lib/utils';
-import { getTutorialUrl, extractYouTubeId, isHoldExercise, parseHoldSeconds, parseDurationSeconds } from '@/lib/exerciseData';
+import { getTutorialUrl, extractYouTubeId, isHoldExercise, isEnduranceExercise, resolveTimeTargetSec } from '@/lib/exerciseData';
 
 interface Props {
   params: { sessionId: string };
@@ -90,8 +91,9 @@ export default function WorkoutPlayerPage({ params }: Props) {
   // Per-set input state
   const [weightInput, setWeightInput] = useState('');
   const [repsInput, setRepsInput] = useState('');
-  const [timeInput, setTimeInput] = useState('');
   const [distInput, setDistInput] = useState('');
+  // Clock the user picked for the current timed exercise (null = use the prescription).
+  const [chosenSec, setChosenSec] = useState<number | null>(null);
 
   // Elapsed timer ref to avoid stale closure
   const elapsedRef = useRef(store.elapsedSec);
@@ -170,13 +172,15 @@ export default function WorkoutPlayerPage({ params }: Props) {
   const currentBlock = store.sessionManifest?.blocks?.[store.currentBlockIndex];
   const currentExercise = currentBlock?.exercises?.[store.currentExerciseIndex];
   const currentSet = store.currentSetIndex;
-  const isCardio = currentExercise?.category === 'cardio' || currentExercise?.category === 'time';
   const isHold = !!currentExercise && isHoldExercise(currentExercise);
-  // A minute/second target (e.g. "10 min", "0:30") drives a reverse countdown,
-  // as do isometric holds. Everything else uses the reps/weight (or distance) logger.
-  const targetDurationSec = currentExercise ? parseDurationSeconds(currentExercise.repsScheme) : null;
-  const useCountdown = isHold || targetDurationSec != null;
-  const countdownSec = isHold ? parseHoldSeconds(currentExercise?.repsScheme) : targetDurationSec ?? 0;
+  const isEndurance = !!currentExercise && isEnduranceExercise(currentExercise);
+  // Endurance work, isometric holds and any explicit time prescription run on a
+  // reverse countdown — never a rep box. Everything else uses the reps/weight
+  // logger. The prescription only seeds the clock; the athlete sets the final
+  // duration before starting.
+  const prescribedSec = currentExercise ? resolveTimeTargetSec(currentExercise) : null;
+  const useCountdown = prescribedSec != null;
+  const countdownSec = chosenSec ?? prescribedSec ?? 0;
   const embedSrc = currentExercise ? buildEmbedSrc(currentExercise.name, currentExercise.tutorialUrl) : null;
   const resolvedTutorialUrl = currentExercise ? getTutorialUrl(currentExercise.name, currentExercise.tutorialUrl) : undefined;
   const ytSearchUrl = currentExercise
@@ -188,8 +192,8 @@ export default function WorkoutPlayerPage({ params }: Props) {
     const exId = currentExercise.exerciseId;
     setWeightInput(store.lastWeight[exId]?.toString() ?? '');
     setRepsInput(store.lastReps[exId]?.toString() ?? '');
-    setTimeInput('');
     setDistInput('');
+    setChosenSec(null);
   }, [currentExercise?.exerciseId, currentSet]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Reset to the video-first "ready" state whenever we move to a new exercise
@@ -205,7 +209,6 @@ export default function WorkoutPlayerPage({ params }: Props) {
 
       const weightKg = parseFloat(weightInput) || undefined;
       const reps = parseInt(repsInput) || undefined;
-      const timeSec = parseInt(timeInput) || undefined;
       const distanceM = parseFloat(distInput) || undefined;
 
       // Save to store (last values for pre-fill)
@@ -217,7 +220,6 @@ export default function WorkoutPlayerPage({ params }: Props) {
         setIndex: currentSet,
         weightKg,
         reps,
-        timeSec,
         distanceM,
         status,
       };
@@ -230,7 +232,6 @@ export default function WorkoutPlayerPage({ params }: Props) {
         setIndex: currentSet,
         weightKg,
         reps,
-        timeSec,
         distanceM,
         status,
       }).catch(() => {/* silent */});
@@ -242,7 +243,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
         store.advanceSet();
       }
     },
-    [currentExercise, currentSet, weightInput, repsInput, timeInput, distInput, sessionId, store],
+    [currentExercise, currentSet, weightInput, repsInput, distInput, sessionId, store],
   );
 
   // Start the current exercise: kick off the session clock (if not already
@@ -260,13 +261,14 @@ export default function WorkoutPlayerPage({ params }: Props) {
         exerciseId: currentExercise.exerciseId,
         setIndex: currentSet,
         timeSec: heldSec,
+        distanceM: parseFloat(distInput) || undefined,
         status: 'completed' as const,
       };
       store.logSet(payload);
       api.logSet(sessionId, payload).catch(() => {/* silent */});
       store.setRestTimer(true);
     },
-    [currentExercise, currentSet, sessionId, store],
+    [currentExercise, currentSet, distInput, sessionId, store],
   );
 
   function handleRestComplete() {
@@ -511,7 +513,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
               {/* Reps / rest targets */}
               <div className="flex flex-wrap gap-2 text-sm">
                 <span className="px-3 py-1 rounded-pill bg-bg-elevated text-text-secondary">
-                  {useCountdown ? (isHold ? 'Hold' : 'Duration') : 'Target'}:{' '}
+                  {useCountdown ? (isHold ? 'Hold' : 'Time') : 'Target'}:{' '}
                   <span className="text-text-primary font-medium">
                     {useCountdown ? formatElapsed(countdownSec) : currentExercise.repsScheme}
                   </span>
@@ -561,6 +563,15 @@ export default function WorkoutPlayerPage({ params }: Props) {
                       )}
                     </div>
                   )}
+                  {useCountdown && (
+                    <div className="p-4 rounded-2xl bg-bg-elevated border border-hairline">
+                      <DurationPicker
+                        value={countdownSec}
+                        prescribedSec={prescribedSec}
+                        onChange={setChosenSec}
+                      />
+                    </div>
+                  )}
                   <button
                     onClick={handleStartExercise}
                     className="w-full py-4 gradient-bg rounded-pill text-white font-semibold flex items-center justify-center gap-2"
@@ -575,11 +586,27 @@ export default function WorkoutPlayerPage({ params }: Props) {
                 /* ── Active timed exercise: reverse countdown, no reps input ── */
                 <>
                   <HoldTimer
-                    key={`${currentExercise.exerciseId}-${currentSet}`}
+                    key={`${currentExercise.exerciseId}-${currentSet}-${countdownSec}`}
                     durationSec={countdownSec}
                     onComplete={logHold}
                     label={isHold ? 'hold' : 'remaining'}
                   />
+                  {isEndurance && (
+                    <div>
+                      <label className="block text-xs text-text-secondary mb-1">
+                        Distance covered (m) — optional
+                      </label>
+                      <input
+                        type="number"
+                        min={0}
+                        inputMode="numeric"
+                        value={distInput}
+                        onChange={(e) => setDistInput(e.target.value)}
+                        placeholder="e.g. 1000"
+                        className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
+                      />
+                    </div>
+                  )}
                   <button
                     onClick={() => handleLogSet('skipped')}
                     className="w-full text-sm text-text-secondary hover:text-text-primary"
@@ -588,35 +615,9 @@ export default function WorkoutPlayerPage({ params }: Props) {
                   </button>
                 </>
               ) : (
-                /* ── Active rep/cardio logger ── */
+                /* ── Active rep logger ── */
                 <>
-                  {isCardio ? (
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs text-text-secondary mb-1">Time (seconds)</label>
-                        <input
-                          type="number"
-                          min={0}
-                          value={timeInput}
-                          onChange={(e) => setTimeInput(e.target.value)}
-                          placeholder="e.g. 300"
-                          className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs text-text-secondary mb-1">Distance (m)</label>
-                        <input
-                          type="number"
-                          min={0}
-                          value={distInput}
-                          onChange={(e) => setDistInput(e.target.value)}
-                          placeholder="e.g. 1000"
-                          className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className="block text-xs text-text-secondary mb-1">Weight (kg)</label>
                         <input
@@ -640,8 +641,7 @@ export default function WorkoutPlayerPage({ params }: Props) {
                           className="w-full px-3 py-2.5 bg-bg-elevated border border-hairline rounded-xl text-center text-base focus:outline-none focus:border-brand-orange"
                         />
                       </div>
-                    </div>
-                  )}
+                  </div>
 
                   <div className="flex gap-3">
                     <button

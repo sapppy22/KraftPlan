@@ -7,7 +7,14 @@ import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Plus, Trash2, Search, ChevronLeft, Loader2, Dumbbell, Play, Wand2 } from 'lucide-react';
 import { api } from '@/lib/api/client';
-import { getTutorialUrl } from '@/lib/exerciseData';
+import {
+  defaultEnduranceSeconds,
+  formatDurationScheme,
+  getTutorialUrl,
+  isEnduranceExercise,
+  resolveTimeTargetSec,
+} from '@/lib/exerciseData';
+import { DurationSelect } from '@/components/ui/DurationSelect';
 import { Card } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { PLAN_CATEGORIES, DIFFICULTY_LEVELS } from '@kraftplan/shared';
@@ -109,7 +116,9 @@ export default function CustomPlanBuilderPage() {
                   instructions: ex.instructions || [],
                   cues: ex.cues || [],
                   sets: 3,
-                  repsScheme: ex.category === 'cardio' || ex.category === 'time' ? '10 min' : '8–12',
+                  repsScheme: isEnduranceExercise(ex)
+                    ? formatDurationScheme(defaultEnduranceSeconds(ex.name))
+                    : '8–12',
                   restSec: ex.category === 'cardio' ? 30 : 60,
                 },
               ],
@@ -266,26 +275,41 @@ export default function CustomPlanBuilderPage() {
                     </button>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
-                    {[
-                      { label: 'Sets', field: 'sets' as const, type: 'number', value: ex.sets, min: 1, max: 20 },
-                      { label: 'Reps / Time', field: 'repsScheme' as const, type: 'text', value: ex.repsScheme },
-                      { label: 'Rest (sec)', field: 'restSec' as const, type: 'number', value: ex.restSec, min: 0, max: 600 },
-                    ].map(({ label, field, type, value, min, max }) => (
-                      <div key={field}>
-                        <label className="block text-[10px] text-text-secondary mb-1">{label}</label>
-                        <input
-                          type={type}
-                          value={value}
-                          min={min}
-                          max={max}
-                          onChange={(e) =>
-                            updateExercise(dayIdx, exIdx, field,
-                              type === 'number' ? (parseInt(e.target.value) || (min ?? 0)) : e.target.value)
-                          }
+                    <div>
+                      <label className="block text-[10px] text-text-secondary mb-1">Sets</label>
+                      <input
+                        type="number" min={1} max={20} value={ex.sets}
+                        onChange={(e) => updateExercise(dayIdx, exIdx, 'sets', parseInt(e.target.value) || 1)}
+                        className="w-full px-2 py-2 bg-bg-surface border border-hairline rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] text-text-secondary mb-1">
+                        {isEnduranceExercise(ex) ? 'Time' : 'Reps'}
+                      </label>
+                      {/* Endurance work is prescribed on the clock, never in reps. */}
+                      {isEnduranceExercise(ex) ? (
+                        <DurationSelect
+                          value={resolveTimeTargetSec(ex) ?? defaultEnduranceSeconds(ex.name)}
+                          onChange={(scheme) => updateExercise(dayIdx, exIdx, 'repsScheme', scheme)}
                           className="w-full px-2 py-2 bg-bg-surface border border-hairline rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange"
                         />
-                      </div>
-                    ))}
+                      ) : (
+                        <input
+                          type="text" value={ex.repsScheme}
+                          onChange={(e) => updateExercise(dayIdx, exIdx, 'repsScheme', e.target.value)}
+                          className="w-full px-2 py-2 bg-bg-surface border border-hairline rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange"
+                        />
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-[10px] text-text-secondary mb-1">Rest (sec)</label>
+                      <input
+                        type="number" min={0} max={600} value={ex.restSec}
+                        onChange={(e) => updateExercise(dayIdx, exIdx, 'restSec', parseInt(e.target.value) || 0)}
+                        className="w-full px-2 py-2 bg-bg-surface border border-hairline rounded-lg text-center text-sm focus:outline-none focus:border-brand-orange"
+                      />
+                    </div>
                   </div>
                 </div>
               ))}

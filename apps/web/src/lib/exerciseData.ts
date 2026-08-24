@@ -1907,3 +1907,89 @@ export function getExerciseThumb(name: string, dbUrl?: string | null, category?:
   return getCategoryFallbackImage(category);
 }
 
+
+// ══════════════════════════════════════
+// ENDURANCE = TIME, NEVER REPS
+// ══════════════════════════════════════
+/**
+ * Work interval (seconds) for endurance movements that arrive without a time
+ * prescription. Steady-state machine work is measured in minutes; everything
+ * else is an interval you hold form through.
+ */
+const ENDURANCE_DEFAULT_SEC: Record<string, number> = {
+  'treadmill run': 600,
+  'rowing machine': 600,
+  'assault bike': 600,
+  'ski erg': 600,
+  'elliptical': 600,
+  'stationary bike': 600,
+  'jump rope': 120,
+  'battle ropes': 30,
+  'burpee': 60,
+  'mountain climber': 45,
+  'sled push': 30,
+  'sled pull': 30,
+  'prowler sprint': 30,
+  'shuttle run': 30,
+};
+
+/** Machine / steady-state work, which is prescribed in minutes rather than seconds. */
+const STEADY_STATE_PATTERN = /\b(run|jog|row|bike|cycle|erg|elliptical|swim|treadmill|stair)\b/;
+
+/**
+ * True for anything trained against the clock rather than a rep count — the
+ * cardio category, plus plan categories that are endurance work by definition.
+ */
+export function isEnduranceExercise(ex: {
+  name?: string | null;
+  category?: string | null;
+}): boolean {
+  const category = (ex.category || '').toLowerCase();
+  if (category === 'cardio' || category === 'endurance' || category === 'time') return true;
+  return false;
+}
+
+/** Default work interval for an endurance movement with no explicit time target. */
+export function defaultEnduranceSeconds(name?: string | null): number {
+  const key = normalizeName(name || '');
+  for (const [dictKey, sec] of Object.entries(ENDURANCE_DEFAULT_SEC)) {
+    if (normalizeName(dictKey) === key || key.includes(normalizeName(dictKey))) return sec;
+  }
+  return STEADY_STATE_PATTERN.test((name || '').toLowerCase()) ? 600 : 60;
+}
+
+/**
+ * The clock target (seconds) for an exercise, or null when it's genuinely a
+ * rep-based movement. Order matters: an explicit prescription always wins, then
+ * isometric holds, and finally endurance work falls back to a sensible default
+ * so a rep-based cardio prescription still gets a timer instead of a rep box.
+ */
+export function resolveTimeTargetSec(ex: {
+  name?: string | null;
+  category?: string | null;
+  repsScheme?: string | null;
+}): number | null {
+  const explicit = parseDurationSeconds(ex.repsScheme);
+  if (explicit != null) return explicit;
+  if (isHoldExercise(ex)) return parseHoldSeconds(ex.repsScheme);
+  if (isEnduranceExercise(ex)) return defaultEnduranceSeconds(ex.name);
+  return null;
+}
+
+/** mm:ss for a duration in seconds. */
+export function formatClock(sec: number): string {
+  const m = Math.floor(sec / 60);
+  const s = Math.round(sec % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+/** Durations offered when prescribing timed work in the builders. */
+export const DURATION_CHOICES = [15, 30, 45, 60, 90, 120, 180, 300, 600, 900, 1200, 1800];
+
+/**
+ * Render a duration as a prescription string the player can parse back
+ * ("45s", "5 min"). Whole minutes read as minutes; anything else as seconds.
+ */
+export function formatDurationScheme(sec: number): string {
+  return sec % 60 === 0 ? `${sec / 60} min` : `${sec}s`;
+}
