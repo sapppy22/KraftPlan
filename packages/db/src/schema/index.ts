@@ -27,6 +27,12 @@ export const users = pgTable('users', {
   bodyweightKg: numeric('bodyweight_kg'),
   heightCm: numeric('height_cm'),
   goal: text('goal'),
+  // ── Nutrition inputs (BMI / BMR / TDEE) ──
+  sex: text('sex'),
+  birthYear: integer('birth_year'),
+  activityLevel: text('activity_level'),
+  dietGoal: text('diet_goal'),
+  calorieTargetOverride: integer('calorie_target_override'),
   role: text('role').default('user').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
@@ -172,6 +178,8 @@ export const workoutSessions = pgTable(
     startedAt: timestamp('started_at', { withTimezone: true }).notNull(),
     endedAt: timestamp('ended_at', { withTimezone: true }),
     totalVolumeKg: numeric('total_volume_kg'),
+    // MET-based burn estimate, frozen at completion (bodyweight can change later).
+    estimatedKcal: integer('estimated_kcal'),
     notes: text('notes'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   },
@@ -251,6 +259,58 @@ export const eventOutbox = pgTable('event_outbox', {
   status: text('status').default('pending').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
+
+// ══════════════════════════════════════
+// FOOD LOG (calories in)
+// ══════════════════════════════════════
+export const foodLogs = pgTable(
+  'food_logs',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    // Local calendar day (YYYY-MM-DD) so a day's totals don't shift with timezone.
+    date: text('date').notNull(),
+    meal: text('meal').default('snack').notNull(),
+    name: text('name').notNull(),
+    servings: numeric('servings').default('1').notNull(),
+    calories: numeric('calories').notNull(),
+    proteinG: numeric('protein_g'),
+    carbsG: numeric('carbs_g'),
+    fatG: numeric('fat_g'),
+    source: text('source').default('manual').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    userDateIdx: index('idx_food_logs_user_date').on(table.userId, table.date),
+  }),
+);
+
+// ══════════════════════════════════════
+// ACTIVITY LOG (calories out — steps / cardio the player can't capture)
+// ══════════════════════════════════════
+export const activityLogs = pgTable(
+  'activity_logs',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    date: text('date').notNull(),
+    type: text('type').default('cardio').notNull(),
+    activityId: text('activity_id'),
+    steps: integer('steps'),
+    durationMin: numeric('duration_min'),
+    distanceM: numeric('distance_m'),
+    caloriesOut: numeric('calories_out').notNull(),
+    note: text('note'),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    userDateIdx: index('idx_activity_logs_user_date').on(table.userId, table.date),
+  }),
+);
 
 // ══════════════════════════════════════
 // FEEDBACK
