@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, CalendarDays, BarChart3, Library, Settings, UserCircle, LogOut } from 'lucide-react';
+import { LayoutDashboard, CalendarDays, Apple, Flame, BarChart3, Library, Settings, UserCircle, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/ui/Logo';
 import { AuthGuard } from '@/components/AuthGuard';
@@ -14,10 +14,16 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/plans', label: 'Plans', icon: CalendarDays },
+  { href: '/nutrition', label: 'Nutrition', icon: Apple },
+  { href: '/activity', label: 'Activity', icon: Flame },
   { href: '/progress', label: 'Progress', icon: BarChart3 },
   { href: '/library', label: 'Library', icon: Library },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
+
+// Settings lives in the mobile header (the avatar), so the bottom bar keeps to
+// the six day-to-day destinations.
+const mobileNavItems = navItems.filter((item) => item.href !== '/settings');
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -34,12 +40,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </Link>
             <div className="flex items-center gap-2 sm:gap-3">
               <ThemeToggle variant="compact" />
-              <div className="flex items-center gap-2">
+              <Link href="/settings" className="flex items-center gap-2" aria-label="Settings">
                 <span className="text-sm font-medium text-text-secondary hidden sm:inline">{isGuest ? 'Guest' : user?.name}</span>
                 <div className="w-8 h-8 rounded-full bg-surface-2 flex items-center justify-center">
                   <UserCircle className="w-5 h-5 text-text-secondary" />
                 </div>
-              </div>
+              </Link>
               <button
                 onClick={logout}
                 title="Log Out"
@@ -134,8 +140,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
         {/* Mobile bottom nav */}
         <nav className="fixed bottom-0 inset-x-0 z-40 bg-bg-surface/90 backdrop-blur-lg border-t border-hairline lg:hidden pb-safe">
-          <div className="flex items-center justify-around h-16 px-2">
-            {navItems.slice(0, 5).map((item) => {
+          <div className="flex items-center justify-around h-16 px-1">
+            {mobileNavItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname?.startsWith(item.href);
               return (
@@ -144,7 +150,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   data-tour={`nav-${item.label.toLowerCase()}-mobile`}
                   className={cn(
-                    'flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-colors',
+                    'flex flex-col items-center gap-1 px-2 py-1 rounded-lg transition-colors',
                     isActive ? 'text-brand-orange' : 'text-text-secondary',
                   )}
                 >

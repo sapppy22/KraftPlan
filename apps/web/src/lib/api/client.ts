@@ -143,6 +143,46 @@ export const api = {
   getEndurance: (range?: string) =>
     apiFetch<any[]>('/progress/endurance', { params: { range } }),
 
+  // Nutrition & energy balance
+  // The API keys days by local calendar date, so every call carries the
+  // browser's UTC offset — otherwise an evening workout lands on "tomorrow".
+  getNutritionDay: (date?: string) =>
+    apiFetch<any>('/nutrition/day', {
+      params: { date, tzOffset: String(new Date().getTimezoneOffset()) },
+    }),
+
+  getNutritionProfile: () => apiFetch<any>('/nutrition/profile'),
+
+  updateNutritionProfile: (data: any) =>
+    apiFetch<any>('/nutrition/profile', { method: 'PATCH', body: JSON.stringify(data) }),
+
+  logFood: (data: any) =>
+    apiFetch<any>(`/nutrition/log?tzOffset=${new Date().getTimezoneOffset()}`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  deleteFoodLog: (id: string) =>
+    apiFetch<any>(`/nutrition/log/${id}`, { method: 'DELETE' }),
+
+  getActivityDay: (date?: string) =>
+    apiFetch<any>('/activity', {
+      params: { date, tzOffset: String(new Date().getTimezoneOffset()) },
+    }),
+
+  getActivityTrend: (days = 7) =>
+    apiFetch<any>('/activity/trend', {
+      params: { days: String(days), tzOffset: String(new Date().getTimezoneOffset()) },
+    }),
+
+  logActivity: (data: any) =>
+    apiFetch<any>(`/activity?tzOffset=${new Date().getTimezoneOffset()}`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  deleteActivity: (id: string) => apiFetch<any>(`/activity/${id}`, { method: 'DELETE' }),
+
   // Exercises
   getExercises: (params?: Record<string, string | undefined>) =>
     apiFetch<{ exercises: any[]; total: number }>('/exercises', { params }),
