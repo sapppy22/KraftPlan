@@ -7,7 +7,9 @@ An AI-Powered Gym Workout Planner & Tracker engineered for peak performance.
 KraftPlan is a full-stack, mobile-first web application designed to help athletes discover, customize, and execute structured gym workout plans. It features an interactive workout player, real-time PR tracking, dynamic analytics, and role-based administration.
 
 ## Core Features
-- **Interactive Workout Player:** Sequential logging of sets, reps, weight, RPE, and time. Features an integrated rest timer and inline YouTube tutorial videos.
+- **Interactive Workout Player:** Sequential logging of sets, reps, weight, RPE, and time. Features an integrated rest timer and inline YouTube tutorial videos. Endurance work runs on a countdown you set before you start; loaded exercises always take a weight, carries and sled pushes included.
+- **Nutrition:** BMI and maintenance calories from your own body metrics, calorie and macro targets for cutting, maintaining or bulking, recipe suggestions ranked by how well they fill the calories left in the day, and a food log.
+- **Energy Balance:** Calories in versus out, with app workouts folded in automatically (a MET estimate from the session clock) alongside manually logged steps and outside cardio.
 - **Progress & Analytics:** Deep insights into 30-day volume, adherence heatmaps, estimated 1RM trends, and program completion progress.
 - **Adaptive Planning:** Choose from 9 training modalities (Strength, Hypertrophy, Hyrox, Endurance, etc.) or create custom throwaway sessions.
 - **Exercise Library:** 81 curated exercises with search, filtering, alternatives, and detailed coaching cues.
