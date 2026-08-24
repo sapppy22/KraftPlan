@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { eq, and } from 'drizzle-orm';
-import { createSessionSchema, setLogSchema, sessionCompleteSchema } from '@kraftplan/shared';
+import { createSessionSchema, setLogSchema, sessionCompleteSchema, metCalories, workoutMet } from '@kraftplan/shared';
 import { schema } from '../db';
 import { requireUserId, type AppEnv } from '../context';
 import { buildDayManifest } from './plans';
@@ -254,9 +254,16 @@ workouts.post('/:sessionId/complete', async (c) => {
   }
 
   const now = new Date();
+  const estimatedKcal = await estimateSessionKcal(db, userId, session, parsed.data.totalElapsedSec, now);
   await db
     .update(schema.workoutSessions)
-    .set({ status: 'completed', endedAt: now, totalVolumeKg: totalVolumeKg.toString(), notes: parsed.data.notes || null })
+    .set({
+      status: 'completed',
+      endedAt: now,
+      totalVolumeKg: totalVolumeKg.toString(),
+      estimatedKcal,
+      notes: parsed.data.notes || null,
+    })
     .where(eq(schema.workoutSessions.id, sessionId));
 
   // Compute PRs inline (e1RM per exercise) — the Node service did this via an
@@ -268,8 +275,48 @@ workouts.post('/:sessionId/complete', async (c) => {
     payload: { userId, sessionId, exerciseIds: Array.from(exerciseIds), endedAt: now.toISOString() },
   });
 
-  return c.json({ sessionId, totalVolumeKg, setsCompleted, exercisesCompleted: exerciseIds.size, durationSec: parsed.data.totalElapsedSec });
+  return c.json({
+    sessionId,
+    totalVolumeKg,
+    setsCompleted,
+    exercisesCompleted: exerciseIds.size,
+    durationSec: parsed.data.totalElapsedSec,
+    estimatedKcal,
+  });
 });
+
+/**
+ * MET-based burn estimate for a finished session, frozen at completion so the
+ * nutrition tab's calories-out stays stable if bodyweight changes later.
+ * Prefers the in-app clock (elapsed) over wall-clock, which counts breaks.
+ */
+async function estimateSessionKcal(
+  db: AppEnv['Variables']['db'],
+  userId: string,
+  session: typeof schema.workoutSessions.$inferSelect,
+  totalElapsedSec: number,
+  endedAt: Date,
+): Promise<number> {
+  const wallMin = (endedAt.getTime() - session.startedAt.getTime()) / 60_000;
+  const minutes = Math.min(300, Math.max(0, totalElapsedSec > 0 ? totalElapsedSec / 60 : wallMin));
+
+  const [planRow] = await db
+    .select({ category: schema.plans.category })
+    .from(schema.planDays)
+    .innerJoin(schema.planWeeks, eq(schema.planDays.weekId, schema.planWeeks.id))
+    .innerJoin(schema.plans, eq(schema.planWeeks.planId, schema.plans.id))
+    .where(eq(schema.planDays.id, session.planDayId))
+    .limit(1);
+
+  const [user] = await db
+    .select({ bodyweightKg: schema.users.bodyweightKg })
+    .from(schema.users)
+    .where(eq(schema.users.id, userId))
+    .limit(1);
+  const weightKg = user?.bodyweightKg ? parseFloat(user.bodyweightKg.toString()) : null;
+
+  return metCalories(workoutMet(planRow?.category), weightKg, minutes);
+}
 
 // Recompute the best e1RM PR for each exercise the user just trained.
 async function updatePRs(db: AppEnv['Variables']['db'], userId: string, exerciseIds: string[]) {

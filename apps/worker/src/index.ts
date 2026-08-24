@@ -8,6 +8,7 @@ import { library } from './routes/library';
 import { plans, userPlan } from './routes/plans';
 import { workouts } from './routes/workouts';
 import { progress, dashboard } from './routes/progress';
+import { nutrition, activity } from './routes/nutrition';
 import { feedback } from './routes/feedback';
 import { admin } from './routes/admin';
 
@@ -62,6 +63,8 @@ app.route('/users/me/plan', userPlan);
 app.route('/workouts', workouts);
 app.route('/progress', progress);
 app.route('/dashboard', dashboard);
+app.route('/nutrition', nutrition);
+app.route('/activity', activity);
 app.route('/feedback', feedback);
 app.route('/admin', admin);
 

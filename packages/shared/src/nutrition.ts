@@ -150,6 +150,16 @@ export function caloriesFromMacros(m: Partial<MacroTargets>): number {
 
 // ── Calories out ──
 /**
+ * Resting + daily-living burn (kcal/day) before any logged exercise. Uses the
+ * sedentary multiplier deliberately: logged workouts, steps and cardio are
+ * added on top, so a higher factor here would double-count them.
+ */
+export function baselineBurn(bmrValue?: number | null): number | null {
+  if (!bmrValue || bmrValue <= 0) return null;
+  return Math.round(bmrValue * 1.2);
+}
+
+/**
  * Kcal burned for `minutes` of an activity with a given MET value.
  * kcal = MET × 3.5 × kg / 200 per minute (ACSM).
  */
